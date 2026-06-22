@@ -96,7 +96,7 @@
   </div>
 
   <div class="app">
-    <div class="intro">The other half of the library: who he can place into. Each contact is tagged with what they actually want — sector, stage, cheque, mandate — so an opportunity can be matched outward, and any contact can be opened to see which vetted deals already fit them.</div>
+    <div class="intro">The other half of the library: the capital each opportunity can be placed with. Every contact is tagged with what it wants — sector, stage, cheque, mandate — so an opportunity can be matched outward, and any contact can be opened to see which vetted deals already fit.</div>
     <div class="layout">
       <div class="dirgrid">
 
@@ -149,7 +149,7 @@
     agricapital:{name:"AgriCapital Partners",type:"Institutional",tclass:"inst",
       wants:[["Sectors","Canadian ag & agri-food, broad"],["Stage","Growth / platform / buyout"],["Cheque","$5M and up"],["Geography","Canada"]],
       note:"Holds a mandate to deploy foreign LP capital into Canadian agriculture. Needs vetted, structured, decision-ready deals — the exact buyer the navigator positioning is built for.",
-      act:"Mandate active this year — your highest-value relationship.",
+      act:"Mandate active this year — the highest-value relationship in the network.",
       matches:[{n:"Tilth Labs",s:"Agtech · growth",f:"8.9"},{n:"Pasturage Co.",s:"Agriculture · platform",f:"7.8"}]},
     prairieag:{name:"Prairie Ag Growth",type:"VC fund",tclass:"",
       wants:[["Sectors","Agtech, precision ag"],["Stage","Series A"],["Cheque","$2–6M"],["Geography","Western Canada"]],
@@ -190,9 +190,9 @@
       '<div class="block"><div class="bh">Notes</div><div class="note">'+d.note+'</div></div>'+
       '<div class="block"><div class="bh">Recent activity</div><div class="act">'+d.act+'</div></div>'+
       '<div class="block"><div class="bh">Opportunities that fit</div>'+matches+'</div>'+
-      '<div class="srcnote">Matches are drawn from your referral library and ranked by fit. Sending an intro logs it to your pipeline — the lucrative end of the flow.</div>';
+      '<div class="srcnote">Matches are drawn from the referral library and ranked by fit. Sending an intro logs it to the pipeline — the lucrative end of the flow.</div>';
   }
-  function sendIntro(el){ el.closest('.match').innerHTML = '<span class="sent">✓ Introduction sent — logged to your pipeline</span>'; }
+  function sendIntro(el){ el.closest('.match').innerHTML = '<span class="sent">✓ Introduction sent — logged to the pipeline</span>'; }
   pick('agricapital');
 </script>
 </body>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F1E9; --surface:#FCFAF4; --panel:#FFFFFF; --panel2:#F1ECE0; --ink:#0F2A20; --muted:#74806E;
+    --line:#DED7C6; --blue:#8F6F2E; --teal:#4F6B52; --green:#2F7A3A; --green-bg:#E7EFE0; --green-line:#CFE0C2;
+    --amber:#A06A1F; --gold:#B08A3C; --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:15px 24px;max-width:1300px;margin:0 auto;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:8px;font-family:var(--df);font-size:18px;font-weight:500;letter-spacing:-.01em}
+  .brand .n{color:var(--blue)} .brand .sub{color:var(--muted);font-weight:400}
+  .mark{width:24px;height:24px;vertical-align:-5px;margin-right:2px}
+  .digest{display:flex;gap:16px;font-size:13px;color:var(--muted)} .digest b{color:var(--ink);font-weight:500}
+  .digest .on{color:var(--green)}
+  .app{max-width:1300px;margin:0 auto;padding:20px 24px 70px}
+  .layout{display:grid;grid-template-columns:1fr 392px;gap:20px;align-items:start}
+  @media(max-width:980px){.layout{grid-template-columns:1fr}}
+  .zone{margin-bottom:28px}
+  .zlabel{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:2px}
+  .zlabel h2{font-family:var(--df);font-weight:500;font-size:19px}
+  .zsub{font-size:12.5px;color:var(--muted)}
+  .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+  @media(max-width:680px){.kanban{grid-template-columns:repeat(2,1fr)}}
+  .col{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px;min-height:120px}
+  .col h4{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:1px 3px 11px;display:flex;justify-content:space-between;align-items:center}
+  .col h4 .ct{color:var(--ink);background:var(--panel);border-radius:999px;padding:1px 7px;font-size:10.5px}
+  .pcard{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px;margin-bottom:8px;cursor:pointer;transition:.13s}
+  .pcard:last-child{margin-bottom:0}
+  .pcard:hover{border-color:var(--muted)}
+  .pcard.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .pn{font-family:var(--df);font-weight:500;font-size:13.5px;margin-bottom:6px}
+  .chip{font-size:10.5px;padding:2px 7px;border-radius:999px;display:inline-block}
+  .chip.sector{color:var(--muted);background:#EAE4D6}
+  .chip.fit{color:var(--green);background:var(--green-bg)}
+  .chip.stage{color:var(--blue);background:#F0E7D2}
+  .chip.dtype{color:var(--muted);background:#EAE4D6}
+  .pmeta{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .libgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin-top:14px}
+  .lcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px;cursor:pointer;transition:.13s}
+  .lcard:hover{border-color:var(--muted)}
+  .lcard.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .lh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .ln{font-family:var(--df);font-weight:500;font-size:15.5px}
+  .lpitch{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:9px}
+  .bestfit{font-size:11.5px;color:var(--ink);margin-top:10px} .bestfit b{color:var(--green);font-weight:500}
+
+  .detail{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:40px 12px;line-height:1.6}
+  .dh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .dname{font-family:var(--df);font-weight:500;font-size:20px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:11px}
+  .aitag{font-size:10.5px;color:var(--muted);margin-left:2px} .aitag i{color:var(--blue);font-style:normal}
+  .dsum{font-size:13.5px;color:var(--ink);line-height:1.55;margin-top:14px}
+  .dblock{margin-top:15px}
+  .dbh{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+  .live{font-size:9.5px;letter-spacing:.06em;color:var(--green);border:1px solid var(--green-line);border-radius:999px;padding:1px 7px;text-transform:uppercase}
+  .dbt{font-size:12.5px;color:var(--muted);line-height:1.5}
+  .dl{margin:0;padding-left:17px} .dl li{font-size:12.5px;color:var(--ink);line-height:1.45;margin-bottom:5px}
+  .dl li.flag{color:var(--amber);list-style:none;margin-left:-17px;padding-left:17px;position:relative}
+  .dl li.flag::before{content:"▲";position:absolute;left:0;font-size:9px;top:3px}
+  .live-block{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px}
+  .stat{font-family:var(--df);font-weight:500;font-size:15px;color:var(--ink);margin-bottom:5px}
+  .conn{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;margin-top:8px}
+  .cname{color:var(--ink)} .ctype{color:var(--muted);font-size:11px;margin-top:1px}
+  .sendbtn{background:none;border:1px solid var(--line);color:var(--blue);border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer;font-family:var(--bf);flex:none}
+  .sendbtn:hover{border-color:var(--blue)}
+  .sent{color:var(--green);font-size:12px;display:flex;align-items:center;gap:5px}
+  .srcnote{font-size:11px;color:var(--muted);margin-top:16px;padding-top:13px;border-top:1px solid var(--line);line-height:1.5}
+  .dacts{display:flex;gap:9px;margin-top:14px}
+  .abtn{flex:1;background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:9px;font-size:12.5px;font-family:var(--bf);cursor:pointer}
+  .abtn:hover{color:var(--ink);border-color:var(--muted)}
+  .abtn.primary{background:#F0E7D2;color:var(--blue);border-color:#D8C38E}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block (div#gate + the following <script>) to make a page public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";   /* <-- change this to any password you like */
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){
+      if(document.getElementById('gpw').value === GATE_PASSWORD){
+        try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){}
+        var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g);
+      } else { document.getElementById('gerr').textContent = 'Incorrect \u2014 try again.'; }
+    }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <div class="bar">
+    <span class="brand">
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech&nbsp;Connect <span class="sub">&nbsp;/ dashboard</span>
+    </span>
+    <div class="digest">
+      <span><b>2</b> new to vet</span><span><b>6</b> in process</span><span><b>4</b> in library</span><span class="on">live data on</span>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="layout">
+      <div class="left">
+
+        <div class="zone">
+          <div class="zlabel"><h2>In process</h2><span class="zsub">where each relationship sits — new intake and existing alike</span></div>
+          <div class="kanban">
+            <div class="col">
+              <h4>Vetting fit <span class="ct">2</span></h4>
+              <div class="pcard" data-card="soilsense" onclick="select('soilsense')"><div class="pn">SoilSense</div><span class="chip sector">Bioscience</span><div class="pmeta">New — scoring vs rubric</div></div>
+              <div class="pcard" data-card="harvestpay" onclick="select('harvestpay')"><div class="pn">HarvestPay</div><span class="chip sector">Food</span><div class="pmeta">New — scoring vs rubric</div></div>
+            </div>
+            <div class="col">
+              <h4>Engaged <span class="ct">2</span></h4>
+              <div class="pcard" data-card="greenfield" onclick="select('greenfield')"><div class="pn">Greenfield Seed</div><span class="chip sector">Agtech</span><div class="pmeta">Advising on go-to-market</div></div>
+              <div class="pcard" data-card="pasturage" onclick="select('pasturage')"><div class="pn">Pasturage Co.</div><span class="chip sector">Agriculture</span><div class="pmeta">Structuring capital</div></div>
+            </div>
+            <div class="col">
+              <h4>Gaining traction <span class="ct">1</span></h4>
+              <div class="pcard" data-card="rootstock" onclick="select('rootstock')"><div class="pn">Rootstock Robotics</div><span class="chip sector">Agtech</span><div class="pmeta">Intros underway</div></div>
+            </div>
+            <div class="col">
+              <h4>Ready to introduce <span class="ct">1</span></h4>
+              <div class="pcard active" data-card="tilth" onclick="select('tilth')"><div class="pn">Tilth Labs</div><span class="chip sector">Agtech</span> <span class="chip fit">8.9</span><div class="pmeta">Cleared — in the library</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="zone">
+          <div class="zlabel"><h2>Referral library</h2><span class="zsub">vetted opportunities, ready to match to the right capital — the outflow</span></div>
+          <div class="libgrid">
+            <div class="lcard" data-card="tilth" onclick="select('tilth')"><div class="lh"><span class="ln">Tilth Labs</span><span class="chip fit">8.9</span></div><div class="lpitch">Variable-rate platform — $640k ARR, +18% MoM.</div><div class="bestfit">Best fit: <b>growth-stage agtech funds</b></div></div>
+            <div class="lcard" data-card="rootstock" onclick="select('rootstock')"><div class="lh"><span class="ln">Rootstock Robotics</span><span class="chip fit">8.4</span></div><div class="lpitch">Autonomous weeding — four paid pilots.</div><div class="bestfit">Best fit: <b>hardware-comfortable seed</b></div></div>
+            <div class="lcard" data-card="verdant" onclick="select('verdant')"><div class="lh"><span class="ln">Verdant Bio</span><span class="chip fit">7.7</span></div><div class="lpitch">Nitrogen-fixing microbial — strong lab data.</div><div class="bestfit">Best fit: <b>patient bioscience capital</b></div></div>
+            <div class="lcard" data-card="prairieprotein" onclick="select('prairieprotein')"><div class="lh"><span class="ln">Prairie Protein</span><span class="chip fit">7.8</span></div><div class="lpitch">Pulse-based protein — first co-packer signed.</div><div class="bestfit">Best fit: <b>food-tech & family offices</b></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="detail" id="detail">
+        <div class="empty">Select an opportunity to see its enriched profile — the vetting read, plus live market, comparables, and your network.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const DATA = {
+    tilth:{name:"Tilth Labs",sector:"Agtech",stage:"Series A",dtype:"Investment",fit:"8.9",
+      summary:"Variable-rate application platform. $640k ARR growing ~18% month over month, and two of your portfolio peers are already customers.",
+      strengths:["Best traction in the batch","Warm references from peers you trust","Capital-efficient to date"],
+      risks:["Valuation expectations may run ahead of stage"],
+      market:{stat:"VRA software adoption +22% YoY",note:"Category leaders are getting marked up — timing favours a raise now rather than in six months."},
+      comps:"Comparable Series A rounds priced $25–40M post on similar ARR and growth.",
+      net:{fit:"growth-stage agtech funds",conn:"Prairie Ag Growth",ctype:"Series A fund · precision ag"}},
+    rootstock:{name:"Rootstock Robotics",sector:"Agtech",stage:"Seed",dtype:"Investment",fit:"8.4",
+      summary:"Autonomous inter-row weeding for row crops. Four paid pilots on Prairie farms, real cost-per-acre savings, a founder who actually farmed.",
+      strengths:["Paying pilots, not letters of intent","Founder ran a 5,000-acre operation","Clear cost-per-acre savings story"],
+      risks:["Hardware margins unproven at scale","{FLAG} Deck claims $180k ARR but the listed pilots sum to ~$120k"],
+      market:{stat:"Precision-ag funding +14% YoY",note:"Weeding robotics is one of the few ag-hardware niches still drawing seed capital."},
+      comps:"Early comps (FarmWise, Carbon Robotics) priced $8–12M post at seed.",
+      net:{fit:"hardware-comfortable seed capital",conn:"North40 Angels",ctype:"angel group · ag hardware"}},
+    soilsense:{name:"SoilSense",sector:"Bioscience",stage:"Seed",dtype:"Investment",fit:"6.9",
+      summary:"Microbial soil amendment improving nitrogen uptake. Lab results strong; field trials just beginning.",
+      strengths:["Differentiated science","Large addressable market","Technical founding team"],
+      risks:["Pre-revenue, field data still thin","Regulatory path not yet mapped"],
+      market:{stat:"Ag biologicals ~$15B, +10% CAGR",note:"Nitrogen-efficiency plays are in favour while fertilizer costs stay elevated."},
+      comps:"Pivot Bio and Sound Ag set the category; early rounds $5–9M.",
+      net:{fit:"patient bioscience capital",conn:"BioPrairie Fund",ctype:"deep-tech · long horizon"}},
+    harvestpay:{name:"HarvestPay",sector:"Food",stage:"Seed",dtype:"Investment",fit:"5.2",
+      summary:"Payments and working capital for produce buyers. Capable team, but adjacent to your agronomy edge.",
+      strengths:["Experienced fintech founder","Working product"],
+      risks:["Fintech-led, not the core lane","{FLAG} Crowded category with no clear agriculture wedge"],
+      market:{stat:"Agri-fintech: 40+ funded players",note:"Hard to differentiate without a proprietary channel; valuations compressed since 2023."},
+      comps:"Many comps, compressed valuations — buyer's market.",
+      net:{fit:"generalist fintech — likely outside your network",conn:"—",ctype:""}},
+    greenfield:{name:"Greenfield Seed",sector:"Agtech",stage:"Advisory",dtype:"Advisory",fit:"7.1",
+      summary:"Forage-seed startup needing a go-to-market and channel strategy into Western Canada.",
+      strengths:["Strong product, early interest","You know the dealer channel well"],
+      risks:["Limited budget for a full engagement"],
+      market:{stat:"Forage-seed: steady, regional",note:"Channel relationships are the whole game here — squarely your edge."},
+      comps:"—",
+      net:{fit:"an advisory client, not a referral",conn:"—",ctype:""}},
+    pasturage:{name:"Pasturage Co.",sector:"Agriculture",stage:"Advisory",dtype:"Advisory + capital",fit:"7.8",
+      summary:"Established cow-calf and feedlot operation wanting to restructure debt and bring in an outside investor. Squarely your world.",
+      strengths:["Real operating business with cash flow","Your direct cattle and feedlot experience","A clear, answerable question"],
+      risks:["Family-ownership dynamics to navigate"],
+      market:{stat:"Cattle margins improving on tight supply",note:"A good window to bring capital in on better terms."},
+      comps:"—",
+      net:{fit:"you could syndicate the investor side",conn:"Friesen Family Office",ctype:"family office · ag"}},
+    verdant:{name:"Verdant Bio",sector:"Bioscience",stage:"Seed",dtype:"Investment",fit:"7.7",
+      summary:"Nitrogen-fixing microbial amendment — strong lab data, field trials beginning.",
+      strengths:["Strong science","Timely given input costs"],
+      risks:["Field validation still pending","Long regulatory runway"],
+      market:{stat:"Biologicals +10% CAGR",note:"Investor appetite is strong; credible field data is the unlock."},
+      comps:"Early microbial rounds $6–10M post.",
+      net:{fit:"patient bioscience capital",conn:"BioPrairie Fund",ctype:"deep-tech · long horizon"}},
+    prairieprotein:{name:"Prairie Protein",sector:"Food",stage:"Seed",dtype:"Investment",fit:"7.8",
+      summary:"Pulse-based protein ingredient — first co-packer signed, early purchase orders in hand.",
+      strengths:["Real offtake interest","Rides Prairie pulse supply"],
+      risks:["Capital-intensive scale-up","Commodity-priced inputs"],
+      market:{stat:"Plant protein reset; B2B holding up",note:"Ingredient suppliers are faring better than consumer brands in this cycle."},
+      comps:"B2B ingredient rounds $4–8M post.",
+      net:{fit:"food-tech & family offices",conn:"Friesen Family Office",ctype:"family office · food & ag"}}
+  };
+
+  function select(id){
+    document.querySelectorAll('[data-card]').forEach(c=>c.classList.toggle('active', c.getAttribute('data-card')===id));
+    const d=DATA[id];
+    const risks=d.risks.map(r=> r.indexOf('{FLAG}')===0 ? '<li class="flag">'+r.replace('{FLAG}','').trim()+'</li>' : '<li>'+r+'</li>').join('');
+    const comps = (d.comps && d.comps!=='—') ? '<div class="dblock"><div class="dbh">Comparables <span class="live">live</span></div><div class="dbt">'+d.comps+'</div></div>' : '';
+    const net = (d.net.conn && d.net.conn!=='—')
+      ? '<div class="dblock"><div class="dbh">In your network</div><div class="dbt">Best fit: <b style="color:var(--green);font-weight:500">'+d.net.fit+'</b></div><div class="conn"><div><div class="cname">'+d.net.conn+'</div><div class="ctype">'+d.net.ctype+'</div></div><button class="sendbtn" onclick="sendIntro(this)">Send intro</button></div></div>'
+      : '<div class="dblock"><div class="dbh">In your network</div><div class="dbt">'+d.net.fit+'</div></div>';
+    document.getElementById('detail').innerHTML =
+      '<div class="dh"><span class="dname">'+d.name+'</span><span class="chip fit">Fit '+d.fit+'</span></div>'+
+      '<div class="tags"><span class="chip sector">'+d.sector+'</span><span class="chip stage">'+d.stage+'</span><span class="chip dtype">'+d.dtype+'</span><span class="aitag"><i>AI-categorized</i> · confirm</span></div>'+
+      '<div class="dsum">'+d.summary+'</div>'+
+      '<div class="dblock"><div class="dbh">Strengths</div><ul class="dl">'+d.strengths.map(s=>'<li>'+s+'</li>').join('')+'</ul></div>'+
+      '<div class="dblock"><div class="dbh">Risks &amp; flags</div><ul class="dl">'+risks+'</ul></div>'+
+      '<div class="live-block"><div class="dbh">Market signal <span class="live">live</span></div><div class="stat">'+d.market.stat+'</div><div class="dbt">'+d.market.note+'</div></div>'+
+      comps+net+
+      '<div class="srcnote">Enriched from market data, comparables, your CRM and news — refreshed live. AI-assisted; you make the call.</div>'+
+      '<div class="dacts"><button class="abtn primary">Open calendar</button><button class="abtn">Decline with note</button></div>';
+  }
+  function sendIntro(el){ el.closest('.conn').innerHTML = '<span class="sent">✓ Introduction sent — tracked</span>'; }
+  select('tilth');
+</script>
+</body>
+</html>

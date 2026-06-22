@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — a trusted navigator for capital entering Canadian agriculture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#ECE7D9; --ink:#0F2A20; --body:#41473E; --muted:#7A8076;
+    --green:#0F2A20; --green-d:#0A1F17; --green-deep:#0F2A20; --gold:#B08A3C; --gold-2:#8F6F2E;
+    --line:#DED7C6; --on-dark:#F4F1E9; --gold-dark:#C9A45A; --sage-dark:#9DB39A;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(250,245,235,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .navin{max-width:1080px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink)}
+  .brand .n{color:var(--green)}
+  .mark{width:27px;height:27px;flex:none}
+  .navlinks{display:flex;align-items:center;gap:26px;font-size:14.5px;color:var(--body)}
+  .navlinks a:hover{color:var(--green)}
+  .navbtn{background:var(--green);color:var(--on-dark);padding:9px 16px;border-radius:8px;font-size:14px;font-weight:500}
+  .navbtn:hover{background:var(--green-d)}
+  @media(max-width:680px){.navlinks a:not(.navbtn){display:none}}
+
+  /* hero */
+  .hero{background:var(--green-deep);color:var(--on-dark);position:relative;overflow:hidden}
+  .hero .wrap{padding-top:88px;padding-bottom:92px;position:relative;z-index:2}
+  .eyebrow{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dark);font-weight:600}
+  .hero h1{font-family:var(--df);font-weight:500;font-size:54px;line-height:1.08;letter-spacing:-.015em;margin-top:20px;max-width:15ch}
+  .hero .sub{font-size:20px;color:#D8E0CB;margin-top:24px;max-width:60ch;line-height:1.55}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+  .btn{padding:14px 24px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;transition:.15s;border:1px solid transparent;display:inline-block}
+  .btn.primary{background:var(--gold-dark);color:#2A2208}
+  .btn.primary:hover{background:#e6c986}
+  .btn.ghost{background:transparent;color:var(--on-dark);border-color:rgba(241,233,216,.4)}
+  .btn.ghost:hover{border-color:var(--on-dark)}
+  .tagline{margin-top:42px;font-family:var(--df);font-style:italic;font-size:20px;color:var(--sage-dark)}
+  .hero-rule{width:54px;height:3px;background:var(--gold-dark);margin-top:44px;opacity:.8}
+  .hero-wheat{position:absolute;right:-40px;bottom:-30px;width:340px;opacity:.10;z-index:1;color:var(--gold-dark)}
+  @media(max-width:680px){.hero h1{font-size:38px}.hero .sub{font-size:17px}}
+
+  /* sections */
+  section{padding:78px 0}
+  .sec-eyebrow{font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  h2{font-family:var(--df);font-weight:500;font-size:36px;line-height:1.14;letter-spacing:-.01em;margin-top:12px}
+  .lead{font-size:19px;color:var(--body);margin-top:18px;max-width:62ch;line-height:1.6}
+
+  .prop{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+  @media(max-width:760px){.prop{grid-template-columns:1fr;gap:20px}}
+  .prop p{font-size:17px;color:var(--body);line-height:1.65}
+  .prop p + p{margin-top:14px}
+
+  /* two paths */
+  .paths{background:var(--cream2)}
+  .pathgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:38px}
+  @media(max-width:760px){.pathgrid{grid-template-columns:1fr}}
+  .path{background:var(--cream);border:1px solid var(--line);border-radius:16px;padding:34px;display:flex;flex-direction:column}
+  .path .tag{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:var(--gold-2)}
+  .path h3{font-family:var(--df);font-weight:500;font-size:25px;margin-top:10px;line-height:1.18}
+  .path p{font-size:16px;color:var(--body);margin-top:14px;line-height:1.6;flex:1}
+  .path .go{margin-top:22px;font-weight:500;font-size:15px;color:var(--green);align-self:flex-start;border-bottom:1.5px solid var(--gold-dark);padding-bottom:2px}
+  .path.lead{border-color:#cdbf9f;box-shadow:0 10px 30px rgba(43,90,46,.07)}
+  .path.lead .leadmark{font-size:11.5px;color:var(--green);background:#E7EFE0;border-radius:999px;padding:3px 10px;align-self:flex-start;margin-bottom:14px;font-weight:600;letter-spacing:.04em}
+
+  /* moat */
+  .moat{background:var(--green-deep);color:var(--on-dark)}
+  .moat .sec-eyebrow{color:var(--gold-dark)}
+  .moat h2{color:var(--on-dark)}
+  .pillars{display:grid;grid-template-columns:1fr 1fr;gap:30px 48px;margin-top:40px}
+  @media(max-width:760px){.pillars{grid-template-columns:1fr}}
+  .pillar h4{font-family:var(--df);font-weight:500;font-size:20px;color:var(--gold-dark)}
+  .pillar p{font-size:16px;color:#D6DECA;margin-top:8px;line-height:1.6}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:54px;padding-top:38px;border-top:1px solid rgba(216,184,110,.25)}
+  @media(max-width:680px){.stats{grid-template-columns:1fr 1fr;gap:28px 18px}}
+  .stat .num{font-family:var(--df);font-weight:500;font-size:34px;color:var(--on-dark)}
+  .stat .lbl{font-size:13.5px;color:var(--sage-dark);margin-top:4px;line-height:1.4}
+
+  /* how */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:40px}
+  @media(max-width:760px){.steps{grid-template-columns:1fr;gap:18px}}
+  .step{padding-top:20px;border-top:2px solid var(--gold-dark)}
+  .step .k{font-family:var(--df);font-size:15px;color:var(--gold-2);font-weight:600}
+  .step h4{font-family:var(--df);font-weight:500;font-size:21px;margin-top:8px}
+  .step p{font-size:15.5px;color:var(--body);margin-top:10px;line-height:1.6}
+
+  /* close */
+  .close{background:var(--cream2);text-align:center}
+  .close h2{max-width:20ch;margin:0 auto}
+  .close .lead{margin:18px auto 0}
+  .close .cta{justify-content:center}
+  .contact{margin-top:26px;font-size:15px;color:var(--muted)}
+  .contact a{color:var(--green);font-weight:500;border-bottom:1px solid var(--gold-dark)}
+
+  footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .n{color:var(--gold-dark)}
+
+  /* Ask Terry — AI front door */
+  .askwrap{background:var(--cream);padding-bottom:72px}
+  .askcard{max-width:760px;margin:-54px auto 0;background:var(--cream);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(21,46,24,.14);padding:26px 26px 22px;position:relative;z-index:5}
+  .askhead{display:flex;align-items:center;gap:13px}
+  .askav{width:46px;height:46px;border-radius:50%;background:var(--green);color:var(--on-dark);display:flex;align-items:center;justify-content:center;font-family:var(--df);font-weight:600;font-size:20px;flex:none}
+  .asktitle{font-family:var(--df);font-weight:600;font-size:19px;display:flex;align-items:center;gap:9px}
+  .aibadge{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-2);border:1px solid #ddcba0;border-radius:999px;padding:2px 8px;font-weight:600;font-family:var(--bf)}
+  .asksub{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .transcript{margin-top:18px;height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:6px}
+  .msg{max-width:84%;font-size:14px;line-height:1.5;padding:11px 14px;border-radius:14px}
+  .msg.bot{background:var(--cream2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
+  .msg.user{background:var(--green);color:var(--on-dark);align-self:flex-end;border-bottom-right-radius:4px}
+  .go2{display:inline-block;margin-top:8px;color:var(--green);font-weight:500;border-bottom:1.5px solid var(--gold-dark);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip2{font-size:12.5px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;color:var(--body);transition:.13s}
+  .chip2:hover{border-color:var(--green);color:var(--green)}
+  .askinput{display:flex;gap:9px;margin-top:14px}
+  .askinput input{flex:1;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;font-family:var(--bf);color:var(--ink);outline:none}
+  .askinput input:focus{border-color:var(--green)}
+  .asksend{background:var(--green);color:var(--on-dark);border:none;border-radius:10px;padding:0 18px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--bf)}
+  .asksend:hover{background:var(--green-d)}
+  .askfoot{font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.5;text-align:center}
+
+  /* intake modal */
+  .overlay{position:fixed;inset:0;background:rgba(21,46,24,.55);z-index:100;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:48px 20px}
+  .overlay.open{display:flex}
+  .modal{background:var(--cream);border-radius:18px;max-width:560px;width:100%;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.32);position:relative}
+  .mclose{position:absolute;top:14px;right:16px;width:34px;height:34px;border:none;background:transparent;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;border-radius:8px}
+  .mclose:hover{background:var(--cream2);color:var(--ink)}
+  .mstep{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .mh{font-family:var(--df);font-weight:500;font-size:25px;margin-top:8px;line-height:1.2}
+  .mp{font-size:15px;color:var(--body);margin-top:10px;line-height:1.55}
+  .dbtn{display:block;width:100%;text-align:left;background:var(--cream);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin-top:14px;cursor:pointer;transition:.13s}
+  .dbtn:hover{border-color:var(--green);box-shadow:0 6px 18px rgba(43,90,46,.08)}
+  .dbt{display:block;font-family:var(--df);font-weight:500;font-size:18px;color:var(--ink)}
+  .dbd{display:block;font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.45}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .opt{text-align:left;background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:14px 16px;font-size:15px;color:var(--ink);cursor:pointer;font-family:var(--bf);transition:.13s}
+  .opt:hover{border-color:var(--green);background:#fff}
+  .verdict{border-radius:13px;padding:18px 20px;font-size:15.5px;line-height:1.55;margin-top:18px}
+  .verdict.good{background:#E7EFE0;color:var(--green-d);border:1px solid #cfe0c2}
+  .verdict.soft{background:#F6EEDD;color:#7a5e22;border:1px solid #e6d6b3}
+  .form{margin-top:18px;display:flex;flex-direction:column;gap:13px}
+  .fg label{display:block;font-size:13px;color:var(--body);font-weight:500;margin-bottom:5px}
+  .fg input,.fg textarea{width:100%;background:var(--cream);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font-size:14px;font-family:var(--bf);color:var(--ink);outline:none;resize:vertical}
+  .fg input:focus,.fg textarea:focus{border-color:var(--green)}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--body);margin-top:16px;line-height:1.45;cursor:pointer}
+  .consent input{margin-top:3px;flex:none}
+  .mbtn{width:100%;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--bf);margin-top:18px}
+  .mbtn.primary{background:var(--green);color:var(--on-dark)}
+  .mbtn.primary:hover{background:var(--green-d)}
+  .mback{background:none;border:none;color:var(--muted);font-size:13.5px;cursor:pointer;margin-top:14px;font-family:var(--bf);padding:4px 2px}
+  .mback:hover{color:var(--ink)}
+  .donecheck{width:54px;height:54px;border-radius:50%;background:#E7EFE0;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;margin:6px auto 0}
+  .cerr{color:#b4452e;font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block (div#gate + the following <script>) to make a page public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";   /* <-- change this to any password you like */
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){
+      if(document.getElementById('gpw').value === GATE_PASSWORD){
+        try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){}
+        var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g);
+      } else { document.getElementById('gerr').textContent = 'Incorrect \u2014 try again.'; }
+    }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+
+  <nav>
+    <div class="navin">
+      <span class="brand">
+        <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="9" y="11" width="30" height="4" fill="#0F2A20"/>
+          <rect x="11" y="15" width="4" height="22" fill="#0F2A20"/>
+          <rect x="33" y="15" width="4" height="22" fill="#0F2A20"/>
+          <rect x="22" y="18" width="4" height="16" fill="#B08A3C"/>
+          <rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/>
+        </svg>
+        AgNtech Connect
+      </span>
+      <div class="navlinks">
+        <a href="#what">What I do</a>
+        <a href="#why">Why it works</a>
+        <a href="#how">How it works</a>
+        <a href="#contact" class="navbtn">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <svg class="hero-wheat" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="20" y="18" width="60" height="9"/><rect x="24" y="27" width="9" height="52"/><rect x="67" y="27" width="9" height="52"/><rect x="44" y="34" width="12" height="45"/></svg>
+    <div class="wrap">
+      <div class="eyebrow">Canadian Agriculture · Bioscience · Capital</div>
+      <h1>A trusted navigator for serious capital entering Canadian agriculture.</h1>
+      <p class="sub">Forty years on the land and in the boardroom. I find, vet, and structure the opportunities only a local operator can reach — and I back the deal with my own stake.</p>
+      <div class="cta">
+        <a href="#ask" class="btn primary" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
+        <a href="#ask" class="btn ghost" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
+      </div>
+      <div class="tagline">"I speak farmer, tech, and capital — and I connect the three."</div>
+    </div>
+  </header>
+
+  <div class="askwrap" id="ask">
+    <div class="wrap">
+      <div class="askcard">
+        <div class="askhead">
+          <div class="askav">T</div>
+          <div>
+            <div class="asktitle">Ask Terry <span class="aibadge">AI · always on</span></div>
+            <div class="asksub">Trained on how he thinks and what he looks for. Ask a question, or pitch a deal.</div>
+          </div>
+        </div>
+        <div class="transcript" id="transcript">
+          <div class="msg bot">I'm Terry's AI — trained on how he thinks and what he backs. Ask me anything, or pitch a deal and I'll tell you if it's a fit.</div>
+        </div>
+        <div class="chips">
+          <span class="chip2" onclick="chip(this)">Is my company a fit?</span>
+          <span class="chip2" onclick="chip(this)">How do you get paid?</span>
+          <span class="chip2" onclick="chip(this)">I have capital to deploy</span>
+          <span class="chip2" onclick="chip(this)">I want to pitch a deal</span>
+        </div>
+        <div class="askinput">
+          <input id="askq" type="text" placeholder="Ask a question, or give me your one-liner…" autocomplete="off">
+          <button class="asksend" onclick="send()">Send</button>
+        </div>
+        <div class="askfoot">A working demo. In production this runs on your AI stack — trained on Terry's material and his screening criteria — and serious pitches flow straight into the intake and onto his dashboard.</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="prop">
+        <div>
+          <div class="sec-eyebrow">What I do</div>
+          <h2>An operating partner, invested in the outcome.</h2>
+        </div>
+        <div>
+          <p>I've farmed it, built in it, and exited from it. I know the operators, the regulators, and what's real on the ground — and that's exactly what serious capital needs to enter Canadian agriculture well.</p>
+          <p>That's the work: opening the right doors, vetting hard, structuring the deal cleanly, and staying in it afterward — paid to get it right, with my own stake in the outcome.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paths">
+    <div class="wrap">
+      <div class="sec-eyebrow">Who I work with</div>
+      <h2>Two ways in.</h2>
+      <div class="pathgrid">
+        <div class="path lead">
+          <span class="leadmark">Serious capital</span>
+          <span class="tag">For capital entering the sector</span>
+          <h3>Governments, family offices, and agribusiness placing real money into Canadian agriculture.</h3>
+          <p>Entering Canadian agriculture well takes someone on the inside. I source and vet the opportunities, structure the entry, navigate the ownership and review rules, and land it — a trusted local who has deployed capital and seen an exit.</p>
+          <a href="#contact" class="go">Start a private conversation →</a>
+        </div>
+        <div class="path">
+          <span class="tag">For ventures raising or scaling</span>
+          <h3>Founders who need more than a cheque.</h3>
+          <p>The right introductions, a clean structure, first customers, and a real path to capital — including the non-dilutive programs I know how to find. I help get the legs under a business and build real momentum early.</p>
+          <a href="#contact" class="go">Tell me about your venture →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="moat">
+    <div class="wrap">
+      <div class="sec-eyebrow">Why it works</div>
+      <h2>Built over forty years.</h2>
+      <div class="pillars">
+        <div class="pillar"><h4>Access</h4><p>Four decades and a network across farming, finance, and food, built relationship by relationship.</p></div>
+        <div class="pillar"><h4>Track record</h4><p>An early advisor and investor in a Canadian hemp-foods company acquired for more than $400 million. A 10,000-acre farm. A feature film, financed and delivered.</p></div>
+        <div class="pillar"><h4>Operator judgment</h4><p>I've run the cattle, weathered the droughts and the border closures, and made payroll. I know what's real, and what it takes.</p></div>
+        <div class="pillar"><h4>Alignment</h4><p>I take a stake and share the risk. My interests sit beside yours, all the way through.</p></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">55 yrs</div><div class="lbl">farming the land</div></div>
+        <div class="stat"><div class="num">40 yrs</div><div class="lbl">in business &amp; finance</div></div>
+        <div class="stat"><div class="num">20+</div><div class="lbl">ventures founded or backed</div></div>
+        <div class="stat"><div class="num">$400M+</div><div class="lbl">exit, as early backer</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-eyebrow">How it works</div>
+      <h2>Vetted, structured, connected — and I stay in after the introduction.</h2>
+      <div class="steps">
+        <div class="step"><div class="k">01</div><h4>Vet for fit</h4><p>Every opportunity is screened against clear criteria and current market intelligence — judgment backed by live data.</p></div>
+        <div class="step"><div class="k">02</div><h4>Structure the deal</h4><p>The right entry, cleanly and compliantly — including the ownership limits and review process that govern outside capital in Canadian ag.</p></div>
+        <div class="step"><div class="k">03</div><h4>Connect and stay in</h4><p>Matched to the right capital or the right opportunity, with introductions that carry weight — and an operating partner who stays involved.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="close">
+    <div class="wrap">
+      <div class="sec-eyebrow" style="text-align:center">Get in touch</div>
+      <h2>If you're moving capital into Canadian agriculture — or building something in it — let's talk.</h2>
+      <p class="lead">Every conversation starts the same way: a short, structured intake so I understand the fit before we ever get on a call. Discreet, and worth your time.</p>
+      <div class="cta">
+        <a href="#" class="btn primary" style="background:var(--green);color:var(--on-dark)" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
+        <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
+      </div>
+      <p style="font-family:var(--df);font-size:21px;color:var(--ink);margin-top:26px">Terry Cholka <span style="color:var(--gold-2)">· Founding Partner</span></p>
+      <div class="contact">Dauphin, Manitoba &nbsp;·&nbsp; <a href="#">terry@agntechconnect.com</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+      <span>Dauphin, Manitoba</span>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay" onclick="if(event.target===this)closeIntake()">
+    <div class="modal">
+      <button class="mclose" onclick="closeIntake()" aria-label="Close">×</button>
+      <div id="mbody"></div>
+    </div>
+  </div>
+
+  <script>
+    var tr = document.getElementById('transcript');
+    function bubble(text, who, cta){
+      var d = document.createElement('div');
+      d.className = 'msg ' + who;
+      d.innerHTML = text + (cta ? ' <a href="#" class="go2" onclick="openIntake();return false;">Start the 2-minute intake →</a>' : '');
+      tr.appendChild(d); tr.scrollTop = tr.scrollHeight;
+    }
+    function reply(q){
+      q = q.toLowerCase();
+      if (q.indexOf('fit') > -1)
+        return {t:"Worth a look if you're in ag, agtech, ag-bioscience or food, with real traction — revenue or paying pilots — and you're raising or scaling. Terry backs operators who know their ground. Tell me more, or start the short intake and he'll have a read quickly.", cta:true};
+      if (q.indexOf('paid') > -1 || q.indexOf('fee') > -1 || q.indexOf('cost') > -1 || q.indexOf('charge') > -1)
+        return {t:"Depends on the engagement, and he's always upfront about it. For capital entering the sector: a mix of retainer, project and success fees. For ventures: usually fees plus a small stake, so his upside grows with yours — aligned with your outcome, start to finish.", cta:false};
+      if (q.indexOf('capital') > -1 || q.indexOf('invest') > -1 || q.indexOf('deploy') > -1 || q.indexOf('mandate') > -1 || q.indexOf('fund') > -1)
+        return {t:"Then you're exactly who he works with. He sources, vets and structures deals for serious capital entering Canadian ag — and navigates the ownership and review rules that trip up outside money. Tell me the mandate — size, sectors, timeline — or start the intake.", cta:true};
+      if (q.indexOf('grant') > -1 || q.indexOf('government') > -1 || q.indexOf('non-dilutive') > -1)
+        return {t:"Often yes — there's real non-dilutive money in Canadian ag, and matching you to the right program is part of what he does. Tell me what you're building and I'll point you at what could stack.", cta:true};
+      if (q.indexOf('pitch') > -1 || q.indexOf('deal') > -1 || q.indexOf('rais') > -1 || q.indexOf('startup') > -1 || q.indexOf('company') > -1)
+        return {t:"Go ahead — give me the one-liner: what you do, your traction, and what you're raising. I'll tell you straight if it's a fit and where it could go. Serious pitches go right onto Terry's desk.", cta:true};
+      return {t:"Good question. Give me a little more, or start the short intake and Terry will get you a real answer fast.", cta:true};
+    }
+    function ask(q){
+      if (!q) return;
+      bubble(q, 'user', false);
+      var r = reply(q);
+      setTimeout(function(){ bubble(r.t, 'bot', r.cta); }, 380);
+    }
+    function chip(el){ ask(el.textContent); }
+    function send(){
+      var i = document.getElementById('askq');
+      var v = i.value.trim();
+      if (v){ ask(v); i.value = ''; }
+    }
+    document.getElementById('askq').addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){ e.preventDefault(); send(); }
+    });
+  </script>
+
+  <script>
+    var IK = { door:null, step:0, fit:{}, view:null };
+    var _ov, _mb;
+    function openIntake(door){
+      _ov = document.getElementById('overlay'); _mb = document.getElementById('mbody');
+      IK = { door: door || null, step:0, fit:{}, view:null };
+      _ov.classList.add('open'); document.body.style.overflow='hidden';
+      if (IK.door) renderFit(); else renderChooser();
+    }
+    function closeIntake(){ _ov.classList.remove('open'); document.body.style.overflow=''; }
+    function chooseDoor(d){ IK.door=d; IK.step=0; IK.fit={}; renderFit(); }
+
+    var FIT = {
+      capital:[
+        {q:"What's your aim?", a:["Deploy capital into the sector","Co-invest alongside Terry","Explore the market first"]},
+        {q:"Mandate size?", a:["Under $1M","$1–5M","$5M and up"]}
+      ],
+      venture:[
+        {q:"Your sector?", a:["Agriculture","Agtech","Bioscience","Food","Other"]},
+        {q:"Traction so far?", a:["Idea stage","Paid pilots","Revenue"]},
+        {q:"What do you need?", a:["Capital","Advice & connections","Both"]}
+      ]
+    };
+    function doorLabel(){ return IK.door==='capital' ? 'Capital' : 'Venture'; }
+    function backBtn(){ return '<button class="mback" onclick="stepBack()">← Back</button>'; }
+
+    function renderChooser(){
+      IK.view='chooser';
+      _mb.innerHTML =
+        '<div class="mstep">Get in touch</div>'+
+        '<h3 class="mh">Which door is yours?</h3>'+
+        '<p class="mp">A short, structured intake — Terry sees the fit before any call.</p>'+
+        '<button class="dbtn" onclick="chooseDoor(\'capital\')"><span class="dbt">I have capital to deploy</span><span class="dbd">Governments, family offices, and agribusiness placing money into Canadian ag.</span></button>'+
+        '<button class="dbtn" onclick="chooseDoor(\'venture\')"><span class="dbt">I\'m raising or building</span><span class="dbd">Founders who need capital, connections, or both.</span></button>';
+    }
+    function renderFit(){
+      var qs = FIT[IK.door];
+      if (IK.step >= qs.length){ renderVerdict(); return; }
+      IK.view='fit';
+      var cur = qs[IK.step];
+      var opts = cur.a.map(function(o,i){ return '<button class="opt" onclick="answer('+i+')">'+o+'</button>'; }).join('');
+      _mb.innerHTML =
+        '<div class="mstep">'+doorLabel()+' · question '+(IK.step+1)+' of '+qs.length+'</div>'+
+        '<h3 class="mh">'+cur.q+'</h3>'+
+        '<div class="opts">'+opts+'</div>'+
+        backBtn();
+    }
+    function answer(i){ var qs=FIT[IK.door]; IK.fit[IK.step]=qs[IK.step].a[i]; IK.step++; renderFit(); }
+
+    function verdictFor(){
+      if (IK.door==='capital'){
+        if (IK.fit[0]==='Explore the market first')
+          return {tone:'soft', text:"Happy to help you get oriented. A few details and Terry will be in touch to point you the right way."};
+        return {tone:'good', text:"This is squarely the work. Give me the details and Terry will reach out personally — discreetly."};
+      }
+      if (IK.fit[0]==='Other')
+        return {tone:'soft', text:"Terry's lanes are agriculture, agtech, bioscience and food — yours sits outside that. Be honest about the fit, but you're welcome to submit and he'll give you a straight read."};
+      if (IK.fit[1]==='Idea stage')
+        return {tone:'soft', text:"Terry backs operators with something real — paying pilots or revenue. Idea stage is early for him, but submit if you'd like an honest read and a pointer or two."};
+      return {tone:'good', text:"Looks like a fit. Give me the details and your pitch goes straight onto Terry's desk."};
+    }
+    function renderVerdict(){
+      IK.view='verdict';
+      var v=verdictFor();
+      _mb.innerHTML =
+        '<div class="mstep">'+doorLabel()+' · your fit</div>'+
+        '<div class="verdict '+v.tone+'">'+v.text+'</div>'+
+        '<button class="mbtn primary" onclick="renderForm()">Continue to details →</button>'+
+        backBtn();
+    }
+    function fg(label,id,ph,val){ return '<div class="fg"><label>'+label+'</label><input id="'+id+'" type="text" placeholder="'+(ph||'')+'" value="'+(val||'')+'"></div>'; }
+    function ta(label,id,ph){ return '<div class="fg"><label>'+label+'</label><textarea id="'+id+'" rows="3" placeholder="'+(ph||'')+'"></textarea></div>'; }
+    function renderForm(){
+      IK.view='form';
+      var body;
+      if (IK.door==='capital'){
+        body = fg('Name','f_name')+fg('Organization','f_org')+fg('Email','f_email','you@organization.com')
+             + fg('Sectors of interest','f_sec','Ag, agtech, bioscience, food…')
+             + fg('Geography','f_geo','Where you want to deploy')
+             + fg('Timeline','f_time','e.g. over the next 12 months')
+             + ta('Your mandate, in a sentence or two','f_note');
+      } else {
+        body = fg('Name','f_name')+fg('Company','f_co')+fg('Email','f_email','you@company.com')
+             + fg('Sector','f_sec','', IK.fit[0]||'')
+             + fg('Stage / traction','f_stage','', IK.fit[1]||'')
+             + fg("What you're raising or need",'f_need','', IK.fit[2]||'')
+             + '<div class="fg"><label>Pitch deck (optional)</label><input type="file" id="f_deck"></div>'
+             + ta('Your one-liner','f_one','What you do, in one sentence');
+      }
+      _mb.innerHTML =
+        '<div class="mstep">'+doorLabel()+' · details</div>'+
+        '<h3 class="mh">'+(IK.door==='capital'?'Tell me about your mandate':'Tell me about your venture')+'</h3>'+
+        '<div class="form">'+body+'</div>'+
+        '<label class="consent"><input type="checkbox" id="consent"> I agree my details may be stored and reviewed by Terry. Nothing is shared with anyone else without my consent.</label>'+
+        '<button class="mbtn primary" onclick="submitIntake()">Submit</button>'+
+        backBtn();
+    }
+    function submitIntake(){
+      var c=document.getElementById('consent');
+      if (c && !c.checked){
+        if (!document.getElementById('cerrline')){
+          var e=document.createElement('div'); e.className='cerr'; e.id='cerrline';
+          e.textContent='Please tick the consent box to continue.';
+          c.parentNode.parentNode.insertBefore(e, c.parentNode.nextSibling);
+        }
+        return;
+      }
+      renderDone();
+    }
+    function renderDone(){
+      IK.view='done';
+      var msg = (IK.door==='capital')
+        ? "Received. Terry reviews capital mandates personally and will be in touch directly — discreetly. Thank you."
+        : "Received — your pitch is on Terry's desk. If it's a fit you'll hear back soon, and either way you'll get a straight, prompt answer.";
+      _mb.innerHTML =
+        '<div class="donecheck">✓</div>'+
+        '<h3 class="mh" style="text-align:center">Thank you</h3>'+
+        '<p class="mp" style="text-align:center">'+msg+'</p>'+
+        '<button class="mbtn primary" onclick="closeIntake()">Done</button>';
+    }
+    function stepBack(){
+      if (IK.view==='fit'){ if (IK.step>0){ IK.step--; renderFit(); } else { renderChooser(); } }
+      else if (IK.view==='verdict'){ IK.step = FIT[IK.door].length-1; renderFit(); }
+      else if (IK.view==='form'){ renderVerdict(); }
+    }
+  </script>
+
+</body>
+</html>

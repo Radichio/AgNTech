@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F1E9; --surface:#FCFAF4; --panel:#FFFFFF; --ink:#0F2A20; --muted:#74806E;
+    --line:#DED7C6; --blue:#8F6F2E; --teal:#4F6B52; --green:#2F7A3A; --green-bg:#E7EFE0; --green-line:#CFE0C2;
+    --gold:#B08A3C; --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:15px 24px;max-width:1300px;margin:0 auto;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:8px;font-family:var(--df);font-size:18px;font-weight:500;letter-spacing:-.01em}
+  .brand .n{color:var(--blue)} .brand .sub{color:var(--muted);font-weight:400}
+  .mark{width:24px;height:24px;vertical-align:-5px;margin-right:2px}
+  .digest{display:flex;gap:16px;font-size:13px;color:var(--muted)} .digest b{color:var(--ink);font-weight:500}
+  .app{max-width:1300px;margin:0 auto;padding:22px 24px 70px}
+  .intro{font-size:13px;color:var(--muted);margin-bottom:18px;max-width:760px;line-height:1.5}
+  .layout{display:grid;grid-template-columns:1fr 392px;gap:20px;align-items:start}
+  @media(max-width:980px){.layout{grid-template-columns:1fr}}
+  .dirgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:13px}
+  .ncard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px;cursor:pointer;transition:.13s}
+  .ncard:hover{border-color:var(--muted)}
+  .ncard.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .nh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .nn{font-family:var(--df);font-weight:500;font-size:15.5px;line-height:1.15}
+  .badge{font-size:10.5px;padding:2px 8px;border-radius:999px;background:var(--green-bg);color:var(--green);white-space:nowrap;flex:none}
+  .chip{font-size:10.5px;padding:2px 7px;border-radius:999px;display:inline-block;margin:3px 3px 0 0}
+  .chip.type{color:var(--blue);background:#F0E7D2}
+  .chip.type.angel{color:var(--teal);background:#E4EBE0}
+  .chip.type.fo{color:var(--gold);background:#F0E7D2}
+  .chip.type.inst{color:var(--green);background:var(--green-bg)}
+  .chip.type.prog{color:var(--gold);background:#F0E7D2}
+  .chip.sec{color:var(--muted);background:#EAE4D6}
+  .nmeta{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.45}
+  .nmeta b{color:var(--ink);font-weight:500}
+
+  .detail{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:44px 12px;line-height:1.6}
+  .dname{font-family:var(--df);font-weight:500;font-size:20px}
+  .dtype{margin-top:9px}
+  .block{margin-top:15px}
+  .bh{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:8px}
+  .wants{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12.5px}
+  .wants .k{color:var(--muted)} .wants .v{color:var(--ink)}
+  .note{font-size:12.5px;color:var(--ink);line-height:1.55}
+  .act{font-size:12px;color:var(--muted);line-height:1.5;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .match{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-bottom:8px}
+  .match:last-child{margin-bottom:0}
+  .mname{font-size:13px;color:var(--ink);font-weight:500} .msec{font-size:11px;color:var(--muted);margin-top:1px}
+  .mfit{font-size:11px;color:var(--green);background:var(--green-bg);border-radius:999px;padding:1px 7px;margin-left:6px}
+  .sendbtn{background:none;border:1px solid var(--line);color:var(--blue);border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer;font-family:var(--bf);flex:none}
+  .sendbtn:hover{border-color:var(--blue)}
+  .sent{color:var(--green);font-size:12px}
+  .srcnote{font-size:11px;color:var(--muted);margin-top:16px;padding-top:13px;border-top:1px solid var(--line);line-height:1.5}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block (div#gate + the following <script>) to make a page public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";   /* <-- change this to any password you like */
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){
+      if(document.getElementById('gpw').value === GATE_PASSWORD){
+        try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){}
+        var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g);
+      } else { document.getElementById('gerr').textContent = 'Incorrect \u2014 try again.'; }
+    }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <div class="bar">
+    <span class="brand">
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech&nbsp;Connect <span class="sub">&nbsp;/ network</span>
+    </span>
+    <div class="digest"><span><b>6</b> active relationships</span><span><b>1</b> institutional mandate</span><span><b>1</b> co-funding program</span></div>
+  </div>
+
+  <div class="app">
+    <div class="intro">The other half of the library: who he can place into. Each contact is tagged with what they actually want — sector, stage, cheque, mandate — so an opportunity can be matched outward, and any contact can be opened to see which vetted deals already fit them.</div>
+    <div class="layout">
+      <div class="dirgrid">
+
+        <div class="ncard" data-card="agricapital" onclick="pick('agricapital')">
+          <div class="nh"><span class="nn">AgriCapital Partners</span><span class="badge">2 fit</span></div>
+          <div><span class="chip type inst">Institutional</span><span class="chip sec">Canadian ag, broad</span></div>
+          <div class="nmeta"><b>$5M+</b> · growth / platform · mandate to place foreign capital into Canadian ag</div>
+        </div>
+
+        <div class="ncard" data-card="prairieag" onclick="pick('prairieag')">
+          <div class="nh"><span class="nn">Prairie Ag Growth</span><span class="badge">1 fit</span></div>
+          <div><span class="chip type">VC fund</span><span class="chip sec">Agtech</span></div>
+          <div class="nmeta"><b>$2–6M</b> · Series A · precision ag, wants revenue + warm refs</div>
+        </div>
+
+        <div class="ncard" data-card="north40" onclick="pick('north40')">
+          <div class="nh"><span class="nn">North40 Angels</span><span class="badge">1 fit</span></div>
+          <div><span class="chip type angel">Angel group</span><span class="chip sec">Ag hardware</span></div>
+          <div class="nmeta"><b>$100–500k</b> · pre-seed / seed · comfortable with field + hardware risk</div>
+        </div>
+
+        <div class="ncard" data-card="bioprairie" onclick="pick('bioprairie')">
+          <div class="nh"><span class="nn">BioPrairie Fund</span><span class="badge">2 fit</span></div>
+          <div><span class="chip type">VC fund</span><span class="chip sec">Bioscience</span></div>
+          <div class="nmeta"><b>$1–4M</b> · seed–A · patient, science-first, long horizon</div>
+        </div>
+
+        <div class="ncard" data-card="friesen" onclick="pick('friesen')">
+          <div class="nh"><span class="nn">Friesen Family Office</span><span class="badge">2 fit</span></div>
+          <div><span class="chip type fo">Family office</span><span class="chip sec">Food & ag</span></div>
+          <div class="nmeta"><b>$500k–3M</b> · flexible · relationship-driven, likes operating businesses</div>
+        </div>
+
+        <div class="ncard" data-card="pic" onclick="pick('pic')">
+          <div class="nh"><span class="nn">Protein Industries Canada</span><span class="badge">1 fit</span></div>
+          <div><span class="chip type prog">Co-funding</span><span class="chip sec">Plant protein</span></div>
+          <div class="nmeta"><b>non-dilutive</b> · co-invests in consortium projects · pairs with private capital</div>
+        </div>
+
+      </div>
+
+      <div class="detail" id="detail">
+        <div class="empty">Select a contact to see what they want — and which vetted opportunities already fit them.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const NET = {
+    agricapital:{name:"AgriCapital Partners",type:"Institutional",tclass:"inst",
+      wants:[["Sectors","Canadian ag & agri-food, broad"],["Stage","Growth / platform / buyout"],["Cheque","$5M and up"],["Geography","Canada"]],
+      note:"Holds a mandate to deploy foreign LP capital into Canadian agriculture. Needs vetted, structured, decision-ready deals — the exact buyer the navigator positioning is built for.",
+      act:"Mandate active this year — your highest-value relationship.",
+      matches:[{n:"Tilth Labs",s:"Agtech · growth",f:"8.9"},{n:"Pasturage Co.",s:"Agriculture · platform",f:"7.8"}]},
+    prairieag:{name:"Prairie Ag Growth",type:"VC fund",tclass:"",
+      wants:[["Sectors","Agtech, precision ag"],["Stage","Series A"],["Cheque","$2–6M"],["Geography","Western Canada"]],
+      note:"Wants real revenue and warm references before engaging. Disciplined on price.",
+      act:"Closed Fund II recently — actively deploying.",
+      matches:[{n:"Tilth Labs",s:"Agtech · Series A",f:"8.9"}]},
+    north40:{name:"North40 Angels",type:"Angel group",tclass:"angel",
+      wants:[["Sectors","Ag hardware, equipment"],["Stage","Pre-seed / seed"],["Cheque","$100–500k"],["Geography","Prairies"]],
+      note:"Rare in being comfortable with field and hardware risk — a natural home for equipment plays others won't touch.",
+      act:"Three deals in the last twelve months.",
+      matches:[{n:"Rootstock Robotics",s:"Agtech · seed",f:"8.4"}]},
+    bioprairie:{name:"BioPrairie Fund",type:"VC fund",tclass:"",
+      wants:[["Sectors","Bioscience, deep tech"],["Stage","Seed–Series A"],["Cheque","$1–4M"],["Geography","Canada"]],
+      note:"Science-first and patient on timelines — the right kind of capital for long regulatory runways.",
+      act:"Raising Fund I; building a pipeline now.",
+      matches:[{n:"Verdant Bio",s:"Bioscience · seed",f:"7.7"},{n:"SoilSense",s:"Bioscience · seed",f:"6.9"}]},
+    friesen:{name:"Friesen Family Office",type:"Family office",tclass:"fo",
+      wants:[["Sectors","Food & agriculture"],["Stage","Flexible"],["Cheque","$500k–3M"],["Geography","Any, prefers local"]],
+      note:"Relationship-driven and patient. Values real operating businesses and people they can trust over pure growth stories.",
+      act:"Looking to make 2–3 placements this year.",
+      matches:[{n:"Prairie Protein",s:"Food · seed",f:"7.8"},{n:"Pasturage Co.",s:"Agriculture · syndicate",f:"7.8"}]},
+    pic:{name:"Protein Industries Canada",type:"Co-funding program",tclass:"prog",
+      wants:[["Sectors","Plant protein & ingredients"],["Stage","Collaborative projects"],["Cheque","Up to ~45% of project"],["Geography","Canada (Prairie-strong)"]],
+      note:"Non-dilutive co-investment that stacks with private capital. Needs a consortium of two or more members including an SME — so it pairs with, rather than replaces, a private round.",
+      act:"Fermentation call open for expressions of interest.",
+      matches:[{n:"Prairie Protein",s:"Food · co-fund",f:"7.8"}]}
+  };
+
+  function pick(id){
+    document.querySelectorAll('[data-card]').forEach(c=>c.classList.toggle('active', c.getAttribute('data-card')===id));
+    const d=NET[id];
+    const wants = d.wants.map(w=>'<div class="k">'+w[0]+'</div><div class="v">'+w[1]+'</div>').join('');
+    const matches = d.matches.map(m=>'<div class="match"><div><span class="mname">'+m.n+'</span><span class="mfit">'+m.f+'</span><div class="msec">'+m.s+'</div></div><button class="sendbtn" onclick="sendIntro(this)">Send intro</button></div>').join('');
+    document.getElementById('detail').innerHTML =
+      '<div class="dname">'+d.name+'</div>'+
+      '<div class="dtype"><span class="chip type '+d.tclass+'">'+d.type+'</span></div>'+
+      '<div class="block"><div class="bh">What they want</div><div class="wants">'+wants+'</div></div>'+
+      '<div class="block"><div class="bh">Notes</div><div class="note">'+d.note+'</div></div>'+
+      '<div class="block"><div class="bh">Recent activity</div><div class="act">'+d.act+'</div></div>'+
+      '<div class="block"><div class="bh">Opportunities that fit</div>'+matches+'</div>'+
+      '<div class="srcnote">Matches are drawn from your referral library and ranked by fit. Sending an intro logs it to your pipeline — the lucrative end of the flow.</div>';
+  }
+  function sendIntro(el){ el.closest('.match').innerHTML = '<span class="sent">✓ Introduction sent — logged to your pipeline</span>'; }
+  pick('agricapital');
+</script>
+</body>
+</html>

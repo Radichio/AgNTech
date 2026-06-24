@@ -160,6 +160,30 @@
   .mback:hover{color:var(--ink)}
   .donecheck{width:54px;height:54px;border-radius:50%;background:#E7EFE0;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;margin:6px auto 0}
   .cerr{color:#b4452e;font-size:13px;margin-top:8px}
+
+  /* ===== Ask Terry — enhanced widget (typing, classify-tags, full-screen) ===== */
+  .askexpand{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;transition:.13s}
+  .askexpand:hover{border-color:var(--green);color:var(--green)}
+  .askexpand svg{width:15px;height:15px}
+  .aitags{display:flex;flex-wrap:wrap;gap:6px}
+  .aitags:not(:empty){margin-top:12px}
+  .aitag-pop{font-size:11px;letter-spacing:.02em;padding:3px 9px;border-radius:999px;border:1px solid #cfe0c2;background:#E7EFE0;color:var(--green-d);opacity:0;transform:translateY(4px);animation:tagpop .3s ease forwards}
+  .aitag-pop.sig{border-color:#ddcba0;background:#F6EEDD;color:var(--gold-2);font-weight:600}
+  @keyframes tagpop{to{opacity:1;transform:translateY(0)}}
+  .msg.typing{display:inline-flex;gap:5px;align-items:center;width:auto;max-width:none}
+  .msg.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.5;animation:tdot 1.1s infinite ease-in-out}
+  .msg.typing span:nth-child(2){animation-delay:.16s}
+  .msg.typing span:nth-child(3){animation-delay:.32s}
+  @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:.95}}
+  .caret{display:inline-block;width:2px;height:1.05em;background:var(--green);margin-left:1px;vertical-align:-2px;animation:cblink 1s steps(1) infinite}
+  @keyframes cblink{50%{opacity:0}}
+  .askfs-backdrop{position:fixed;inset:0;background:rgba(15,42,32,.5);z-index:150;display:none}
+  .askfs-backdrop.on{display:block}
+  body.askfs-open{overflow:hidden}
+  .askcard.fs{position:fixed;top:24px;bottom:24px;left:50%;transform:translateX(-50%);width:min(940px,calc(100vw - 36px));max-width:none;height:auto;margin:0;z-index:160;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(15,42,32,.4)}
+  .askcard.fs .transcript{flex:1;height:auto;max-height:none}
+  @media(max-width:680px){.askcard.fs{top:10px;bottom:10px;width:calc(100vw - 20px)}}
+  @media(prefers-reduced-motion:reduce){.aitag-pop,.msg.typing span,.caret{animation:none;opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -234,11 +258,13 @@
             <div class="asktitle">Ask Terry <span class="aibadge">AI · always on</span></div>
             <div class="asksub">Trained on how he thinks and what he looks for. Ask a question, or pitch a deal.</div>
           </div>
+          <button class="askexpand" onclick="toggleFs()" aria-label="Expand to full screen" title="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
         </div>
         <div class="transcript" id="transcript">
           <div class="msg bot">I'm Terry's AI — trained on how he thinks and what he backs. Ask me anything, or pitch a deal and I'll tell you if it's a fit.</div>
         </div>
-        <div class="chips">
+        <div class="aitags" id="aitags"></div>
+        <div class="chips" id="chips">
           <span class="chip2" onclick="chip(this)">Is my company a fit?</span>
           <span class="chip2" onclick="chip(this)">How do you get paid?</span>
           <span class="chip2" onclick="chip(this)">I have capital to deploy</span>
@@ -349,43 +375,285 @@
     </div>
   </div>
 
+  <div class="askfs-backdrop" id="askfsBackdrop" onclick="toggleFs(false)"></div>
+
   <script>
+        /* ===== Ask Terry — scripted-max engine. Grounded in Terry's own words + the live site. Signal only, never a score, never the rubric. ===== */
     var tr = document.getElementById('transcript');
-    function bubble(text, who, cta){
+    var tagsEl = document.getElementById('aitags');
+    var chipsEl = document.getElementById('chips');
+    var inputEl = document.getElementById('askq');
+    var busy = false;
+
+    var FALLBACK = "Good question — and a bit much to settle in a chat box. Give me a little more, or step through the short intake and Terry will get you a real answer fast. The things worth doing properly, he'd rather do properly — with you.";
+
+    var CAPITAL_ANSWER = "Then you're in the right place. Terry finds, vets and structures opportunities for serious capital coming into Canadian agriculture — and he steers it through the ownership and review rules that catch outside money off guard. What you see has already been pressure-tested, not a stack of cold introductions. Tell me roughly what you're after — the sectors, the size, the horizon — or step through the short intake and he'll take it from there.";
+
+    var KB = [
+      { keys:["hello","hi ","hey","good morning","good afternoon","greetings","howdy"],
+        a:"Good to have you here. Ask me whatever you like — what Terry does, how he works, who he's backed — or tell me about your venture and I'll give you an honest read.", cta:false },
+
+      { keys:["good fit","right fit","suitable","would you work","work with me","right for me","a candidate","do i qualify","am i a fit","is my company a fit","is my deal a fit"],
+        a:"More than the sector or the stage, Terry watches the person. The work goes well with people who listen as closely as they pitch — who want a partner beside them, not an audience in front. Get that right and most things are workable; miss it, and even a good idea tends to lose its footing. So the real question isn't whether you impress him — it's whether it feels like a fit, both ways. Tell me what you're building and we'll find out.", cta:true },
+
+      { keys:["dealbreaker","deal breaker","say no","turn down","turn me down","pass on","red flag","what do you avoid","wouldn't work","won't work","when do you say no"],
+        a:"He doesn't keep a list of disqualifiers so much as a feel for it. If it's outside his ground he'll tell you early, and kindly, rather than waste your time. And if it all works on paper but the chemistry isn't there — someone who'd sooner hold the wheel alone than share it — that tends to be where good ideas quietly stall. He'd rather be honest about that up front than learn it the hard way later.", cta:false },
+
+      { keys:["paid","get paid","fee","fees","cost","charge","pricing","your rate","expensive","how much do you charge","what do you charge"],
+        a:"He keeps that open and simple. There's no set rate card — he'd rather shape it to the work, and to what's fair on both sides, and he'll lay it out plainly before anything begins. The thread through all of it is alignment: he tends to do well when you do, and he's glad to earn it that way. You'd settle the specifics in a conversation, once he understands what you're after.", cta:true },
+
+      { keys:["capital to deploy","deploy capital","have capital","place capital","allocate","mandate","family office","institutional capital","i'm an investor","limited partner","money to invest","place money"],
+        a:CAPITAL_ANSWER, cta:true, tags:[{label:"Capital"},{label:"Canadian ag"}] },
+
+      { keys:["grant","grants","non-dilutive","nondilutive","government money","funding program","subsidy","public funding"],
+        a:"Often, yes — there's real non-dilutive money in Canadian agriculture, and knowing which doors to knock on, and how it sits alongside private capital, is part of the work. He won't map your whole funding picture in a chat window — that's something you'd do together — but tell me what you're building and I'll tell you honestly whether it's a road worth walking.", cta:true },
+
+      { keys:["navigator","different","why you","what makes you","broker","versus a fund","instead of a fund","why not just"],
+        a:"Because he's not a broker taking a clip, and he's not a fund spending someone else's mandate. He's farmed it, built in it, and come out the far side of a sale — so he can stand between serious capital and real operators and make sure both enter well. He takes a stake and stays in after the introduction. That's the difference: he's in the boat, not waving from the dock.", cta:false },
+
+      { keys:["who are you","who is terry","about terry","about you","your background","yourself","your story","cholka","tell me about terry"],
+        a:"Terry Cholka — forty years in business, and a lifetime on the land. He farms ten thousand acres at Tetra Farms — grain, forage seed, cattle and more — and he's been founder, director, advisor or investor in better than twenty ventures across ten sectors, from agtech to bioscience to film. He was an early backer of a Canadian hemp-foods company that went on to sell for north of $400 million, and he helped a feature film, 'Stand!', reach the screen. He's weathered the hard years too — the eighties, BSE, droughts, and storms closer to home. At heart, though, he'll tell you he's still just a 'lil farm boy.", cta:false },
+
+      { keys:["400","$400","the exit","hemp","manitoba harvest","fresh hemp","tilray","biggest deal","you sold"],
+        a:"That's the hemp-foods story. He came in early on a Canadian company in the hemp space — saw what it could be before it was obvious — and stayed with it as it grew. It was later acquired in a deal valued at more than $400 million. He'll spare you the war stories here, but it's a fair shorthand for what he tries to do: find the real thing early, and help it go the distance.", cta:false },
+
+      { keys:["the farm","tetra","acres","cattle","feedlot","your land","ranch","grain","the crops","livestock"],
+        a:"Tetra Farms is home — ten thousand acres of grain, forage and specialty seed, pasture, a cow-calf herd, a feedlot, hogs and custom work. He's farmed since the eighties. It isn't a backdrop; it's where he learned to read risk, weather and people. So when he tells you something's real or it isn't, that's where the instinct comes from.", cta:false },
+
+      { keys:["crisis","hard time","tough","struggle","struggling","failing","in trouble","downturn","rough patch","help me through","bse","weathering","a storm"],
+        a:"He knows that ground well. He broke into farming in the eighties, came through the BSE years when the borders shut, through droughts and market collapses, and through storms closer to home — health and family. He kept the operation standing through all of it. So if you're steadying something while the ground shifts under it, he can sit with you in that. It's some of the most useful work he does.", cta:true },
+
+      { keys:["score","scoring","rate me","rating","criteria","rubric","how do you decide","how do you evaluate","how do you assess","how do you rank","your process","scorecard","how do you score"],
+        a:"He'll always give you his read — that part he shares freely. How he weighs it underneath is really just judgment, earned slowly over forty years; it doesn't fold down to a worksheet, and that's not the part that helps you anyway. The read is. So ask whatever you like, and he'll tell you plainly where you'd land.", cta:false },
+
+      { keys:["sector","sectors","industries","what do you invest in","what areas","what do you focus","what do you back"],
+        a:"His ground is agriculture, agtech, ag-bioscience and food. That's where his network runs deepest and his read is sharpest. He'll glance at the edges of it now and then if the people are right, but those four are home — and that's usually where he's most useful to you.", cta:false },
+
+      { keys:["geography","canada","canadian","where are you","where do you operate","your location","based in","what region","international","united states","america","work globally"],
+        a:"Canadian agriculture is the centre of it — that's where he knows the land, the players and the rules. He's based in Dauphin, Manitoba. Capital is welcome from further afield; the work is helping it enter Canada well.", cta:false },
+
+      { keys:["what stage","too early","seed stage","traction","how far along","when should i come","idea stage","pre-revenue"],
+        a:"He leans toward operators with something real underway — paying customers or genuine pilots — over an idea on its own. That said, if it's early but the person and the thinking are right, he'd still rather hear it and point you well than send you off with nothing. Tell me where you're at and I'll be straight about the timing.", cta:true },
+
+      { keys:["how much","cheque","check size","minimum","ticket size","what amount","deal size","invest how much"],
+        a:"That depends on the deal and on what fits — it isn't a fixed number, and he'd rather size it to the situation than quote you a floor. The better conversation is what you're trying to do; the structure follows from that. Tell me the shape of it and we'll find the right footing.", cta:true },
+
+      { keys:["ownership","review process","the rules","foreign","regulation","regulatory","compliance","outside money","restrictions"],
+        a:"Bringing outside capital into Canadian agriculture comes with ownership limits and a review process that trip up people who don't see them coming. Steering money through that cleanly is a good part of what he does — so it lands well rather than stalling at the worst moment. If that's your situation, it's squarely his work.", cta:true },
+
+      { keys:["opticag","optic ag","marco","hunstad"],
+        a:"OpticAg is Marco Hunstad's company, out of Winnipeg. He's built something farmers genuinely needed — one clear place to gather the scattered data from their sensors and systems, so they can see what's happening and what to do next. Terry came in early, and it's finding its feet now, scaling through an accelerator and a growing dealer network. He's proud to have backed it before it was obvious.", cta:false },
+
+      { keys:["scimar","sci mar","mick","lautt"],
+        a:"SciMar is Mick Lautt's team, working on the bioscience side. Terry has stood behind their effort — it's the patient, science-first kind of work that needs the right backer, and that's a role he's glad to play.", cta:false },
+
+      { keys:["stand!","the film","the movie","danny schur","schur","juliane","entertainment"],
+        a:"'Stand!' is a feature film Terry helped bring to the screen — a true Winnipeg story, written and composed by the late Danny Schur. A different world from farming and finance, the same instinct: believe in a story worth telling, and help it get made. He's proud of that one.", cta:false },
+
+      { keys:["backed","portfolio","investments","testimonial","testimonials","track record","references","who have you","companies you"],
+        a:"A few mean a great deal to him. He came in early with Marco Hunstad at OpticAg — a Winnipeg agtech pulling a farm's scattered data into one clear place, finding its feet now. He's stood behind Mick Lautt's work at SciMar, and he helped a fine film, 'Stand!', reach the screen. Different worlds, one instinct: back the right people before it's obvious, then be of real use to them.", cta:false },
+
+      { keys:["what do you do","what do you offer","your services","what exactly","how do you help","the work you","what's the work"],
+        a:"Plainly: he opens the right doors, vets hard, structures the deal cleanly, and stays in after the introduction. For capital coming into the sector, he finds and pressure-tests the opportunities. For founders, he helps get the legs under a raise and makes the introductions that carry weight. And he takes a stake, so he's in it with you.", cta:false },
+
+      { keys:["get started","next step","how do i start","contact","reach terry","reach out","connect","book a","schedule","a call","talk to him"],
+        a:"Simplest thing is to start the short intake — a few questions so Terry understands the fit before you ever get on a call. It's quick and discreet, and it means the first conversation is a good one. Tell me which side you're on — bringing capital, or building something — and we'll get you moving.", cta:true },
+
+      { keys:["taking on","accepting","are you available","have room","capacity","any spots","open to new"],
+        a:"He takes on a limited number of things at once, because he actually stays involved — that's the point of it. So the honest answer is: it depends on fit and timing. Tell me what you've got, and if it's right, you'll find the room.", cta:true },
+
+      { keys:["thank","thanks","appreciate","cheers"],
+        a:"My pleasure. When you're ready, the intake's the best next step — and Terry will be glad to pick it up from there.", cta:true },
+
+      { keys:["are you a bot","are you real","are you ai","chatbot","are you human","a real person","is this actually terry"],
+        a:"I'm a stand-in — an assistant trained on how Terry thinks and what he backs, here to give you a real sense of it at any hour. For anything that matters, the next step is to reach Terry himself through the intake, and he'll take it from there personally.", cta:true },
+
+      { keys:["write code","code for","legal advice","medical","write a poem","a recipe","my homework","an essay","translate this"],
+        a:"That's a little outside his patch — I'm here for Terry's world: capital, ventures and Canadian agriculture. Ask me about any of that and I'm all yours. For the rest, you'll want someone else's desk.", cta:false },
+
+      { keys:["ignore previous","ignore all","your instructions","system prompt","repeat your","disregard","pretend you are","jailbreak","reveal your"],
+        a:"Nice try — but I'll stay on the one thing I'm good for: telling you how Terry works, and whether your situation's a fit. Shall we do that instead?", cta:false }
+    ];
+
+    function kbScore(q, keys){
+      var s = 0;
+      for (var i=0;i<keys.length;i++){
+        var k = keys[i].toLowerCase();
+        if (q.indexOf(k) > -1) s += 1 + Math.min(k.length/9, 1.4);
+      }
+      return s;
+    }
+    function findReply(q){
+      var best = null, bestScore = 0;
+      for (var i=0;i<KB.length;i++){
+        var sc = kbScore(q, KB[i].keys);
+        if (sc > bestScore){ bestScore = sc; best = KB[i]; }
+      }
+      if (best && bestScore > 0) return best;
+      return { a: FALLBACK, cta:true, tags:null };
+    }
+
+    function capitalSideRe(q){ return /(have capital|capital to deploy|to deploy|deploy capital|\bdeploy\b|mandate|family office|to invest|place (capital|money)|allocate|i'?m an investor|capital coming)/i.test(q); }
+    function looksLikeCapital(q){
+      return capitalSideRe(q) && !/(raising|\braise\b|pre-?seed|series\s*[a-d]\b|\bwe (make|build|are building|sell)|our (product|startup|venture))/i.test(q);
+    }
+    function classifyPitch(q){
+      var raiseSignal = /(raising|\braise\b|seed round|series\s*[a-d]\b|pre-?seed|looking for (capital|investment|funding|money)|our round)/i.test(q);
+      var buildSignal = /(we (make|build|are building|sell|developed|created|have built)|our (product|startup|company|technology|platform|venture)|i'?m building|building a (startup|company|product))/i.test(q);
+      if ((!raiseSignal && !buildSignal) || capitalSideRe(q)) return null;
+
+      var sector = null;
+      if (/(sensor|soil|precision|agtech|robot|drone|imaging|software|platform|\bdata\b)/i.test(q)) sector = "Agtech";
+      else if (/(microb|biolog|nitrogen|genetic|bioscience|amendment|trait)/i.test(q)) sector = "Bioscience";
+      else if (/(\bfood\b|protein|ingredient|beverage|snack|consumer|\bcpg\b)/i.test(q)) sector = "Food";
+      else if (/(cattle|grain|forage|seed|\bfarm\b|\bacre|crop|livestock|feedlot)/i.test(q)) sector = "Agriculture";
+
+      var stage = null;
+      if (/(revenue|arr\b|mrr\b|paying|profitable)/i.test(q)) stage = "Revenue";
+      else if (/(pilot|trial|\bloi\b|letter of intent|early customer)/i.test(q)) stage = "Paying pilots";
+      else if (/(\bidea\b|concept|pre-?revenue|pre-?seed|just starting|no revenue)/i.test(q)) stage = "Early";
+
+      var inLane = (sector === "Agtech" || sector === "Bioscience" || sector === "Food" || sector === "Agriculture");
+      var signal = null;
+      if (inLane && (stage === "Revenue" || stage === "Paying pilots")) signal = "Worth a look";
+      else if (stage === "Early") signal = "Early";
+
+      var tags = [];
+      if (sector) tags.push({ label: sector });
+      if (stage) tags.push({ label: stage });
+      if (signal) tags.push({ label: signal, sig:true });
+
+      var open = inLane
+        ? "I'd like to hear more — that's right where Terry lives, so you're on good ground already."
+        : "I'd like to hear more. That sits a touch outside his usual ground, but he'll give you a straight read all the same.";
+      var reply = open + " Two things help him see it clearly — who's finding it valuable enough to pay today, and what this round is really meant to unlock. Tell me that much and you'll get an honest read; if it's a fit, it goes straight to Terry, and you'll hear back either way.";
+
+      return { tags: tags, reply: reply };
+    }
+
+    function addUser(text){
       var d = document.createElement('div');
-      d.className = 'msg ' + who;
-      d.innerHTML = text + (cta ? ' <a href="#" class="go2" onclick="openIntake();return false;">Start the 2-minute intake →</a>' : '');
+      d.className = 'msg user';
+      d.textContent = text;
       tr.appendChild(d); tr.scrollTop = tr.scrollHeight;
     }
-    function reply(q){
-      q = q.toLowerCase();
-      if (q.indexOf('fit') > -1)
-        return {t:"Worth a look if you're in ag, agtech, ag-bioscience or food, with real traction — revenue or paying pilots — and you're raising or scaling. Terry backs operators who know their ground. Tell me more, or start the short intake and he'll have a read quickly.", cta:true};
-      if (q.indexOf('paid') > -1 || q.indexOf('fee') > -1 || q.indexOf('cost') > -1 || q.indexOf('charge') > -1)
-        return {t:"Depends on the engagement, and he's always upfront about it. For capital entering the sector: a mix of retainer, project and success fees. For ventures: usually fees plus a small stake, so his upside grows with yours — aligned with your outcome, start to finish.", cta:false};
-      if (q.indexOf('capital') > -1 || q.indexOf('invest') > -1 || q.indexOf('deploy') > -1 || q.indexOf('mandate') > -1 || q.indexOf('fund') > -1)
-        return {t:"Then you're exactly who he works with. He sources, vets and structures deals for serious capital entering Canadian ag — and navigates the ownership and review rules that trip up outside money. Tell me the mandate — size, sectors, timeline — or start the intake.", cta:true};
-      if (q.indexOf('grant') > -1 || q.indexOf('government') > -1 || q.indexOf('non-dilutive') > -1)
-        return {t:"Often yes — there's real non-dilutive money in Canadian ag, and matching you to the right program is part of what he does. Tell me what you're building and I'll point you at what could stack.", cta:true};
-      if (q.indexOf('pitch') > -1 || q.indexOf('deal') > -1 || q.indexOf('rais') > -1 || q.indexOf('startup') > -1 || q.indexOf('company') > -1)
-        return {t:"Go ahead — give me the one-liner: what you do, your traction, and what you're raising. I'll tell you straight if it's a fit and where it could go. Serious pitches go right onto Terry's desk.", cta:true};
-      return {t:"Good question. Give me a little more, or start the short intake and Terry will get you a real answer fast.", cta:true};
+    function showTyping(){
+      var t = document.createElement('div');
+      t.className = 'msg bot typing';
+      t.innerHTML = '<span></span><span></span><span></span>';
+      tr.appendChild(t); tr.scrollTop = tr.scrollHeight;
+      return t;
     }
+    function streamBot(text, cta, done){
+      var typing = showTyping();
+      var startDelay = 420 + Math.random()*280;
+      setTimeout(function(){
+        if (typing.parentNode) typing.parentNode.removeChild(typing);
+        var d = document.createElement('div'); d.className = 'msg bot';
+        var span = document.createElement('span'); d.appendChild(span);
+        var caret = document.createElement('span'); caret.className = 'caret'; d.appendChild(caret);
+        tr.appendChild(d);
+        var words = text.split(' '), i = 0;
+        (function tick(){
+          if (i < words.length){
+            span.textContent += (i ? ' ' : '') + words[i]; i++;
+            tr.scrollTop = tr.scrollHeight;
+            setTimeout(tick, 16 + Math.random()*34);
+          } else {
+            if (caret.parentNode) caret.parentNode.removeChild(caret);
+            if (cta){
+              var a = document.createElement('a');
+              a.href = '#'; a.className = 'go2'; a.textContent = 'Start the 2-minute intake →';
+              a.onclick = function(e){ e.preventDefault(); if (window.openIntake) window.openIntake(); };
+              d.appendChild(document.createTextNode(' ')); d.appendChild(a);
+            }
+            tr.scrollTop = tr.scrollHeight;
+            if (done) done();
+          }
+        })();
+      }, startDelay);
+    }
+    function popTags(tags){
+      if (!tagsEl) return;
+      tagsEl.innerHTML = '';
+      if (!tags) return;
+      tags.forEach(function(t, idx){
+        if (!t) return;
+        var s = document.createElement('span');
+        s.className = 'aitag-pop' + (t.sig ? ' sig' : '');
+        s.textContent = t.label;
+        s.style.animationDelay = (idx * 0.12) + 's';
+        tagsEl.appendChild(s);
+      });
+    }
+
+    var CHIP_SETS = [
+      ["Is my company a fit?","How do you get paid?","I have capital to deploy","Pitch a deal"],
+      ["What makes you different?","Can you help with grants?","Who have you backed?","Tell me about Terry"],
+      ["What sectors do you focus on?","I'm raising — where do I start?","Can you help in a downturn?","How do you decide?"]
+    ];
+    var chipIdx = 0;
+    function renderChips(){
+      if (!chipsEl) return;
+      chipsEl.innerHTML = '';
+      CHIP_SETS[chipIdx].forEach(function(label){
+        var s = document.createElement('span');
+        s.className = 'chip2'; s.textContent = label;
+        s.onclick = function(){ ask(label); };
+        chipsEl.appendChild(s);
+      });
+    }
+
     function ask(q){
+      if (!q || busy) return;
+      q = String(q).trim();
       if (!q) return;
-      bubble(q, 'user', false);
-      var r = reply(q);
-      setTimeout(function(){ bubble(r.t, 'bot', r.cta); }, 380);
+      addUser(q);
+      busy = true;
+      var lower = q.toLowerCase();
+      var p = classifyPitch(lower);
+      if (p){
+        popTags(p.tags);
+        streamBot(p.reply, true, function(){ busy = false; });
+      } else if (looksLikeCapital(lower)){
+        popTags([{ label:"Capital" }, { label:"Canadian ag" }]);
+        streamBot(CAPITAL_ANSWER, true, function(){ busy = false; });
+      } else {
+        var r = findReply(lower);
+        popTags(r.tags || null);
+        streamBot(r.a, r.cta, function(){ busy = false; });
+      }
+      chipIdx = (chipIdx + 1) % CHIP_SETS.length;
+      renderChips();
+      if (inputEl) inputEl.value = '';
     }
     function chip(el){ ask(el.textContent); }
     function send(){
-      var i = document.getElementById('askq');
-      var v = i.value.trim();
-      if (v){ ask(v); i.value = ''; }
+      if (!inputEl) return;
+      var v = inputEl.value.trim();
+      if (v) ask(v);
     }
-    document.getElementById('askq').addEventListener('keydown', function(e){
-      if (e.key === 'Enter'){ e.preventDefault(); send(); }
+
+    function toggleFs(force){
+      var card = document.querySelector('.askcard');
+      var back = document.getElementById('askfsBackdrop');
+      if (!card) return;
+      var open = (typeof force === 'boolean') ? force : !card.classList.contains('fs');
+      card.classList.toggle('fs', open);
+      if (back) back.classList.toggle('on', open);
+      document.body.classList.toggle('askfs-open', open);
+      if (open && inputEl) setTimeout(function(){ inputEl.focus(); }, 60);
+    }
+
+    if (inputEl){
+      inputEl.addEventListener('keydown', function(e){
+        if (e.key === 'Enter'){ e.preventDefault(); send(); }
+      });
+    }
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ var c = document.querySelector('.askcard'); if (c && c.classList.contains('fs')) toggleFs(false); }
     });
+    renderChips();
   </script>
 
   <script>

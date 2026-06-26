@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — Terry's Walk-Through</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#ECE7D9; --paper:#FBF9F3; --ink:#0F2A20; --green:#0F2A20; --green-d:#0A1F17;
+    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --line:#DED7C6; --gold-dark:#C9A45A;
+    --ok:#2F7A3A; --over:#A23B2B;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#E7E2D4;color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.55}
+
+  .top{position:sticky;top:0;z-index:50;background:var(--green-d);color:var(--cream);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:13px 22px}
+  .top .brand{display:flex;align-items:center;gap:10px;font-family:var(--df);font-size:17px}
+  .top .brand .n{color:var(--gold-dark)}
+  .top .brand .sub{color:#9DB3A4;font-size:13px}
+  .mark{width:26px;height:26px;flex:none}
+  .savestate{font-size:12px;color:#9DB3A4}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:26px 22px 120px;display:grid;grid-template-columns:188px 1fr;gap:30px;align-items:start}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr;gap:18px}}
+  nav.rail{position:sticky;top:74px}
+  @media(max-width:860px){nav.rail{position:static}}
+  .rail a{display:block;font-size:13px;color:var(--muted);text-decoration:none;padding:7px 11px;border-radius:0 6px 6px 0;transition:.12s}
+  .rail a:hover{color:var(--ink);background:var(--cream)}
+  .rail a .rn{font-family:var(--df);color:var(--gold-2);margin-right:7px;font-size:12px}
+  .raillab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 8px 11px}
+  main{min-width:0}
+
+  .lead{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:30px 32px;margin-bottom:22px}
+  .lead .eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .lead h1{font-family:var(--df);font-weight:500;font-size:30px;line-height:1.16;margin-top:11px}
+  .lead p{font-size:14.5px;color:var(--body);margin-top:14px;max-width:64ch;line-height:1.65}
+  .lead p b{color:var(--ink)}
+  .leadnote{font-size:13px;color:var(--muted);margin-top:14px;font-style:italic;border-top:1px solid var(--line);padding-top:13px}
+
+  section{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:28px 32px;margin-bottom:20px;scroll-margin-top:78px}
+  .sh{display:flex;align-items:baseline;gap:13px;border-bottom:1px solid var(--ink);padding-bottom:13px;margin-bottom:6px}
+  .snum{font-family:var(--df);font-size:15px;color:var(--gold-2);font-weight:700}
+  .sh h2{font-family:var(--df);font-weight:500;font-size:22px;line-height:1.2}
+  .sdesc{font-size:13.5px;color:var(--body);margin:13px 0 4px;line-height:1.6;max-width:64ch}
+  .sdesc b{color:var(--ink)}
+
+  /* rubric */
+  .rcat{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-top:12px;background:var(--paper)}
+  .rtop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .rcn{font-family:var(--df);font-weight:500;font-size:16.5px}
+  .rcm{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+  .rsub{margin-top:7px}
+  .rsub span{display:inline-block;font-size:12px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin:3px 4px 0 0;color:var(--body)}
+  .rw{flex:none;text-align:center;width:84px}
+  .rwl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .rwi{width:66px;height:40px;border:1.5px solid var(--gold-dark);border-radius:8px;background:var(--cream);text-align:center;font-family:var(--df);font-size:19px;color:var(--ink);outline:none}
+  .rwi:focus{border-color:var(--green)}
+  .pct{color:var(--muted);font-size:14px;margin-left:2px}
+  .rnote{margin-top:10px}
+  .rnote input{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--cream);padding:7px 10px;font-family:var(--bf);font-size:12.5px;color:var(--ink);outline:none}
+  .rtotal{display:flex;align-items:center;justify-content:flex-end;gap:13px;margin-top:16px;padding:13px 16px;border:1.5px solid var(--ink);border-radius:11px;background:var(--cream2)}
+  .rtotal .tl{font-family:var(--df);font-size:15px;font-weight:500}
+  .rtotal .tv{font-family:var(--df);font-size:24px;font-weight:700;min-width:64px;text-align:right}
+  .rtotal .tv.ok{color:var(--ok)} .rtotal .tv.over{color:var(--over)}
+  .ko{margin-top:22px}
+  .kolab{font-family:var(--df);font-size:16px;font-weight:500;margin-bottom:4px}
+  .kohint{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+  .korow{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:9px;padding:10px 13px;margin-top:8px;background:var(--paper);font-size:13.5px;cursor:pointer}
+  .korow input{width:17px;height:17px;accent-color:var(--gold-2);flex:none}
+  .q{margin-top:13px}
+  .q .ql{font-size:14.5px;color:var(--ink);font-weight:500;font-family:var(--df)}
+  .q .qhint{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+  .q textarea,.q input[type=text]{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--paper);padding:11px 13px;font-family:var(--bf);font-size:14px;color:var(--ink);outline:none;margin-top:9px;resize:vertical}
+  .q textarea{min-height:60px;line-height:1.55}
+  .q textarea:focus,.q input[type=text]:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(15,42,32,.07)}
+  .bands{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:14px;font-size:13px;align-items:baseline}
+  .bands .b{font-family:var(--df);font-weight:600;color:var(--green);white-space:nowrap}
+  .bands .s{color:var(--body)}
+
+  /* package items */
+  .items{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:14px}
+  .items h4{font-family:var(--df);font-weight:500;font-size:15px;margin-bottom:9px}
+  .items ol{margin:0 0 0 18px}
+  .items li{font-size:13px;color:var(--body);margin-bottom:5px;line-height:1.45}
+  .items li .tag{font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:6px}
+  .tag.auto{color:var(--gold-2);background:#F0E7D2} .tag.terry{color:var(--green);background:#E2EBDE}
+
+  .samplelab{font-size:11.5px;letter-spacing:.06em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin:24px 0 0}
+  /* sample memo */
+  .memo{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px;background:#fff}
+  .memo-head{background:var(--green-d);color:var(--cream);padding:16px 20px}
+  .memo-head .mt{font-family:var(--df);font-size:18px}
+  .memo-head .ms{font-size:12px;color:#9DB3A4;margin-top:4px}
+  .memo-body{padding:6px 20px 16px}
+  .mrow{padding:13px 0;border-bottom:1px solid var(--line)}
+  .mrow:last-child{border-bottom:none}
+  .mrow .mh{font-family:var(--df);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--gold-2);font-weight:700}
+  .mrow p{font-size:13px;color:var(--body);line-height:1.6;margin-top:5px}
+  .mrow p b{color:var(--ink)}
+  .mflag{color:var(--muted);font-style:italic}
+  .mfoot{font-size:11px;color:var(--muted);padding:12px 20px;background:var(--paper);border-top:1px solid var(--line);line-height:1.5}
+
+  .finish{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--green-d);border-top:2px solid var(--gold-dark);padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .finish .fmsg{color:var(--cream);font-size:13px;max-width:50ch;line-height:1.45}
+  .finish .fmsg b{color:var(--gold-dark)}
+  .fbtns{display:flex;gap:10px}
+  .btn{border:none;border-radius:9px;padding:11px 18px;font-family:var(--bf);font-size:13.5px;font-weight:600;cursor:pointer}
+  .btn.primary{background:var(--gold);color:var(--green-d)} .btn.primary:hover{background:#c2992f}
+  .btn.ghost{background:transparent;color:var(--cream);border:1px solid #3a5a4b} .btn.ghost:hover{border-color:var(--gold-dark)}
+  .toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:11px 20px;border-radius:999px;font-size:13px;opacity:0;transition:.25s;z-index:70;pointer-events:none}
+  .toast.show{opacity:1}
+  .done{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#16352A;border-top:2px solid var(--gold-dark);padding:16px 22px;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--cream)}
+  .done .dt{font-family:var(--df);font-size:15px}
+  .done .dt span{color:#9DB3A4;font-size:13px;margin-left:8px;font-family:var(--bf)}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <div class="top">
+    <span class="brand">
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      Ag<span class="n">N</span>tech Connect <span class="sub">/ your walk-through</span>
+    </span>
+    <span class="savestate" id="savestate">Saving as you go on this device</span>
+  </div>
+
+  <div class="wrap">
+    <nav class="rail">
+      <div class="raillab">Two things</div>
+      <a href="#s1"><span class="rn">1</span>Your scoring</a>
+      <a href="#s2"><span class="rn">2</span>Investor package</a>
+    </nav>
+
+    <main>
+      <div class="lead">
+        <div class="eyebrow">For Terry — private</div>
+        <h1>Two things, in your hands.</h1>
+        <p>Most of what the site needs, we already have. <b>Two things are yours alone.</b> First, set the <b>scoring</b> that sorts what comes through the door — heavier weight means it counts more. Second, look over the <b>investor package</b> — the tool that does the homework for you — and tell us what to change.</p>
+        <div class="leadnote">Ten minutes. It saves itself as you go, so you can stop and come back. When you're done, hit Send.</div>
+      </div>
+
+      <!-- 1 — rubric -->
+      <section id="s1">
+        <div class="sh"><span class="snum">01</span><h2>How you score an opportunity</h2></div>
+        <p class="sdesc">This is the scoring behind the dashboard. The categories are a start; <b>the weights are yours.</b> Put a number in each box so they add up to <b>100</b>. The person applying never sees these numbers or this list — they only get a plain signal, so it can't be gamed.</p>
+
+        <div class="rcat"><div class="rtop"><div><div class="rcn">01 · Lane fit</div><div class="rcm">On your ground, and how close to the centre of it.</div><div class="rsub"><span>In your sectors</span><span>Core vs adjacent</span><span>You can genuinely help</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_lane" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_lane" placeholder="Your note (optional)"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">02 · The people</div><div class="rcm">The thing you watch first. Do they listen as closely as they pitch? Want a partner, not an audience?</div><div class="rsub"><span>Listens / coachable</span><span>Has done it</span><span>Wants a partner</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_people" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_people" placeholder="How heavily does the person outweigh the idea for you?"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">03 · What's real</div><div class="rcm">Something on the ground — paying pilots, revenue, real customers. Not idea-stage.</div><div class="rsub"><span>Revenue / paid pilots</span><span>Real customers</span><span>Capital-efficient</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_real" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_real" placeholder="What's the minimum 'real' you'll look at?"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">04 · Market</div><div class="rcm">Big enough, and is the timing right? Tailwinds, whitespace, a window worth moving in.</div><div class="rsub"><span>Size</span><span>Timing</span><span>Room to win</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_market" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_market" placeholder="Your note (optional)"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">05 · Model &amp; economics</div><div class="rcm">Does the business make sense — unit economics, a path to capital (incl. the non-dilutive money you know how to find), room to scale.</div><div class="rsub"><span>Unit economics</span><span>Path to capital</span><span>Scalable</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_model" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_model" placeholder="Your note (optional)"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">06 · Deal &amp; structure</div><div class="rcm">Can it be done cleanly, and can you be in it as a principal — sane valuation, room for your stake and a fair fee.</div><div class="rsub"><span>Valuation realistic</span><span>Clean to structure</span><span>Room for your stake</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_deal" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_deal" placeholder="Your note (optional)"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">07 · Your edge &amp; alignment</div><div class="rcm">Does <em>you</em> being in it move the needle, and do your interests sit beside theirs all the way through?</div><div class="rsub"><span>Network helps</span><span>Operator value-add</span><span>Interests aligned</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_edge" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_edge" placeholder="Your note (optional)"></div></div>
+        <div class="rcat"><div class="rtop"><div><div class="rcn">08 · Risk &amp; flags</div><div class="rcm">What could be wrong — do the claims check out, is the runway sane, is it over-concentrated. (Weight so the score is reduced by risk.)</div><div class="rsub"><span>Claims verify</span><span>Regulatory / runway</span><span>Concentration</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_risk" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_risk" placeholder="Your note (optional)"></div></div>
+
+        <div class="rtotal"><span class="tl">Total — should equal 100</span><span class="tv" id="rtv">0</span></div>
+
+        <div class="ko">
+          <div class="kolab">Knock-outs</div>
+          <div class="kohint">Different from weights — these end it on their own, no matter the score. Tick the ones true for you.</div>
+          <label class="korow"><input type="checkbox" data-f="ko" value="Outside your lanes entirely"> Outside your lanes entirely.</label>
+          <label class="korow"><input type="checkbox" data-f="ko" value="Won't share the wheel"> Won't share the wheel — would sooner run it alone than take a partner.</label>
+          <label class="korow"><input type="checkbox" data-f="ko" value="Claims can't be verified / integrity flag"> Claims that can't be verified, or an integrity problem.</label>
+          <div class="q"><input type="text" data-f="ko_other" placeholder="Add your own dealbreaker…"></div>
+        </div>
+
+        <div style="margin-top:20px">
+          <div class="kolab" style="font-size:15px">Where the signal lands</div>
+          <div class="kohint">The visitor only ever sees the words, never the number. Leave our defaults, or change them.</div>
+          <div class="bands">
+            <div class="b">8.0 and up</div><div class="s">"Worth a look." Onto your desk, near the top.</div>
+            <div class="b">6.5 – 7.9</div><div class="s">"Promising, with questions." On your desk, flagged.</div>
+            <div class="b">Below 6.5</div><div class="s">"Early / not a fit right now." A gracious, honest no.</div>
+          </div>
+          <div class="q"><input type="text" data-f="bands_note" placeholder="Want different cutoffs or wording? Tell us here."></div>
+        </div>
+      </section>
+
+      <!-- 2 — investor package -->
+      <section id="s2">
+        <div class="sh"><span class="snum">02</span><h2>The investor package</h2></div>
+        <p class="sdesc">This is the tool you described — a package that does the diligence automatically (market, comparables, a claims-check, your network) and hands you a finished memo to <b>review and judge.</b> Here's everything it includes, and a sample of what comes out the other end.</p>
+
+        <div class="items">
+          <h4>What every package includes</h4>
+          <ol>
+            <li>The thesis — why this, why now <span class="tag terry">your call</span></li>
+            <li>The opportunity — what they do, stage, traction <span class="tag auto">auto</span> <span class="tag terry">your read</span></li>
+            <li>Market — size, growth, timing, with sources <span class="tag auto">auto</span></li>
+            <li>Comparables — what similar rounds priced at <span class="tag auto">auto</span></li>
+            <li>Claims-check — the deck vs the verifiable facts <span class="tag auto">auto</span></li>
+            <li>Strengths &amp; risks <span class="tag auto">auto</span> <span class="tag terry">your read</span></li>
+            <li>The structure — how the deal &amp; capital come together <span class="tag terry">your call</span></li>
+            <li>The ask — what's needed, on what terms <span class="tag terry">your call</span></li>
+            <li>Why AgNtech is in it — your stake &amp; value-add <span class="tag terry">your call</span></li>
+          </ol>
+        </div>
+
+        <div class="samplelab">A sample of what gets produced — for one deal</div>
+        <div class="memo">
+          <div class="memo-head"><div class="mt">Tilth Labs — Series A</div><div class="ms">Agtech · variable-rate application · prepared by AgNtech Connect</div></div>
+          <div class="memo-body">
+            <div class="mrow"><div class="mh">The thesis</div><p>Best traction in the current pipeline, in a category being re-rated, with two operators we trust already paying. The window favours moving now rather than in six months.</p></div>
+            <div class="mrow"><div class="mh">The opportunity</div><p>Variable-rate application platform for row crops. <b>$640k ARR, growing ~18% month over month;</b> two portfolio peers already customers. Capital-efficient to date — real product, real users.</p></div>
+            <div class="mrow"><div class="mh">Market</div><p>Variable-rate software adoption up ~22% year over year; category leaders being marked up as precision-ag budgets shift to software. <span class="mflag">[sources cited in the data room]</span></p></div>
+            <div class="mrow"><div class="mh">Comparables</div><p>Comparable Series A rounds priced <b>$25–40M post</b> on similar ARR and growth.</p></div>
+            <div class="mrow"><div class="mh">Claims-check</div><p>Company figures reconcile with independent diligence; no material discrepancies. <span class="mflag">(When they don't, this section flags it — e.g. "deck claims $180k ARR; listed pilots sum to ~$120k.")</span></p></div>
+            <div class="mrow"><div class="mh">Strengths &amp; risks</div><p><b>Strengths:</b> strongest traction in the batch; warm references from operators we know; capital-efficient. &nbsp;<b>Risks:</b> valuation expectations may run ahead of the stage.</p></div>
+            <div class="mrow"><div class="mh">The structure</div><p>Lead a $3M round; syndicate the balance through a growth-stage agtech fund in the network. AgNtech takes a principal stake.</p></div>
+            <div class="mrow"><div class="mh">The ask</div><p>$3M Series A; target close in 60 days. References and full data room on request.</p></div>
+            <div class="mrow"><div class="mh">Why AgNtech is in it</div><p>Investing alongside, with operator help on channel and go-to-market — and the relationships for the capital this company needs next. We don't introduce and walk away.</p></div>
+          </div>
+          <div class="mfoot">Assembled by the tool, approved by Terry before it goes out. Figures sourced and current as of the date of issue. For discussion among qualified parties; not an offer of securities or investment advice.</div>
+        </div>
+
+        <div class="q" style="margin-top:20px"><div class="ql">What would you add, drop, or change?</div><textarea data-f="pkg_changes" placeholder="e.g. 'always put a one-page summary up front', 'add the founder's track record'…"></textarea></div>
+        <div class="q"><div class="ql">What's the judgment <em>you</em> bring that the tool can't?</div><div class="qhint">This is the part we protect — the read only you have.</div><textarea data-f="pkg_judgment" placeholder="In your words…"></textarea></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Hidden form so Netlify detects & provisions the form at deploy time. Submission is sent via JS below. -->
+  <form name="terry-walkthrough" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="terry-walkthrough">
+    <input type="text" name="payload">
+    <input type="text" name="summary">
+    <input type="text" name="bot-field">
+  </form>
+
+  <div class="finish" id="finishbar">
+    <div class="fmsg">All set, Terry? One tap and it goes straight to Lisa — <b>nothing else to do.</b></div>
+    <div class="fbtns">
+      <button class="btn primary" id="sendbtn" style="padding:12px 28px;font-size:14.5px" onclick="submitToLisa()">Send to Lisa</button>
+    </div>
+  </div>
+  <div class="done" id="donebar" style="display:none">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C9A45A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    <div class="dt">Sent — you're done.<span>Lisa has your answers. Thank you, Terry.</span></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+  function compile(){
+    var data = {};
+    document.querySelectorAll('[data-f]').forEach(function(el){
+      var k = el.getAttribute('data-f');
+      if(el.type === 'checkbox'){ if(!Array.isArray(data[k])) data[k] = []; if(el.checked) data[k].push(el.value); }
+      else { data[k] = el.value; }
+    });
+    return data;
+  }
+  function rtotal(){
+    var t = 0;
+    document.querySelectorAll('[data-w]').forEach(function(i){ var v = parseFloat(i.value); if(!isNaN(v)) t += v; });
+    var tv = document.getElementById('rtv');
+    tv.textContent = Math.round(t*10)/10;
+    tv.className = 'tv' + (t===100 ? ' ok' : (t>100 ? ' over' : ''));
+  }
+  function save(){ try{ localStorage.setItem('agn_walkthrough_weights', JSON.stringify(compile())); var s=document.getElementById('savestate'); s.textContent='Saved'; setTimeout(function(){s.textContent='Saving as you go on this device';},1200);}catch(e){} }
+  function restore(){
+    try{
+      var s = localStorage.getItem('agn_walkthrough_weights'); if(!s) return;
+      var d = JSON.parse(s);
+      document.querySelectorAll('[data-f]').forEach(function(el){
+        var k = el.getAttribute('data-f'); if(d[k]===undefined) return;
+        if(el.type==='checkbox'){ if(Array.isArray(d[k]) && d[k].indexOf(el.value)>-1) el.checked = true; }
+        else { el.value = d[k]; }
+      });
+    }catch(e){}
+  }
+  document.querySelectorAll('[data-f]').forEach(function(el){
+    el.addEventListener('input', function(){ save(); if(el.hasAttribute('data-w')) rtotal(); });
+    el.addEventListener('change', save);
+  });
+  function readable(){
+    var d = compile(); var L = [];
+    L.push('AGNTECH CONNECT — TERRY WALK-THROUGH (scoring + package)');
+    L.push('Submitted: ' + new Date().toLocaleString()); L.push('');
+    function add(label, val){ if(val===undefined||val===null||val==='') return; if(Array.isArray(val)){ if(!val.length) return; val = val.join(', ');} L.push(label + ': ' + val); }
+    L.push('— SCORING WEIGHTS —');
+    add('Lane fit', d.w_lane); add('The people', d.w_people); add("What's real", d.w_real); add('Market', d.w_market);
+    add('Model & economics', d.w_model); add('Deal & structure', d.w_deal); add('Edge & alignment', d.w_edge); add('Risk & flags', d.w_risk);
+    ['lane','people','real','market','model','deal','edge','risk'].forEach(function(k){ add('Note · '+k, d['wn_'+k]); });
+    add('Knock-outs', d.ko); add('Other knock-out', d.ko_other); add('Signal bands note', d.bands_note);
+    L.push(''); L.push('— INVESTOR PACKAGE —');
+    add('Changes', d.pkg_changes); add('Your judgment', d.pkg_judgment);
+    return L.join('\n');
+  }
+  function flash(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3400); }
+
+  function downloadFallback(){
+    var payload = { meta:{ submitted:new Date().toISOString(), source:'terry-walkthrough' }, answers: compile(), readable: readable() };
+    var blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'terry-walkthrough-answers.json';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function showDone(){
+    try{ localStorage.removeItem('agn_walkthrough_weights'); }catch(e){}
+    var f=document.getElementById('finishbar'); if(f) f.style.display='none';
+    var d=document.getElementById('donebar'); if(d) d.style.display='flex';
+  }
+  function submitToLisa(){
+    var btn=document.getElementById('sendbtn'); if(btn){ btn.disabled=true; btn.textContent='Sending…'; }
+    var payload = JSON.stringify({ meta:{ submitted:new Date().toISOString(), source:'terry-walkthrough' }, answers: compile() });
+    var body = new URLSearchParams();
+    body.append('form-name','terry-walkthrough');
+    body.append('payload', payload);
+    body.append('summary', readable());
+    body.append('bot-field','');
+    fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() })
+      .then(function(r){ if(r.ok){ showDone(); } else { throw new Error('status '+r.status); } })
+      .catch(function(){
+        downloadFallback();  /* safety net — Terry's answers are never lost (e.g. previewing before deploy) */
+        if(btn){ btn.disabled=false; btn.textContent='Send to Lisa'; }
+        flash('Saved a copy for Lisa — one-tap send goes live once this is on the site.');
+      });
+  }
+  restore(); rtotal();
+</script>
+</body>
+</html>

@@ -236,6 +236,7 @@
         </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="4" data-f="w_risk" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_risk" placeholder="Your note (optional)"></div></div>
 
         <div class="rtotal"><span class="tl">Total — should equal 100</span><span class="tv" id="rtv">0</span></div>
+        <div style="text-align:right;margin-top:9px"><button type="button" onclick="resetDefaults()" style="background:none;border:none;color:var(--gold-2);font-family:var(--bf);font-size:12px;cursor:pointer;text-decoration:underline;padding:0">Reset to the example weights</button></div>
 
         <div class="ko">
           <div class="kolab">Knock-outs</div>
@@ -339,10 +340,10 @@
     tv.textContent = Math.round(t*10)/10;
     tv.className = 'tv' + (t===100 ? ' ok' : (t>100 ? ' over' : ''));
   }
-  function save(){ try{ localStorage.setItem('agn_walkthrough_weights', JSON.stringify(compile())); var s=document.getElementById('savestate'); s.textContent='Saved'; setTimeout(function(){s.textContent='Saving as you go on this device';},1200);}catch(e){} }
+  function save(){ try{ localStorage.setItem('agn_walkthrough_v2', JSON.stringify(compile())); var s=document.getElementById('savestate'); s.textContent='Saved'; setTimeout(function(){s.textContent='Saving as you go on this device';},1200);}catch(e){} }
   function restore(){
     try{
-      var s = localStorage.getItem('agn_walkthrough_weights'); if(!s) return;
+      var s = localStorage.getItem('agn_walkthrough_v2'); if(!s) return;
       var d = JSON.parse(s);
       document.querySelectorAll('[data-f]').forEach(function(el){
         var k = el.getAttribute('data-f'); if(d[k]===undefined) return;
@@ -378,13 +379,13 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
   function showDone(){
-    try{ localStorage.setItem('agn_walkthrough_sent', new Date().toISOString()); }catch(e){}
+    try{ localStorage.setItem('agn_walkthrough_sent_v2', new Date().toISOString()); }catch(e){}
     var f=document.getElementById('finishbar'); if(f) f.style.display='none';
     var d=document.getElementById('donebar'); if(d) d.style.display='flex';
   }
   function applySentState(){
     try{
-      var ts = localStorage.getItem('agn_walkthrough_sent'); if(!ts) return;
+      var ts = localStorage.getItem('agn_walkthrough_sent_v2'); if(!ts) return;
       var dt = new Date(ts); var dstr = isNaN(dt.getTime()) ? '' : ('on ' + dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}));
       var nd = document.getElementById('resentdate'); if(nd) nd.textContent = dstr;
       var note = document.getElementById('resentnote'); if(note) note.style.display = 'flex';
@@ -407,6 +408,11 @@
         if(btn){ btn.disabled=false; btn.textContent='Send'; }
         flash('Saved a copy — the one-tap send goes live once this is on the site.');
       });
+  }
+  function resetDefaults(){
+    if(!window.confirm('Reset the weights to the example recommendation? This clears any changes saved on this device.')) return;
+    try{ localStorage.removeItem('agn_walkthrough_v2'); }catch(e){}
+    location.reload();
   }
   restore(); rtotal(); applySentState();
 </script>

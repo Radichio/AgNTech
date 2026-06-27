@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — About</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9; --ink:#0F2A20; --green:#0F2A20; --green-deep:#0A1F17;
+    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --gold-dark:#C9A45A; --line:#DED7C6; --sage-dark:#9DB3A4;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.6}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+
+  /* nav */
+  nav.top{position:sticky;top:0;z-index:40;background:rgba(244,241,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:18px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}
+  .brand .n{color:var(--green)}
+  .mark{width:26px;height:26px;flex:none}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{font-size:14px;color:var(--body);text-decoration:none;transition:.12s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a.active{color:var(--green);font-weight:600}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  /* hero */
+  .hero{padding:62px 0 34px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .hero h1{font-family:var(--df);font-weight:500;font-size:44px;line-height:1.1;margin-top:14px;max-width:16ch}
+  @media(max-width:640px){.hero h1{font-size:33px}}
+  .hero .lead{font-size:18px;color:var(--body);line-height:1.65;margin-top:20px;max-width:60ch}
+  .hero .lead b{color:var(--ink);font-weight:600}
+
+  section{padding:46px 0;border-bottom:1px solid var(--line)}
+  .sec-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600;margin-bottom:18px}
+  h2{font-family:var(--df);font-weight:500;font-size:27px;line-height:1.2;margin-bottom:18px}
+  .story p{font-size:16.5px;color:var(--body);line-height:1.75;max-width:64ch;margin-bottom:18px}
+  .story p b{color:var(--ink);font-weight:600}
+
+  .pull{font-family:var(--df);font-style:italic;font-size:26px;color:var(--green);line-height:1.35;max-width:22ch;margin:30px 0;padding-left:22px;border-left:3px solid var(--gold-dark)}
+
+  .why p{font-size:16.5px;color:var(--body);line-height:1.75;max-width:64ch;margin-bottom:18px}
+  .why p b{color:var(--ink);font-weight:600}
+  .mission{background:var(--cream2);border:1px solid var(--line);border-left:3px solid var(--gold-dark);border-radius:0 12px 12px 0;padding:22px 26px;margin-top:8px;max-width:66ch}
+  .mission .ml{font-family:var(--df);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-2);font-weight:700;margin-bottom:9px}
+  .mission p{font-family:var(--df);font-size:17px;color:var(--ink);line-height:1.6;margin:0}
+
+  .approach > p{font-size:16.5px;color:var(--body);line-height:1.75;max-width:64ch;margin-bottom:22px}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:6px 0 26px}
+  @media(max-width:680px){.pillars{grid-template-columns:1fr}}
+  .pillar h4{font-family:var(--df);font-size:18px;color:var(--green);margin-bottom:7px}
+  .pillar p{font-size:14px;color:var(--body);line-height:1.6}
+  .align{font-size:16.5px;color:var(--body);line-height:1.75;max-width:64ch}
+  .align b{color:var(--ink)}
+  .firmnote{font-size:14.5px;color:var(--muted);line-height:1.65;max-width:62ch;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+
+  /* close */
+  .close{padding:52px 0;text-align:center}
+  .close h2{font-size:28px;max-width:24ch;margin:0 auto 22px}
+  .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:13px 24px;border-radius:10px;font-size:14.5px;font-weight:600;text-decoration:none;transition:.14s}
+  .btn.primary{background:var(--green);color:var(--cream)} .btn.primary:hover{background:var(--green-deep)}
+  .btn.ghost{border:1px solid var(--gold-dark);color:var(--green)} .btn.ghost:hover{background:var(--paper)}
+
+  footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .n{color:var(--gold-dark)}
+  footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+  footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>Ag<span class="n">N</span>tech Connect</a>
+      <div class="navlinks">
+        <a href="index.html#vision">Vision</a>
+        <a href="index.html#what">What I do</a>
+        <a href="index.html#why">Why it works</a>
+        <a href="about.html" class="active">About</a>
+        <a href="index.html#contact">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">About</div>
+      <h1>A farmer who learned to move capital.</h1>
+      <p class="lead">I'm Terry Cholka. For forty years I've built things that grow — a farm, companies, and the relationships that let serious capital reach Canadian agriculture. <b>AgNtech Connect is where that work lives now.</b></p>
+    </div>
+  </header>
+
+  <section class="story">
+    <div class="wrap">
+      <div class="sec-eyebrow">The road here</div>
+      <p>I broke into farming in the 1980s with more nerve than money. I came up through the years that finished other operators — the BSE crisis among them — and kept going. That's where I learned what's real and what isn't, and how to tell the difference quickly.</p>
+      <p>I grew a farm from 480 acres to more than 10,000, and built it into multiple enterprises. Alongside it, I helped other companies — from start-up to exits — as an investor, director, or advisor: across agriculture, technology, and bioscience. I was an early backer of a Canadian hemp-foods company acquired for more than $400 million. I financed and delivered a feature film. Different worlds, one instinct.</p>
+      <div class="pull">I can turn a concept into reality.</div>
+      <p>None of it came from a fund or a title. It came from being on the ground — knowing the operators, the regulators, and the difference between a deck and a business. <b>That's the judgment I bring to every introduction now.</b></p>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="wrap">
+      <div class="sec-eyebrow">Why this work</div>
+      <p>I do this because the rural economy is worth more than it's been allowed to become. There is real capital looking for a way into Canadian agriculture, and real builders who need more than a cheque — and most of them never find each other. Closing that gap, on terms that hold, is work worth doing.</p>
+      <p>The aim is bigger than any single deal, and I work with people who share it — capital and founders alike.</p>
+      <div class="mission">
+        <div class="ml">The aim</div>
+        <p>To bring people and resources together, from wherever they are, to build the systems behind sustainable agriculture, secure food, and a healthy environment — and to help the rural economy reach its full, sustainable potential, rooted here in Manitoba.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="approach">
+    <div class="wrap">
+      <div class="sec-eyebrow">How AgNtech Connect works</div>
+      <p>AgNtech Connect is a navigator, not a fund. The work is finding the opportunities only a local operator can reach, vetting them hard, structuring them cleanly, and helping open the way to the capital they need — then staying in afterward. Three things run alongside each other:</p>
+      <div class="pillars">
+        <div class="pillar"><h4>Bring capital in</h4><p>Connecting governments, funds, and family offices to vetted opportunities in Canadian agriculture and technology.</p></div>
+        <div class="pillar"><h4>Build companies</h4><p>Backing founders as an investor, director, and advisor — from start-up through to exit.</p></div>
+        <div class="pillar"><h4>Educate &amp; advise</h4><p>Putting four decades on the land and in the boardroom to work for the people who ask.</p></div>
+      </div>
+      <p class="align"><b>And the interests stay aligned.</b> I take a stake in the outcome — my read is only worth something if it proves right.</p>
+      <p class="firmnote">AgNtech Connect is led by Terry, with an advisory bench across funding, legal, and business — the disciplines a serious deal actually needs.</p>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap">
+      <h2>Moving capital into Canadian agriculture — or building something in it?</h2>
+      <div class="ctas">
+        <a class="btn primary" href="index.html#ask">Ask a question</a>
+        <a class="btn ghost" href="index.html#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+        <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      </div>
+      <div class="row treaty"><span>We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
+    </div>
+  </footer>
+
+</body>
+</html>

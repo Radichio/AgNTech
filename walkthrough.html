@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgNtech Connect — Terry's Walk-Through</title>
+<title>AgNtech Connect — Walk-Through</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -34,6 +34,9 @@
   .raillab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 8px 11px}
   main{min-width:0}
 
+  .resent{display:flex;gap:11px;align-items:flex-start;background:#F6EEDD;border:1px solid #e6d6b3;border-radius:11px;padding:13px 16px;margin-bottom:18px;font-size:13.5px;color:#6f5618;line-height:1.5}
+  .resent b{color:#5e4715} .resent svg{flex:none;margin-top:1px}
+
   .lead{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:30px 32px;margin-bottom:22px}
   .lead .eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
   .lead h1{font-family:var(--df);font-weight:500;font-size:30px;line-height:1.16;margin-top:11px}
@@ -48,17 +51,21 @@
   .sdesc{font-size:13.5px;color:var(--body);margin:13px 0 4px;line-height:1.6;max-width:64ch}
   .sdesc b{color:var(--ink)}
 
-  /* rubric */
+  .exnote{background:var(--cream2);border-left:3px solid var(--gold-dark);border-radius:0 9px 9px 0;padding:14px 17px;margin-top:16px;font-size:13px;color:var(--body);line-height:1.6}
+  .exnote b{color:var(--ink)}
+
   .rcat{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-top:12px;background:var(--paper)}
   .rtop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
   .rcn{font-family:var(--df);font-weight:500;font-size:16.5px}
   .rcm{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5}
   .rsub{margin-top:7px}
   .rsub span{display:inline-block;font-size:12px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin:3px 4px 0 0;color:var(--body)}
+  .rwhy{font-size:11.8px;color:var(--gold-2);margin-top:9px;font-style:italic;line-height:1.5;max-width:60ch}
   .rw{flex:none;text-align:center;width:84px}
   .rwl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:5px}
   .rwi{width:66px;height:40px;border:1.5px solid var(--gold-dark);border-radius:8px;background:var(--cream);text-align:center;font-family:var(--df);font-size:19px;color:var(--ink);outline:none}
   .rwi:focus{border-color:var(--green)}
+  .extag{display:block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:5px}
   .pct{color:var(--muted);font-size:14px;margin-left:2px}
   .rnote{margin-top:10px}
   .rnote input{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--cream);padding:7px 10px;font-family:var(--bf);font-size:12.5px;color:var(--ink);outline:none}
@@ -81,7 +88,6 @@
   .bands .b{font-family:var(--df);font-weight:600;color:var(--green);white-space:nowrap}
   .bands .s{color:var(--body)}
 
-  /* package items */
   .items{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:14px}
   .items h4{font-family:var(--df);font-weight:500;font-size:15px;margin-bottom:9px}
   .items ol{margin:0 0 0 18px}
@@ -90,7 +96,6 @@
   .tag.auto{color:var(--gold-2);background:#F0E7D2} .tag.terry{color:var(--green);background:#E2EBDE}
 
   .samplelab{font-size:11.5px;letter-spacing:.06em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin:24px 0 0}
-  /* sample memo */
   .memo{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px;background:#fff}
   .memo-head{background:var(--green-d);color:var(--cream);padding:16px 20px}
   .memo-head .mt{font-family:var(--df);font-size:18px}
@@ -110,7 +115,6 @@
   .fbtns{display:flex;gap:10px}
   .btn{border:none;border-radius:9px;padding:11px 18px;font-family:var(--bf);font-size:13.5px;font-weight:600;cursor:pointer}
   .btn.primary{background:var(--gold);color:var(--green-d)} .btn.primary:hover{background:#c2992f}
-  .btn.ghost{background:transparent;color:var(--cream);border:1px solid #3a5a4b} .btn.ghost:hover{border-color:var(--gold-dark)}
   .toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:11px 20px;border-radius:999px;font-size:13px;opacity:0;transition:.25s;z-index:70;pointer-events:none}
   .toast.show{opacity:1}
   .done{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#16352A;border-top:2px solid var(--gold-dark);padding:16px 22px;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--cream)}
@@ -143,7 +147,7 @@
   <div class="top">
     <span class="brand">
       <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
-      Ag<span class="n">N</span>tech Connect <span class="sub">/ your walk-through</span>
+      Ag<span class="n">N</span>tech Connect <span class="sub">/ walk-through</span>
     </span>
     <span class="savestate" id="savestate">Saving as you go on this device</span>
   </div>
@@ -151,31 +155,85 @@
   <div class="wrap">
     <nav class="rail">
       <div class="raillab">Two things</div>
-      <a href="#s1"><span class="rn">1</span>Your scoring</a>
+      <a href="#s1"><span class="rn">1</span>The scoring</a>
       <a href="#s2"><span class="rn">2</span>Investor package</a>
     </nav>
 
     <main>
+      <div class="resent" id="resentnote" style="display:none">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8F6F2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+        <div>Your answers were already sent <span id="resentdate"></span>. Change anything below and tap <b>Update &amp; resend</b> — the latest answers replace the earlier copy.</div>
+      </div>
+
       <div class="lead">
-        <div class="eyebrow">For Terry — private</div>
-        <h1>Two things, in your hands.</h1>
-        <p>Most of what the site needs, we already have. <b>Two things are yours alone.</b> First, set the <b>scoring</b> that sorts what comes through the door — heavier weight means it counts more. Second, look over the <b>investor package</b> — the tool that does the homework for you — and tell us what to change.</p>
+        <div class="eyebrow">Private</div>
+        <h1>Two things to set.</h1>
+        <p>Most of what the site needs is already in hand. <b>Two things need your judgment.</b> First, the <b>scoring</b> that sorts what comes through the door — pre-filled with a starting set you can change. Second, a look over the <b>investor package</b> — the tool that does the homework — with a place to note what should change.</p>
         <div class="leadnote">Ten minutes. It saves itself as you go, so you can stop and come back. When you're done, hit Send.</div>
       </div>
 
       <!-- 1 — rubric -->
       <section id="s1">
-        <div class="sh"><span class="snum">01</span><h2>How you score an opportunity</h2></div>
-        <p class="sdesc">This is the scoring behind the dashboard. The categories are a start; <b>the weights are yours.</b> Put a number in each box so they add up to <b>100</b>. The person applying never sees these numbers or this list — they only get a plain signal, so it can't be gamed.</p>
+        <div class="sh"><span class="snum">01</span><h2>How an opportunity gets scored</h2></div>
+        <p class="sdesc">This is the scoring behind the dashboard. The boxes are pre-filled with a <b>starting example</b> — change any number so it reads the way you actually decide. They should total <b>100</b>. The person applying never sees these numbers or this list; they only get a plain signal, so it can't be gamed.</p>
 
-        <div class="rcat"><div class="rtop"><div><div class="rcn">01 · Lane fit</div><div class="rcm">On your ground, and how close to the centre of it.</div><div class="rsub"><span>In your sectors</span><span>Core vs adjacent</span><span>You can genuinely help</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_lane" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_lane" placeholder="Your note (optional)"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">02 · The people</div><div class="rcm">The thing you watch first. Do they listen as closely as they pitch? Want a partner, not an audience?</div><div class="rsub"><span>Listens / coachable</span><span>Has done it</span><span>Wants a partner</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_people" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_people" placeholder="How heavily does the person outweigh the idea for you?"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">03 · What's real</div><div class="rcm">Something on the ground — paying pilots, revenue, real customers. Not idea-stage.</div><div class="rsub"><span>Revenue / paid pilots</span><span>Real customers</span><span>Capital-efficient</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_real" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_real" placeholder="What's the minimum 'real' you'll look at?"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">04 · Market</div><div class="rcm">Big enough, and is the timing right? Tailwinds, whitespace, a window worth moving in.</div><div class="rsub"><span>Size</span><span>Timing</span><span>Room to win</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_market" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_market" placeholder="Your note (optional)"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">05 · Model &amp; economics</div><div class="rcm">Does the business make sense — unit economics, a path to capital (incl. the non-dilutive money you know how to find), room to scale.</div><div class="rsub"><span>Unit economics</span><span>Path to capital</span><span>Scalable</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_model" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_model" placeholder="Your note (optional)"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">06 · Deal &amp; structure</div><div class="rcm">Can it be done cleanly, and can you be in it as a principal — sane valuation, room for your stake and a fair fee.</div><div class="rsub"><span>Valuation realistic</span><span>Clean to structure</span><span>Room for your stake</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_deal" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_deal" placeholder="Your note (optional)"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">07 · Your edge &amp; alignment</div><div class="rcm">Does <em>you</em> being in it move the needle, and do your interests sit beside theirs all the way through?</div><div class="rsub"><span>Network helps</span><span>Operator value-add</span><span>Interests aligned</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_edge" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_edge" placeholder="Your note (optional)"></div></div>
-        <div class="rcat"><div class="rtop"><div><div class="rcn">08 · Risk &amp; flags</div><div class="rcm">What could be wrong — do the claims check out, is the runway sane, is it over-concentrated. (Weight so the score is reduced by risk.)</div><div class="rsub"><span>Claims verify</span><span>Regulatory / runway</span><span>Concentration</span></div></div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" data-f="w_risk" data-w><span class="pct">%</span></div></div><div class="rnote"><input type="text" data-f="wn_risk" placeholder="Your note (optional)"></div></div>
+        <div class="exnote"><b>About these starting numbers.</b> They're an example, not a rule — a recommendation drawn from how you've described your own judgment (the people first, something real, your lane, and where you can add value) alongside how early-stage agriculture deals are usually weighed. They add up to 100 as shown; the total re-tallies the moment you change anything. The short note under each box explains the thinking — overwrite any of them.</div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">01 · Lane fit</div>
+          <div class="rcm">On your ground, and how close to the centre of it.</div>
+          <div class="rsub"><span>In your sectors</span><span>Core vs adjacent</span><span>You can genuinely help</span></div>
+          <div class="rwhy">Why 14: it must be on your ground — but the knock-outs below already catch what's truly off-lane, so this rewards how <em>central</em> it is rather than re-deciding in or out.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="14" data-f="w_lane" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_lane" placeholder="Your note (optional)"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">02 · The people</div>
+          <div class="rcm">The thing you watch first. Do they listen as closely as they pitch? Want a partner, not an audience?</div>
+          <div class="rsub"><span>Listens / coachable</span><span>Has done it</span><span>Wants a partner</span></div>
+          <div class="rwhy">Why 22, the largest: the operator is what you watch first, and at this stage the person predicts the outcome more than the idea does.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="22" data-f="w_people" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_people" placeholder="How heavily does the person outweigh the idea for you?"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">03 · What's real</div>
+          <div class="rcm">Something on the ground — paying pilots, revenue, real customers. Not idea-stage.</div>
+          <div class="rsub"><span>Revenue / paid pilots</span><span>Real customers</span><span>Capital-efficient</span></div>
+          <div class="rwhy">Why 18: paying pilots and revenue de-risk a deal more than any deck — second only to the people.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="18" data-f="w_real" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_real" placeholder="What's the minimum 'real' you'll look at?"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">04 · Market</div>
+          <div class="rcm">Big enough, and is the timing right? Tailwinds, whitespace, a window worth moving in.</div>
+          <div class="rsub"><span>Size</span><span>Timing</span><span>Room to win</span></div>
+          <div class="rwhy">Why 10: it matters, but a strong operator in a real niche beats a weak one in a big market — so it sits below the team and traction.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="10" data-f="w_market" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_market" placeholder="Your note (optional)"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">05 · Model &amp; economics</div>
+          <div class="rcm">Does the business make sense — unit economics, a path to capital, room to scale.</div>
+          <div class="rsub"><span>Unit economics</span><span>Path to capital</span><span>Scalable</span></div>
+          <div class="rwhy">Why 10: unit economics and a real path to capital — including the non-dilutive money you know how to find.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="10" data-f="w_model" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_model" placeholder="Your note (optional)"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">06 · Deal &amp; structure</div>
+          <div class="rcm">Can it be done cleanly, and can you be in it as a principal — sane valuation, room for your stake and a fair fee.</div>
+          <div class="rsub"><span>Valuation realistic</span><span>Clean to structure</span><span>Room for your stake</span></div>
+          <div class="rwhy">Why 8: more a gate than a driver — can it be done cleanly with room for your stake, rather than a reason to chase a deal.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="8" data-f="w_deal" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_deal" placeholder="Your note (optional)"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">07 · Your edge &amp; alignment</div>
+          <div class="rcm">Does <em>you</em> being in it move the needle, and do your interests sit beside theirs all the way through?</div>
+          <div class="rsub"><span>Network helps</span><span>Operator value-add</span><span>Interests aligned</span></div>
+          <div class="rwhy">Why 14: if your involvement doesn't move the needle, it isn't an AgNtech deal — even when it's a good company.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="14" data-f="w_edge" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_edge" placeholder="Your note (optional)"></div></div>
+
+        <div class="rcat"><div class="rtop"><div>
+          <div class="rcn">08 · Risk &amp; flags</div>
+          <div class="rcm">What could be wrong — do the claims check out, is the runway sane, is it over-concentrated.</div>
+          <div class="rsub"><span>Claims verify</span><span>Regulatory / runway</span><span>Concentration</span></div>
+          <div class="rwhy">Why 4, the smallest: this one <em>subtracts</em> from the score rather than building it, and the fatal problems are already handled by the knock-outs.</div>
+        </div><div class="rw"><div class="rwl">Weight</div><input class="rwi" type="number" min="0" max="100" value="4" data-f="w_risk" data-w><span class="pct">%</span><span class="extag">example</span></div></div><div class="rnote"><input type="text" data-f="wn_risk" placeholder="Your note (optional)"></div></div>
 
         <div class="rtotal"><span class="tl">Total — should equal 100</span><span class="tv" id="rtv">0</span></div>
 
@@ -190,7 +248,7 @@
 
         <div style="margin-top:20px">
           <div class="kolab" style="font-size:15px">Where the signal lands</div>
-          <div class="kohint">The visitor only ever sees the words, never the number. Leave our defaults, or change them.</div>
+          <div class="kohint">The visitor only ever sees the words, never the number. Leave these defaults, or change them.</div>
           <div class="bands">
             <div class="b">8.0 and up</div><div class="s">"Worth a look." Onto your desk, near the top.</div>
             <div class="b">6.5 – 7.9</div><div class="s">"Promising, with questions." On your desk, flagged.</div>
@@ -203,7 +261,7 @@
       <!-- 2 — investor package -->
       <section id="s2">
         <div class="sh"><span class="snum">02</span><h2>The investor package</h2></div>
-        <p class="sdesc">This is the tool you described — a package that does the diligence automatically (market, comparables, a claims-check, your network) and hands you a finished memo to <b>review and judge.</b> Here's everything it includes, and a sample of what comes out the other end.</p>
+        <p class="sdesc">This is the tool described earlier — a package that does the diligence automatically (market, comparables, a claims-check, the network) and hands back a finished memo to <b>review and judge.</b> Here's everything it includes, and a sample of what comes out the other end.</p>
 
         <div class="items">
           <h4>What every package includes</h4>
@@ -234,7 +292,7 @@
             <div class="mrow"><div class="mh">The ask</div><p>$3M Series A; target close in 60 days. References and full data room on request.</p></div>
             <div class="mrow"><div class="mh">Why AgNtech is in it</div><p>Investing alongside, with operator help on channel and go-to-market — and the relationships for the capital this company needs next. We don't introduce and walk away.</p></div>
           </div>
-          <div class="mfoot">Assembled by the tool, approved by Terry before it goes out. Figures sourced and current as of the date of issue. For discussion among qualified parties; not an offer of securities or investment advice.</div>
+          <div class="mfoot">Assembled by the tool, approved before it goes out. Figures sourced and current as of the date of issue. For discussion among qualified parties; not an offer of securities or investment advice.</div>
         </div>
 
         <div class="q" style="margin-top:20px"><div class="ql">What would you add, drop, or change?</div><textarea data-f="pkg_changes" placeholder="e.g. 'always put a one-page summary up front', 'add the founder's track record'…"></textarea></div>
@@ -245,22 +303,22 @@
   </div>
 
   <!-- Hidden form so Netlify detects & provisions the form at deploy time. Submission is sent via JS below. -->
-  <form name="terry-walkthrough" data-netlify="true" netlify-honeypot="bot-field" hidden>
-    <input type="hidden" name="form-name" value="terry-walkthrough">
+  <form name="agntech-walkthrough" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="agntech-walkthrough">
     <input type="text" name="payload">
     <input type="text" name="summary">
     <input type="text" name="bot-field">
   </form>
 
   <div class="finish" id="finishbar">
-    <div class="fmsg">All set, Terry? One tap and it goes straight to Lisa — <b>nothing else to do.</b></div>
+    <div class="fmsg">All set? One tap and it's sent — <b>nothing else to do.</b></div>
     <div class="fbtns">
-      <button class="btn primary" id="sendbtn" style="padding:12px 28px;font-size:14.5px" onclick="submitToLisa()">Send to Lisa</button>
+      <button class="btn primary" id="sendbtn" style="padding:12px 28px;font-size:14.5px" onclick="submitForm()">Send</button>
     </div>
   </div>
   <div class="done" id="donebar" style="display:none">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C9A45A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-    <div class="dt">Sent — you're done.<span>Lisa has your answers. Thank you, Terry.</span></div>
+    <div class="dt">Sent — all done.<span>Your answers have been received. Thank you.</span></div>
   </div>
   <div class="toast" id="toast"></div>
 
@@ -299,7 +357,7 @@
   });
   function readable(){
     var d = compile(); var L = [];
-    L.push('AGNTECH CONNECT — TERRY WALK-THROUGH (scoring + package)');
+    L.push('AGNTECH CONNECT — WALK-THROUGH (scoring + package)');
     L.push('Submitted: ' + new Date().toLocaleString()); L.push('');
     function add(label, val){ if(val===undefined||val===null||val==='') return; if(Array.isArray(val)){ if(!val.length) return; val = val.join(', ');} L.push(label + ': ' + val); }
     L.push('— SCORING WEIGHTS —');
@@ -314,33 +372,43 @@
   function flash(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3400); }
 
   function downloadFallback(){
-    var payload = { meta:{ submitted:new Date().toISOString(), source:'terry-walkthrough' }, answers: compile(), readable: readable() };
+    var payload = { meta:{ submitted:new Date().toISOString(), source:'agntech-walkthrough' }, answers: compile(), readable: readable() };
     var blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'terry-walkthrough-answers.json';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'agntech-walkthrough-answers.json';
     document.body.appendChild(a); a.click(); a.remove();
   }
   function showDone(){
-    try{ localStorage.removeItem('agn_walkthrough_weights'); }catch(e){}
+    try{ localStorage.setItem('agn_walkthrough_sent', new Date().toISOString()); }catch(e){}
     var f=document.getElementById('finishbar'); if(f) f.style.display='none';
     var d=document.getElementById('donebar'); if(d) d.style.display='flex';
   }
-  function submitToLisa(){
+  function applySentState(){
+    try{
+      var ts = localStorage.getItem('agn_walkthrough_sent'); if(!ts) return;
+      var dt = new Date(ts); var dstr = isNaN(dt.getTime()) ? '' : ('on ' + dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}));
+      var nd = document.getElementById('resentdate'); if(nd) nd.textContent = dstr;
+      var note = document.getElementById('resentnote'); if(note) note.style.display = 'flex';
+      var btn = document.getElementById('sendbtn'); if(btn) btn.textContent = 'Update & resend';
+      var fmsg = document.querySelector('#finishbar .fmsg'); if(fmsg) fmsg.innerHTML = 'Made changes? Tap to send an updated copy — <b>the latest replaces the earlier one.</b>';
+    }catch(e){}
+  }
+  function submitForm(){
     var btn=document.getElementById('sendbtn'); if(btn){ btn.disabled=true; btn.textContent='Sending…'; }
-    var payload = JSON.stringify({ meta:{ submitted:new Date().toISOString(), source:'terry-walkthrough' }, answers: compile() });
+    var payload = JSON.stringify({ meta:{ submitted:new Date().toISOString(), source:'agntech-walkthrough' }, answers: compile() });
     var body = new URLSearchParams();
-    body.append('form-name','terry-walkthrough');
+    body.append('form-name','agntech-walkthrough');
     body.append('payload', payload);
     body.append('summary', readable());
     body.append('bot-field','');
     fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() })
       .then(function(r){ if(r.ok){ showDone(); } else { throw new Error('status '+r.status); } })
       .catch(function(){
-        downloadFallback();  /* safety net — Terry's answers are never lost (e.g. previewing before deploy) */
-        if(btn){ btn.disabled=false; btn.textContent='Send to Lisa'; }
-        flash('Saved a copy for Lisa — one-tap send goes live once this is on the site.');
+        downloadFallback();  /* safety net — answers are never lost (e.g. previewing before deploy) */
+        if(btn){ btn.disabled=false; btn.textContent='Send'; }
+        flash('Saved a copy — the one-tap send goes live once this is on the site.');
       });
   }
-  restore(); rtotal();
+  restore(); rtotal(); applySentState();
 </script>
 </body>
 </html>

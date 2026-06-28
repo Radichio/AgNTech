@@ -102,7 +102,9 @@
   .contact a{color:var(--green);font-weight:500;border-bottom:1px solid var(--gold-dark)}
 
   footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
-  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+  footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
   footer .n{color:var(--gold-dark)}
   /* vision & mission */
   .vision{background:#EFEADD}
@@ -243,7 +245,7 @@
         <a href="#what">What I do</a>
         <a href="#why">Why it works</a>
         <a href="about.html">About</a>
-        <a href="#contact" class="navbtn">Get in touch</a>
+        <a href="contact.html" class="navbtn">Get in touch</a>
       </div>
     </div>
   </nav>
@@ -400,10 +402,13 @@
 
   <footer>
     <div class="wrap">
-      <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
-      <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      <div class="row">
+        <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+        <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      </div>
+      <div class="row" style="margin-top:9px"><span style="font-size:12.5px;color:var(--sage-dark);opacity:.82">Technology partner — <a href="https://iconnect.studio" target="_blank" rel="noopener" style="color:var(--gold-dark);text-decoration:none">iConnect Studio</a></span></div>
+      <div class="row treaty"><span>We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
     </div>
-    <div class="wrap" style="justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px"><span style="text-align:center;max-width:72ch;line-height:1.5">We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
   </footer>
 
   <div class="overlay" id="overlay" onclick="if(event.target===this)closeIntake()">

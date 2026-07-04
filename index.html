@@ -647,28 +647,68 @@
       });
     }
 
+    // ===== Live "Ask Terry" — calls the Netlify Function (real AI, guardrail server-side) =====
+    var AGN_ENDPOINT = '/.netlify/functions/ask-terry';
+    var AGN_FALLBACK = "Good question — and a bit much to settle in a chat box. Give me a little more, or step through the short intake and Terry will get you a real answer fast.";
+    var history = [];
+
+    // Types text out word-by-word (reuses the existing caret + intake CTA)
+    function typeOut(text, cta, done){
+      var d = document.createElement('div'); d.className = 'msg bot';
+      var span = document.createElement('span'); d.appendChild(span);
+      var caret = document.createElement('span'); caret.className = 'caret'; d.appendChild(caret);
+      tr.appendChild(d);
+      var words = String(text).split(' '), i = 0;
+      (function tick(){
+        if (i < words.length){
+          span.textContent += (i ? ' ' : '') + words[i]; i++;
+          tr.scrollTop = tr.scrollHeight;
+          setTimeout(tick, 16 + Math.random()*34);
+        } else {
+          if (caret.parentNode) caret.parentNode.removeChild(caret);
+          if (cta){
+            var a = document.createElement('a');
+            a.href = '#'; a.className = 'go2'; a.textContent = 'Start the 2-minute intake →';
+            a.onclick = function(e){ e.preventDefault(); if (window.openIntake) window.openIntake(); };
+            d.appendChild(document.createTextNode(' ')); d.appendChild(a);
+          }
+          tr.scrollTop = tr.scrollHeight;
+          if (done) done();
+        }
+      })();
+    }
+
     function ask(q){
       if (!q || busy) return;
       q = String(q).trim();
       if (!q) return;
       addUser(q);
+      history.push({ role:'user', content:q });
+      if (history.length > 24) history = history.slice(-24);
       busy = true;
-      var lower = q.toLowerCase();
-      var p = classifyPitch(lower);
-      if (p){
-        popTags(p.tags);
-        streamBot(p.reply, true, function(){ busy = false; });
-      } else if (looksLikeCapital(lower)){
-        popTags([{ label:"Capital" }, { label:"Canadian ag" }]);
-        streamBot(CAPITAL_ANSWER, true, function(){ busy = false; });
-      } else {
-        var r = findReply(lower);
-        popTags(r.tags || null);
-        streamBot(r.a, r.cta, function(){ busy = false; });
-      }
+      if (inputEl) inputEl.value = '';
+      popTags(null);
       chipIdx = (chipIdx + 1) % CHIP_SETS.length;
       renderChips();
-      if (inputEl) inputEl.value = '';
+
+      var typing = showTyping();
+      fetch(AGN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: history })
+      })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        if (typing.parentNode) typing.parentNode.removeChild(typing);
+        var reply = (data && data.reply) ? String(data.reply).trim() : AGN_FALLBACK;
+        history.push({ role:'assistant', content: reply });
+        if (history.length > 24) history = history.slice(-24);
+        typeOut(reply, true, function(){ busy = false; });
+      })
+      .catch(function(){
+        if (typing.parentNode) typing.parentNode.removeChild(typing);
+        typeOut(AGN_FALLBACK, true, function(){ busy = false; });
+      });
     }
     function chip(el){ ask(el.textContent); }
     function send(){

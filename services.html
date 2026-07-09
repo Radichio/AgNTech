@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — What We Do</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9; --ink:#0F2A20; --green:#0F2A20; --green-deep:#0A1F17;
+    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --gold-dark:#C9A45A; --line:#DED7C6; --sage-dark:#9DB3A4;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.6}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+
+  nav.top{position:sticky;top:0;z-index:40;background:rgba(244,241,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:18px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand .n{color:var(--green)}
+  .mark{width:36px;height:36px;flex:none}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{font-size:14px;color:var(--body);text-decoration:none;transition:.12s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a.active{color:var(--green);font-weight:600}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  .hero{padding:62px 0 26px}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .hero h1{font-family:var(--df);font-weight:500;font-size:44px;line-height:1.1;margin-top:14px}
+  @media(max-width:640px){.hero h1{font-size:33px}}
+  .hero .lead{font-size:18px;color:var(--body);line-height:1.65;margin-top:20px;max-width:60ch}
+  .hero .lead b{color:var(--ink);font-weight:600}
+
+  .silos{padding:20px 0 54px}
+  .silo{border-top:1px solid var(--line);padding:42px 0}
+  .silo:first-of-type{border-top:none;padding-top:22px}
+  .silo .tagrow{display:flex;align-items:baseline;gap:12px}
+  .silo .num{font-family:var(--df);font-size:15px;color:var(--gold-2);font-weight:700;letter-spacing:.06em}
+  .silo .slab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .silo h2{font-family:var(--df);font-weight:500;font-size:29px;line-height:1.16;color:var(--ink);margin:13px 0 0;max-width:22ch}
+  @media(max-width:640px){.silo h2{font-size:24px}}
+  .silo .p{font-size:16px;color:var(--body);line-height:1.68;margin-top:15px;max-width:64ch}
+  .silo .p b{color:var(--ink);font-weight:600}
+  .silo ul{list-style:none;margin-top:19px;display:grid;gap:10px;max-width:64ch}
+  .silo li{position:relative;padding-left:20px;font-size:14.5px;color:var(--body);line-height:1.5}
+  .silo li::before{content:"";position:absolute;left:2px;top:7px;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+  .silo li b{color:var(--ink);font-weight:600}
+  .scopenote{font-size:12.5px;color:var(--muted);margin-top:16px;font-style:italic;max-width:64ch}
+
+  .close{background:var(--green-deep);color:var(--cream);text-align:center;padding:58px 0}
+  .close h2{font-family:var(--df);font-weight:500;font-size:30px;line-height:1.2;max-width:24ch;margin:0 auto}
+  @media(max-width:640px){.close h2{font-size:24px}}
+  .close p{color:var(--sage-dark);font-size:15px;margin-top:14px;max-width:54ch;margin-left:auto;margin-right:auto;line-height:1.6}
+  .close .btns{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-p{background:var(--gold);color:var(--green-deep);text-decoration:none;padding:13px 24px;border-radius:10px;font-size:14.5px;font-weight:600;transition:.14s}
+  .btn-p:hover{background:var(--gold-dark)}
+  .btn-g{background:transparent;color:var(--cream);border:1px solid #3a5a4b;text-decoration:none;padding:13px 24px;border-radius:10px;font-size:14.5px;font-weight:600;transition:.14s}
+  .btn-g:hover{border-color:var(--gold-dark)}
+
+  footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .n{color:var(--gold-dark)}
+  footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+  footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech Connect</a>
+      <div class="navlinks">
+        <a href="index.html#vision">Vision</a>
+        <a href="services.html" class="active">What we do</a>
+        <a href="index.html#why">Why it works</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">What we do</div>
+      <h1>Three ways in.</h1>
+      <p class="lead">AgNtech works with three kinds of client moving on Canadian agriculture — <b>capital arriving from abroad, lenders protecting what they hold, and the operators building on the ground.</b> Different needs; one thing in common — a partner who has actually done it.</p>
+    </div>
+  </header>
+
+  <section class="silos">
+    <div class="wrap">
+
+      <!-- 01 -->
+      <div class="silo">
+        <div class="tagrow"><span class="num">01</span><span class="slab">International capital</span></div>
+        <h2>Capital from abroad, into Canadian ground.</h2>
+        <p class="p">For serious capital entering Canadian agriculture from outside the country. AgNtech finds and vets the opportunities most outside investors never see, and structures the entry cleanly — through the <b>ownership and review rules that catch foreign capital off guard.</b> The money can come from anywhere; the company and the land stay Canadian. And a local operator takes a stake beside you, so the interests hold all the way through.</p>
+        <ul>
+          <li><b>Sourcing &amp; vetting</b> — opportunities in the sector, read by someone inside it</li>
+          <li><b>Structuring the entry</b> — ownership, and the regulatory review foreign capital has to clear</li>
+          <li><b>Alignment</b> — a local operator invested beside you, not introducing and walking away</li>
+        </ul>
+      </div>
+
+      <!-- 02 -->
+      <div class="silo">
+        <div class="tagrow"><span class="num">02</span><span class="slab">Advisory to lenders</span></div>
+        <h2>When a loan goes sideways, don’t fire-sale it.</h2>
+        <p class="p">For banks and lenders holding agricultural exposure that has turned. The instinct is to liquidate — often recovering far less than the operation is worth to someone who understands it. AgNtech advises on <b>structuring the workout instead:</b> assessing the operation honestly, restructuring where there’s a path, and finding the orderly outcome that preserves value on both sides. Forty years operating through hard cycles — including the BSE years — is the judgment behind it.</p>
+        <ul>
+          <li><b>Workout &amp; restructuring advisory</b> on distressed agricultural exposure</li>
+          <li><b>An operator’s valuation</b> — an honest read on what the business can actually carry</li>
+          <li><b>An orderly path</b> that recovers more than a distressed sale</li>
+        </ul>
+        <p class="scopenote">Advisory and structuring — AgNtech is not a licensed insolvency practice.</p>
+      </div>
+
+      <!-- 03 -->
+      <div class="silo">
+        <div class="tagrow"><span class="num">03</span><span class="slab">Operators &amp; founders</span></div>
+        <h2>For the people building it.</h2>
+        <p class="p">The broad advisory practice for founders, farmers, and companies building in Canadian agriculture — <b>capital, growth, and structure,</b> from someone who has built and grown real operations across primary agriculture, agtech, and food. Alongside the core advisory sit two dedicated lines:</p>
+        <ul>
+          <li><b>Capital navigation &amp; advisory</b> — find, vet, structure, and back the right ventures</li>
+          <li><b>Farmer succession structuring</b> — operators rarely protect their own interests in a transition; AgNtech helps structure it properly, and early</li>
+          <li><b>Innovation &amp; testing hub</b> — grant-supported access to development and testing space for startups in the network</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap">
+      <h2>Not sure which one fits?</h2>
+      <p>Start with a question — Terry will tell you straight where you’d land, before you ever get on a call.</p>
+      <div class="btns">
+        <a class="btn-p" href="contact.html">Get in touch</a>
+        <a class="btn-g" href="index.html">Ask Terry first</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+        <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      </div>
+      <div class="row" style="margin-top:9px"><span style="font-size:12.5px;color:var(--sage-dark);opacity:.82">Technology partner — <a href="https://iconnect.studio" target="_blank" rel="noopener" style="color:var(--gold-dark);text-decoration:none">iConnect Studio</a></span></div>
+      <div class="row treaty"><span>We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
+    </div>
+  </footer>
+
+</body>
+</html>

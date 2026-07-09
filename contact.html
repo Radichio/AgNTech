@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — Contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9; --ink:#0F2A20; --green:#0F2A20; --green-deep:#0A1F17;
+    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --gold-dark:#C9A45A; --line:#DED7C6; --sage-dark:#9DB3A4;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.6}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+
+  nav.top{position:sticky;top:0;z-index:40;background:rgba(244,241,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:18px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand .n{color:var(--green)}
+  .mark{width:36px;height:36px;flex:none}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{font-size:14px;color:var(--body);text-decoration:none;transition:.12s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a.active{color:var(--green);font-weight:600}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  .hero{padding:62px 0 30px}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .hero h1{font-family:var(--df);font-weight:500;font-size:44px;line-height:1.1;margin-top:14px}
+  @media(max-width:640px){.hero h1{font-size:33px}}
+  .hero .lead{font-size:18px;color:var(--body);line-height:1.65;margin-top:20px;max-width:58ch}
+  .hero .lead b{color:var(--ink);font-weight:600}
+
+  .grid{display:grid;grid-template-columns:1fr 1.25fr;gap:46px;padding:14px 0 56px;align-items:start}
+  @media(max-width:760px){.grid{grid-template-columns:1fr;gap:34px}}
+
+  .direct .lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);font-weight:600;margin-bottom:16px}
+  .direct .who{font-family:var(--df);font-size:21px;color:var(--ink)}
+  .direct .role{font-size:14px;color:var(--muted);margin-top:2px;margin-bottom:18px}
+  .direct .line{font-size:15.5px;color:var(--body);margin-bottom:9px;display:flex;gap:9px;align-items:baseline}
+  .direct .line .k{color:var(--muted);min-width:64px;font-size:13px}
+  .direct a{color:var(--green);text-decoration:none;border-bottom:1px solid var(--gold-dark)}
+  .askline{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);font-size:14.5px;color:var(--body);line-height:1.6}
+  .askline a{color:var(--green);font-weight:600;text-decoration:none;border-bottom:1px solid var(--gold-dark)}
+
+  form{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+  form .fl{font-size:13px;color:var(--ink);font-weight:600;margin:0 0 6px;display:block}
+  form .row{margin-bottom:16px}
+  input,select,textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--cream);padding:11px 13px;font-family:var(--bf);font-size:14.5px;color:var(--ink);outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(15,42,32,.07)}
+  textarea{min-height:120px;line-height:1.55;resize:vertical}
+  .send{background:var(--green);color:var(--cream);border:none;border-radius:10px;padding:13px 26px;font-size:14.5px;font-weight:600;cursor:pointer;width:auto;transition:.14s}
+  .send:hover{background:var(--green-deep)}
+  .sent{display:none;background:#E2EBDE;border:1px solid #BBD0B6;border-radius:12px;padding:22px 24px;color:#1f4a2e;font-size:15px;line-height:1.6}
+  .sent b{font-family:var(--df)}
+  .formnote{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5}
+
+  footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .n{color:var(--gold-dark)}
+  footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+  footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech Connect</a>
+      <div class="navlinks">
+        <a href="index.html#vision">Vision</a>
+        <a href="services.html">What we do</a>
+        <a href="index.html#why">Why it works</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Contact</div>
+      <h1>Start a conversation.</h1>
+      <p class="lead">Moving capital into Canadian agriculture, or building something in it — <b>the door is open.</b> Reach Terry directly, or send a note below.</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="direct">
+        <div class="lab">Direct</div>
+        <div class="who">Terry Cholka</div>
+        <div class="role">Founding Partner, AgNtech Connect</div>
+        <div class="line"><span class="k">Email</span><a href="mailto:terry@agntechconnect.com">terry@agntechconnect.com</a></div>
+        <div class="line"><span class="k">Offices</span><span>Dauphin &amp; Winnipeg, Manitoba</span></div>
+        <div class="askline">Rather get a read before a call? <a href="index.html#ask">Ask Terry's AI first</a> — on a sector, a structure, or the deal you're weighing.</div>
+      </div>
+
+      <div>
+        <form name="agntech-contact" data-netlify="true" netlify-honeypot="bot-field" id="cform">
+          <input type="hidden" name="form-name" value="agntech-contact">
+          <p hidden><label>Skip<input name="bot-field"></label></p>
+          <div class="row"><label class="fl" for="cname">Name</label><input id="cname" type="text" name="name" required></div>
+          <div class="row"><label class="fl" for="cemail">Email</label><input id="cemail" type="email" name="email" required></div>
+          <div class="row"><label class="fl" for="crole">I'm reaching out as</label>
+            <select id="crole" name="reaching_out_as">
+              <option>Bringing capital to the sector</option>
+              <option>Raising or building a company</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="row"><label class="fl" for="cmsg">Message</label><textarea id="cmsg" name="message" placeholder="A few lines on what you're working on." required></textarea></div>
+          <button class="send" type="submit" id="csend">Send</button>
+          <div class="formnote">Goes straight to Terry. He reads everything that comes in.</div>
+        </form>
+        <div class="sent" id="csent"><b>Thank you — your note has been sent.</b><br>Terry will be in touch. If it's time-sensitive, email <a href="mailto:terry@agntechconnect.com" style="color:#1f4a2e;font-weight:600">terry@agntechconnect.com</a> directly.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+        <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      </div>
+      <div class="row" style="margin-top:9px"><span style="font-size:12.5px;color:var(--sage-dark);opacity:.82">Technology partner — <a href="https://iconnect.studio" target="_blank" rel="noopener" style="color:var(--gold-dark);text-decoration:none">iConnect Studio</a></span></div>
+      <div class="row treaty"><span>We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
+    </div>
+  </footer>
+
+<script>
+  var f = document.getElementById('cform');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = document.getElementById('csend'); btn.disabled = true; btn.textContent = 'Sending…';
+    var body = new URLSearchParams(new FormData(f)).toString();
+    fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body })
+      .then(function(r){ if(!r.ok) throw new Error(r.status);
+        f.style.display='none'; document.getElementById('csent').style.display='block';
+      })
+      .catch(function(){
+        // safety net before the form is live on Netlify (e.g. local preview): fall back to email
+        var n=encodeURIComponent(f.name.value||''), m=encodeURIComponent(f.message.value||''), as=encodeURIComponent(f.reaching_out_as.value||'');
+        window.location.href = 'mailto:terry@agntechconnect.com?subject='+encodeURIComponent('AgNtech enquiry — '+ (f.name.value||''))+'&body='+m+'%0A%0A('+as+')';
+        btn.disabled=false; btn.textContent='Send';
+      });
+  });
+</script>
+</body>
+</html>

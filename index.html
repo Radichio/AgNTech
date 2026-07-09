@@ -650,7 +650,7 @@
     // ===== Live "Ask Terry" — calls the Netlify Function (real AI, guardrail server-side) =====
     var AGN_ENDPOINT = '/.netlify/functions/ask-terry';
     var AGN_FALLBACK = "Good question — and a bit much to settle in a chat box. Give me a little more, or step through the short intake and Terry will get you a real answer fast.";
-    var history = [];
+    var chatHist = [];
 
     // Types text out word-by-word (reuses the existing caret + intake CTA)
     function typeOut(text, cta, done){
@@ -683,8 +683,8 @@
       q = String(q).trim();
       if (!q) return;
       addUser(q);
-      history.push({ role:'user', content:q });
-      if (history.length > 24) history = history.slice(-24);
+      chatHist.push({ role:'user', content:q });
+      if (chatHist.length > 24) chatHist = chatHist.slice(-24);
       busy = true;
       if (inputEl) inputEl.value = '';
       popTags(null);
@@ -695,14 +695,14 @@
       fetch(AGN_ENDPOINT, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: history })
+        body: JSON.stringify({ messages: chatHist })
       })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
         if (typing.parentNode) typing.parentNode.removeChild(typing);
         var reply = (data && data.reply) ? String(data.reply).trim() : AGN_FALLBACK;
-        history.push({ role:'assistant', content: reply });
-        if (history.length > 24) history = history.slice(-24);
+        chatHist.push({ role:'assistant', content: reply });
+        if (chatHist.length > 24) chatHist = chatHist.slice(-24);
         typeOut(reply, true, function(){ busy = false; });
       })
       .catch(function(){

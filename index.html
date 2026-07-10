@@ -761,6 +761,8 @@
   <script>
     var IK = { door:null, step:0, fit:{}, view:null };
     var _ov, _mb;
+    // Allow other pages to route into the one intake via ?intake=capital|venture|open
+    window.addEventListener('load', function(){ try{ var p=new URLSearchParams(location.search).get('intake'); if(p==='capital'||p==='venture'){ openIntake(p); } else if(p){ openIntake(); } }catch(e){} });
     function openIntake(door){
       _ov = document.getElementById('overlay'); _mb = document.getElementById('mbody');
       IK = { door: door || null, step:0, fit:{}, view:null };

@@ -69,6 +69,10 @@
   .m-firm a{color:var(--gold-2);text-decoration:none;border-bottom:1px solid var(--gold-dark)}
   .m-bio{font-size:15.5px;color:var(--body);line-height:1.65;margin-top:10px;max-width:62ch}
   .benchnote{font-size:14.5px;color:var(--muted);line-height:1.65;max-width:62ch;margin-top:20px;font-style:italic}
+  .standgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
+  @media(max-width:820px){.standgrid{grid-template-columns:1fr;gap:22px}}
+  .standitem .sl{font-family:var(--df);font-size:17px;color:var(--ink);margin-bottom:8px}
+  .standitem p{font-size:14.5px;color:var(--body);line-height:1.62}
 
   /* close */
   .close{padding:52px 0;text-align:center}
@@ -186,11 +190,31 @@
       <div class="sec-eyebrow">How AgNtech Connect works</div>
       <p>AgNtech Connect is a navigator, not a fund. The work is finding the opportunities only a local operator can reach, vetting them hard, structuring them cleanly, and helping open the way to the capital they need — then staying in afterward. Three things run alongside each other:</p>
       <div class="pillars">
-        <div class="pillar"><h4>Bring capital in</h4><p>Connecting governments, funds, and family offices to vetted opportunities in Canadian agriculture and technology.</p></div>
-        <div class="pillar"><h4>Build companies</h4><p>Backing founders as an investor, director, and advisor — from start-up through to exit.</p></div>
-        <div class="pillar"><h4>Educate &amp; advise</h4><p>Putting four decades on the land and in the boardroom to work for the people who ask.</p></div>
+        <div class="pillar"><h4>Educate &amp; advise</h4><p>Four decades on the land and in the boardroom, put to work for the people who ask. Honest counsel comes first.</p></div>
+        <div class="pillar"><h4>Bring in people &amp; resources</h4><p>Connecting capital, expertise, and the right partners — governments, funds, family offices, operators — to vetted opportunities here.</p></div>
+        <div class="pillar"><h4>Build</h4><p>Backing founders and building companies — as investor, director, and advisor, from concept through to exit.</p></div>
       </div>
       <p class="align"><b>And the interests stay aligned.</b> I take a stake in the outcome — my read is only worth something if it proves right.</p>
+    </div>
+  </section>
+
+  <section class="stand">
+    <div class="wrap">
+      <div class="sec-eyebrow">Where I stand</div>
+      <div class="standgrid">
+        <div class="standitem">
+          <div class="sl">Merit, first</div>
+          <p>I weigh every opportunity, and every person, on merit — the strength of the idea, the operation, and the character behind it. Background and identity don’t enter into it. The door is open to anyone with something real to build.</p>
+        </div>
+        <div class="standitem">
+          <div class="sl">Non-partisan</div>
+          <p>I hold no political affiliation and take no partisan side. Good agriculture and good business don’t belong to any party.</p>
+        </div>
+        <div class="standitem">
+          <div class="sl">Land &amp; reconciliation</div>
+          <p>This is Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis. I hold that history with respect, and look forward to building alongside Indigenous peoples on the work ahead.</p>
+        </div>
+      </div>
     </div>
   </section>
 

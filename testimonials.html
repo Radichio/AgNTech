@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgNtech Connect — Testimonials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9; --ink:#0F2A20; --green:#0F2A20; --green-deep:#0A1F17;
+    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --gold-dark:#C9A45A; --line:#DED7C6; --sage-dark:#9DB3A4;
+    --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--bf);-webkit-font-smoothing:antialiased;line-height:1.6}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+  a{color:inherit}
+
+  nav.top{position:sticky;top:0;z-index:40;background:rgba(244,241,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:18px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
+  .brand .n{color:var(--green)}
+  .mark{width:36px;height:36px;flex:none}
+  .navlinks{display:flex;gap:24px;align-items:center}
+  .navlinks a{font-size:14px;color:var(--body);text-decoration:none;transition:.12s}
+  .navlinks a:hover{color:var(--ink)}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  .hero{padding:62px 0 14px}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .hero h1{font-family:var(--df);font-weight:500;font-size:44px;line-height:1.1;margin-top:14px}
+  @media(max-width:640px){.hero h1{font-size:33px}}
+  .hero .lead{font-size:18px;color:var(--body);line-height:1.65;margin-top:20px;max-width:60ch}
+
+  .permnote{max-width:1000px;margin:6px auto 0;padding:0 26px}
+  .permnote .inner{background:var(--cream2);border:1px solid var(--line);border-radius:12px;padding:14px 20px;font-size:13.5px;color:var(--muted);line-height:1.55}
+  .permnote b{color:var(--body)}
+
+  .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:30px 0 20px}
+  @media(max-width:760px){.tgrid{grid-template-columns:1fr}}
+  .tcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:28px 28px 24px;position:relative}
+  .tcard.placeholder{border-style:dashed;background:transparent}
+  .pending{position:absolute;top:16px;right:18px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;opacity:.7}
+  .quote{font-family:var(--df);font-size:18px;line-height:1.5;color:var(--ink)}
+  .tcard.placeholder .quote{color:var(--muted);font-style:italic}
+  .attrib{margin-top:18px;font-size:14px;color:var(--body)}
+  .attrib .nm{font-weight:600;color:var(--ink)}
+  .attrib .rl{color:var(--muted)}
+  .tcard.placeholder .attrib{color:var(--muted)}
+
+  .close{background:var(--green-deep);color:var(--cream);text-align:center;padding:52px 0;margin-top:20px}
+  .close h2{font-family:var(--df);font-weight:500;font-size:26px;line-height:1.2;max-width:26ch;margin:0 auto}
+  .close p{color:var(--sage-dark);font-size:15px;margin-top:12px;max-width:52ch;margin-left:auto;margin-right:auto}
+  .btn-p{display:inline-block;margin-top:22px;background:var(--gold);color:var(--green-deep);text-decoration:none;padding:13px 24px;border-radius:10px;font-size:14.5px;font-weight:600}
+
+  footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer .n{color:var(--gold-dark)}
+  footer .fnav{margin-top:12px}
+  footer .fnav a{color:var(--sage-dark);text-decoration:none;opacity:.82}
+  footer .fnav a:hover{color:var(--cream)}
+  footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+  footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
+</style>
+</head>
+<body>
+
+  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
+  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
+    <div style="text-align:center;width:320px;max-width:86vw">
+      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
+      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
+      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
+      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
+      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+  </div>
+  <script>
+    var GATE_PASSWORD = "terry-preview-26";
+    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
+    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
+    document.getElementById('gbtn').addEventListener('click', gateOpen);
+    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
+    document.getElementById('gpw').focus();
+  </script>
+
+  <nav class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech Connect</a>
+      <div class="navlinks">
+        <a href="index.html#vision">Vision</a>
+        <a href="services.html">What I do</a>
+        <a href="index.html#why">Why it works</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Testimonials</div>
+      <h1>In their words.</h1>
+      <p class="lead">Reputation, in this work, is everything — so it belongs to the people who’ve lived it. As those who’ve worked with Terry share their experience, their words will appear here.</p>
+    </div>
+  </header>
+  <div class="permnote"><div class="inner"><b>A note on trust:</b> every testimonial here is published only with the person’s written permission, in their own words. Nothing is invented, edited for spin, or attributed without consent.</div></div>
+
+  <section>
+    <div class="wrap">
+      <div class="tgrid">
+
+        <!-- TEMPLATE CARD — replace the quote and attribution with real, approved content, and remove class "placeholder" + the "pending" tag -->
+        <div class="tcard placeholder">
+          <div class="pending">Awaiting approval</div>
+          <div class="quote">“Their words will go here — in full, in their own voice, once they’ve shared and approved them.”</div>
+          <div class="attrib"><span class="nm">Name</span> · <span class="rl">Role, Company</span></div>
+        </div>
+
+        <div class="tcard placeholder">
+          <div class="pending">Awaiting approval</div>
+          <div class="quote">“A second endorsement will sit here — from a founder, a lender, or a partner Terry has worked with.”</div>
+          <div class="attrib"><span class="nm">Name</span> · <span class="rl">Role, Company</span></div>
+        </div>
+
+        <div class="tcard placeholder">
+          <div class="pending">Awaiting approval</div>
+          <div class="quote">“And a third here — kept short, kept honest, and always credited to the person who said it.”</div>
+          <div class="attrib"><span class="nm">Name</span> · <span class="rl">Role, Company</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap">
+      <h2>Worked with Terry?</h2>
+      <p>If AgNtech Connect made a difference to your venture, your capital, or your outcome — and you’d be willing to say so — we’d be honoured to share it, on your terms.</p>
+      <a class="btn-p" href="contact.html">Share your experience</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <span>Ag<span class="n">N</span>tech Connect — a division of Tetra Farms Ltd.</span>
+        <span>Dauphin &amp; Winnipeg, Manitoba</span>
+      </div>
+      <div class="row fnav"><span><a href="index.html">Home</a> &nbsp;·&nbsp; <a href="services.html">What I do</a> &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; <a href="careers.html">Careers</a> &nbsp;·&nbsp; <a href="testimonials.html">Testimonials</a> &nbsp;·&nbsp; <a href="contact.html">Get in touch</a></span></div>
+      <div class="row" style="margin-top:9px"><span style="font-size:12.5px;color:var(--sage-dark);opacity:.82">Architected by <a href="https://iconnect.studio" target="_blank" rel="noopener" style="color:var(--gold-dark);text-decoration:none">iConnect Studio</a></span></div>
+      <div class="row treaty"><span>We operate on Treaty 1 and Treaty 2 territory in Manitoba — the traditional lands of the Anishinaabe and the homeland of the Red River Métis.</span></div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -202,6 +202,49 @@
   .askcard.fs .transcript{flex:1;height:auto;max-height:none}
   @media(max-width:680px){.askcard.fs{top:10px;bottom:10px;width:calc(100vw - 20px)}}
   @media(prefers-reduced-motion:reduce){.aitag-pop,.msg.typing span,.caret{animation:none;opacity:1;transform:none}}
+
+  /* ── mobile menu ─────────────────────────────────────── */
+  .burger{display:none;background:none;border:none;padding:8px;cursor:pointer;line-height:0}
+  .burger span{display:block;width:22px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px;transition:.2s}
+  .mobmenu{position:fixed;inset:0;z-index:60;background:var(--green-deep);display:none;flex-direction:column;padding:22px 26px}
+  .mobmenu.open{display:flex}
+  .mobmenu .mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+  .mobmenu .mbrand{font-family:var(--df);font-size:19px;color:var(--cream)}
+  .mobmenu .mclose{background:none;border:none;color:var(--cream);font-size:30px;line-height:1;cursor:pointer;padding:0 4px}
+  .mobmenu a{color:var(--cream);text-decoration:none;font-family:var(--df);font-size:23px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.10)}
+  .mobmenu a.sm{font-family:var(--bf);font-size:15px;color:var(--sage-dark);border-bottom:none;padding:9px 0}
+  .mobmenu .mcta{margin-top:22px;background:var(--gold);color:var(--green-deep);text-align:center;border-radius:10px;padding:14px;font-weight:700;font-family:var(--bf);font-size:15px;border-bottom:none}
+  @media(max-width:720px){ .burger{display:block} }
+  /* ── sticky mobile CTA ───────────────────────────────── */
+  .stickycta{display:none}
+  @media(max-width:720px){
+    .stickycta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(10,31,23,.96);backdrop-filter:blur(6px);padding:10px 14px;border-top:1px solid rgba(255,255,255,.10)}
+    .stickycta a{display:block;background:var(--gold);color:var(--green-deep);text-align:center;text-decoration:none;font-weight:700;font-size:15px;padding:13px;border-radius:10px;font-family:var(--bf)}
+    body{padding-bottom:74px}
+  }
+  /* ── mobile scroll/priority pass ─────────────────────── */
+  @media(max-width:720px){
+    section, header.hero, .block, .steps-wrap, .reach, .silos, .land{padding-top:34px !important;padding-bottom:34px !important}
+    .hero{padding-top:30px !important}
+    h1{font-size:31px !important;line-height:1.14 !important}
+    h2, h2.sh{font-size:24px !important}
+    .lead, .sub{font-size:16px !important}
+    .wrap{padding-left:20px;padding-right:20px}
+  }
+
+  /* ── mobile: hero priority — get the three doors above the fold ── */
+  @media(max-width:720px){
+    .hero{padding-top:24px !important;padding-bottom:26px !important}
+    .hero h1{font-size:29px !important;line-height:1.15 !important}
+    .hero .sub{font-size:15.5px !important;margin-top:12px !important}
+    .hero .quote, .hero blockquote{display:none}          /* the pull-quote pushes the doors down */
+    .cta{flex-direction:column;gap:9px;margin-top:18px}
+    .cta .btn{width:100%;text-align:center;padding:14px}
+    /* Ask Terry: room to breathe above the sticky bar */
+    .askwrap, .askcard{margin-bottom:12px}
+    /* intake modal: never scroll-inside-a-scroll */
+    .mcard, .modal-card{max-height:88vh;overflow-y:auto}
+  }
 </style>
 </head>
 <body>
@@ -251,8 +294,30 @@
         <a href="about.html">About</a>
         <a href="contact.html" class="navbtn">Get in touch</a>
       </div>
+      <button class="burger" onclick="openMob()" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
+
+  <div class="mobmenu" id="mobmenu">
+    <div class="mtop">
+      <span class="mbrand">Ag<span style="color:#C9A45A">N</span>tech Connect</span>
+      <button class="mclose" onclick="closeMob()" aria-label="Close menu">&times;</button>
+    </div>
+    <a href="index.html">Home</a>
+    <a href="index.html#vision">Vision &amp; Mission</a>
+    <a href="services.html">What I do</a>
+    <a href="index.html#why">Why it works</a>
+    <a href="about.html">About</a>
+    <a href="index.html#ask">Ask Terry</a>
+    <div style="margin-top:16px">
+      <a class="sm" href="careers.html">Careers</a><br>
+      <a class="sm" href="testimonials.html">Testimonials</a>
+    </div>
+    <a class="mcta" href="contact.html">Get in touch</a>
+  </div>
+
+  <div class="stickycta"><a href="contact.html">Get in touch</a></div>
+
 
   <header class="hero">
     <svg class="hero-wheat" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="20" y="18" width="60" height="9"/><rect x="24" y="27" width="9" height="52"/><rect x="67" y="27" width="9" height="52"/><rect x="44" y="34" width="12" height="45"/></svg>
@@ -262,6 +327,7 @@
       <p class="sub">Forty years on the land and in the boardroom. I find, vet, and structure the opportunities only a local operator can reach — and I help open the way to the capital needed.</p>
       <div class="cta">
         <a href="#ask" class="btn primary" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
+        <a href="#ask" class="btn ghost" onclick="openIntake('lender');return false;">A loan that\'s turned</a>
         <a href="#ask" class="btn ghost" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
       <div class="tagline">"I speak farmer, tech, and capital — and I connect the three."</div>
@@ -355,19 +421,19 @@
           <span class="tag">Capital entering the sector</span>
           <h3>Capital, placed well.</h3>
           <p>Governments, funds, and family offices placing capital in Canadian agriculture. I source and vet the opportunities, structure the entry, and navigate the ownership and review rules that catch outside money off guard — a trusted local who has deployed capital and seen an exit.</p>
-          <a href="#contact" class="go">Start a private conversation →</a>
+          <a href="#" class="go" onclick="openIntake('capital');return false;">Start a private conversation →</a>
         </div>
         <div class="path">
           <span class="tag">Lenders with distressed exposure</span>
           <h3>A workout, not a write‑off.</h3>
           <p>For lenders holding agricultural exposure that has turned. I read the operation honestly and structure the workout — restructuring where there’s a path, and finding the orderly outcome that recovers more than a distressed sale. Forty years through hard cycles is the judgment behind it.</p>
-          <a href="#contact" class="go">Bring me a distressed file →</a>
+          <a href="#" class="go" onclick="openIntake('lender');return false;">Bring me a distressed file →</a>
         </div>
         <div class="path">
           <span class="tag">Founders raising or scaling</span>
           <h3>More than a cheque.</h3>
           <p>The right introductions, a clean structure, first customers, and a real path to capital — including the non-dilutive programs I know how to find. I help get the legs under a business and build real momentum early.</p>
-          <a href="#contact" class="go">Tell me about your venture →</a>
+          <a href="#" class="go" onclick="openIntake('venture');return false;">Tell me about your venture →</a>
         </div>
       </div>
     </div>
@@ -408,9 +474,10 @@
     <div class="wrap">
       <div class="sec-eyebrow" style="text-align:center">Get in touch</div>
       <h2>If you're moving capital into Canadian agriculture — or building something in it — let's talk.</h2>
-      <p class="lead">Every conversation starts the same way: a short, structured intake so I understand the fit before we ever get on a call. Discreet, and worth your time.</p>
+      <p class="lead">Every conversation starts the same way: a few questions, so I understand your situation before we ever get on a call. Discreet, and worth your time.</p>
       <div class="cta">
         <a href="#" class="btn primary" style="background:var(--green);color:var(--on-dark)" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
+        <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('lender');return false;">A loan that\'s turned</a>
         <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
       <p style="font-family:var(--df);font-size:21px;color:var(--ink);margin-top:26px">Terry Cholka <span style="color:var(--gold-2)">· Founding Partner</span></p>
@@ -656,9 +723,19 @@
       ["Can foreign capital invest here?","What's succession planning worth?","How long does this take?","Ask me anything"]
     ];
     var chipIdx = 0;
+    var liveChips = null;   // adaptive follow-ups from the AI (null = use static sets)
     function renderChips(){
       if (!chipsEl) return;
       chipsEl.innerHTML = '';
+      if (liveChips && liveChips.length){
+        liveChips.forEach(function(label){
+          var b = document.createElement('button');
+          b.className = 'chip'; b.type = 'button'; b.textContent = label;
+          b.onclick = function(){ ask(label); };
+          chipsEl.appendChild(b);
+        });
+        return;
+      }
       CHIP_SETS[chipIdx].forEach(function(label){
         var s = document.createElement('span');
         s.className = 'chip2'; s.textContent = label;
@@ -708,6 +785,7 @@
       busy = true;
       if (inputEl) inputEl.value = '';
       popTags(null);
+      liveChips = null;
       chipIdx = (chipIdx + 1) % CHIP_SETS.length;
       renderChips();
 
@@ -721,9 +799,14 @@
       .then(function(data){
         if (typing.parentNode) typing.parentNode.removeChild(typing);
         var reply = (data && data.reply) ? String(data.reply).trim() : AGN_FALLBACK;
+        var sugg  = (data && Array.isArray(data.suggestions)) ? data.suggestions.filter(function(x){ return typeof x === 'string' && x.trim(); }).slice(0,3) : [];
         chatHist.push({ role:'assistant', content: reply });
         if (chatHist.length > 24) chatHist = chatHist.slice(-24);
-        typeOut(reply, true, function(){ busy = false; });
+        typeOut(reply, true, function(){
+          busy = false;
+          liveChips = sugg.length ? sugg : null;   // fall back to the static sets if none
+          renderChips();
+        });
       })
       .catch(function(){
         if (typing.parentNode) typing.parentNode.removeChild(typing);
@@ -763,7 +846,7 @@
     var IK = { door:null, step:0, fit:{}, view:null };
     var _ov, _mb;
     // Allow other pages to route into the one intake via ?intake=capital|venture|open
-    window.addEventListener('load', function(){ try{ var p=new URLSearchParams(location.search).get('intake'); if(p==='capital'||p==='venture'){ openIntake(p); } else if(p){ openIntake(); } }catch(e){} });
+    window.addEventListener('load', function(){ try{ var p=new URLSearchParams(location.search).get('intake'); if(p==='capital'||p==='venture'||p==='lender'){ openIntake(p); } else if(p){ openIntake(); } }catch(e){} });
     function openIntake(door){
       _ov = document.getElementById('overlay'); _mb = document.getElementById('mbody');
       IK = { door: door || null, step:0, fit:{}, view:null };
@@ -782,19 +865,25 @@
         {q:"Your sector?", a:["Agriculture","Agtech","Bioscience","Food","Other"]},
         {q:"Traction so far?", a:["Idea stage","Paid pilots","Revenue"]},
         {q:"What do you need?", a:["Capital","Advice & connections","Both"]}
+      ],
+      lender:[
+        {q:"What kind of operation?", a:["Farm or primary ag","Feedlot or livestock","Processing or food","Agtech or other"]},
+        {q:"Where does it stand?", a:["Early signs of trouble","In default","Headed to realization"]},
+        {q:"What would help most?", a:["An honest read on the operation","A workout structure","A buyer who understands it"]}
       ]
     };
-    function doorLabel(){ return IK.door==='capital' ? 'Capital' : 'Venture'; }
+    function doorLabel(){ return IK.door==='capital' ? 'Capital' : (IK.door==='lender' ? 'Lender' : 'Venture'); }
     function backBtn(){ return '<button class="mback" onclick="stepBack()">← Back</button>'; }
 
     function renderChooser(){
       IK.view='chooser';
       _mb.innerHTML =
         '<div class="mstep">Get in touch</div>'+
-        '<h3 class="mh">Which door is yours?</h3>'+
-        '<p class="mp">A short, structured intake — Terry sees the fit before any call.</p>'+
-        '<button class="dbtn" onclick="chooseDoor(\'capital\')"><span class="dbt">I have capital to deploy</span><span class="dbd">Governments, family offices, and agribusiness placing money into Canadian ag.</span></button>'+
-        '<button class="dbtn" onclick="chooseDoor(\'venture\')"><span class="dbt">I\'m raising or building</span><span class="dbd">Founders who need capital, connections, or both.</span></button>';
+        '<h3 class="mh">Which one is you?</h3>'+
+        '<p class="mp">A few questions, so Terry understands your situation before you ever get on a call.</p>'+
+        '<button class="dbtn" onclick="chooseDoor(\'capital\')"><span class="dbt">I have capital to deploy</span><span class="dbd">Governments, funds, family offices, and agribusiness placing money into Canadian ag.</span></button>'+
+        '<button class="dbtn" onclick="chooseDoor(\'lender\')"><span class="dbt">I\'m a lender with a loan that\'s turned</span><span class="dbd">Agricultural exposure gone sideways — before anyone reaches for a fire-sale.</span></button>'+
+        '<button class="dbtn" onclick="chooseDoor(\'venture\')"><span class="dbt">I\'m raising or building</span><span class="dbd">Founders and operators who need capital, connections, or both.</span></button>';
     }
     function renderFit(){
       var qs = FIT[IK.door];
@@ -811,6 +900,11 @@
     function answer(i){ var qs=FIT[IK.door]; IK.fit[IK.step]=qs[IK.step].a[i]; IK.step++; renderFit(); }
 
     function verdictFor(){
+      if (IK.door==='lender'){
+        if (IK.fit[1]==='Headed to realization')
+          return {tone:'soft', text:"Late in the day, but not always too late — sometimes there's still more value in an orderly path than a forced sale. Give Terry the details and he'll tell you straight what he sees."};
+        return {tone:'good', text:"This is exactly the work. Give Terry the details and he'll come back with an honest read on the operation — discreetly."};
+      }
       if (IK.door==='capital'){
         if (IK.fit[0]==='Explore the market first')
           return {tone:'soft', text:"Happy to help you get oriented. A few details and Terry will be in touch to point you the right way."};
@@ -836,7 +930,14 @@
     function renderForm(){
       IK.view='form';
       var body;
-      if (IK.door==='capital'){
+      if (IK.door==='lender'){
+        body = fg('Name','f_name')+fg('Institution','f_org')+fg('Email','f_email','you@institution.com')
+             + fg('Type of operation','f_sec','', IK.fit[0]||'')
+             + fg('Where it stands','f_stage','', IK.fit[1]||'')
+             + fg('What would help most','f_need','', IK.fit[2]||'')
+             + fg('Approximate exposure','f_exp','Optional — a range is fine')
+             + ta('The situation, in a sentence or two','f_note','Kept in confidence.');
+      } else if (IK.door==='capital'){
         body = fg('Name','f_name')+fg('Organization','f_org')+fg('Email','f_email','you@organization.com')
              + fg('Sectors of interest','f_sec','Ag, agtech, bioscience, food…')
              + fg('Geography','f_geo','Where you want to deploy')
@@ -874,6 +975,8 @@
       IK.view='done';
       var msg = (IK.door==='capital')
         ? "Received. Terry reviews capital mandates personally and will be in touch directly — discreetly. Thank you."
+        : (IK.door==='lender')
+        ? "Received, and held in confidence. Terry will look at the operation himself and come back with a straight read."
         : "Received — your pitch is on Terry's desk. If it's a fit you'll hear back soon, and either way you'll get a straight, prompt answer.";
       _mb.innerHTML =
         '<div class="donecheck">✓</div>'+
@@ -888,5 +991,10 @@
     }
   </script>
 
+<script>
+  function openMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.add('open'); document.body.style.overflow='hidden'; } }
+  function closeMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.remove('open'); document.body.style.overflow=''; } }
+  document.addEventListener('click', function(e){ var a=e.target.closest('#mobmenu a'); if(a) closeMob(); });
+</script>
 </body>
 </html>

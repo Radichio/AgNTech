@@ -58,6 +58,35 @@
   footer .fnav a:hover{color:var(--cream)}
   footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
   footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
+
+  /* ── mobile menu ─────────────────────────────────────── */
+  .burger{display:none;background:none;border:none;padding:8px;cursor:pointer;line-height:0}
+  .burger span{display:block;width:22px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px;transition:.2s}
+  .mobmenu{position:fixed;inset:0;z-index:60;background:var(--green-deep);display:none;flex-direction:column;padding:22px 26px}
+  .mobmenu.open{display:flex}
+  .mobmenu .mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+  .mobmenu .mbrand{font-family:var(--df);font-size:19px;color:var(--cream)}
+  .mobmenu .mclose{background:none;border:none;color:var(--cream);font-size:30px;line-height:1;cursor:pointer;padding:0 4px}
+  .mobmenu a{color:var(--cream);text-decoration:none;font-family:var(--df);font-size:23px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.10)}
+  .mobmenu a.sm{font-family:var(--bf);font-size:15px;color:var(--sage-dark);border-bottom:none;padding:9px 0}
+  .mobmenu .mcta{margin-top:22px;background:var(--gold);color:var(--green-deep);text-align:center;border-radius:10px;padding:14px;font-weight:700;font-family:var(--bf);font-size:15px;border-bottom:none}
+  @media(max-width:720px){ .burger{display:block} }
+  /* ── sticky mobile CTA ───────────────────────────────── */
+  .stickycta{display:none}
+  @media(max-width:720px){
+    .stickycta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(10,31,23,.96);backdrop-filter:blur(6px);padding:10px 14px;border-top:1px solid rgba(255,255,255,.10)}
+    .stickycta a{display:block;background:var(--gold);color:var(--green-deep);text-align:center;text-decoration:none;font-weight:700;font-size:15px;padding:13px;border-radius:10px;font-family:var(--bf)}
+    body{padding-bottom:74px}
+  }
+  /* ── mobile scroll/priority pass ─────────────────────── */
+  @media(max-width:720px){
+    section, header.hero, .block, .steps-wrap, .reach, .silos, .land{padding-top:34px !important;padding-bottom:34px !important}
+    .hero{padding-top:30px !important}
+    h1{font-size:31px !important;line-height:1.14 !important}
+    h2, h2.sh{font-size:24px !important}
+    .lead, .sub{font-size:16px !important}
+    .wrap{padding-left:20px;padding-right:20px}
+  }
 </style>
 </head>
 <body>
@@ -92,8 +121,30 @@
         <a href="about.html">About</a>
         <a href="contact.html" class="active">Get in touch</a>
       </div>
+      <button class="burger" onclick="openMob()" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </nav>
+
+  <div class="mobmenu" id="mobmenu">
+    <div class="mtop">
+      <span class="mbrand">Ag<span style="color:#C9A45A">N</span>tech Connect</span>
+      <button class="mclose" onclick="closeMob()" aria-label="Close menu">&times;</button>
+    </div>
+    <a href="index.html">Home</a>
+    <a href="index.html#vision">Vision &amp; Mission</a>
+    <a href="services.html">What I do</a>
+    <a href="index.html#why">Why it works</a>
+    <a href="about.html">About</a>
+    <a href="index.html#ask">Ask Terry</a>
+    <div style="margin-top:16px">
+      <a class="sm" href="careers.html">Careers</a><br>
+      <a class="sm" href="testimonials.html">Testimonials</a>
+    </div>
+    <a class="mcta" href="contact.html">Get in touch</a>
+  </div>
+
+  <div class="stickycta"><a href="contact.html">Get in touch</a></div>
+
 
   <header class="hero">
     <div class="wrap">
@@ -121,8 +172,8 @@
         <div class="route">
           <div class="it">You're a lender</div>
           <h3>A loan that's turned.</h3>
-          <p>Holding agricultural exposure that's turned? That's a more bespoke matter than a form can hold. Write to Terry, and he'll give you a straight read.</p>
-          <a class="go" href="mailto:terry@agntechconnect.com?subject=Distressed%20agricultural%20exposure">Write to Terry →</a>
+          <p>Holding agricultural exposure that's turned? Tell Terry the shape of it, in confidence — and he'll come back with an honest read on the operation.</p>
+          <a class="go" href="index.html?intake=lender">Start here →</a>
         </div>
       </div>
     </div>
@@ -149,5 +200,10 @@
     </div>
   </footer>
 
+<script>
+  function openMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.add('open'); document.body.style.overflow='hidden'; } }
+  function closeMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.remove('open'); document.body.style.overflow=''; } }
+  document.addEventListener('click', function(e){ var a=e.target.closest('#mobmenu a'); if(a) closeMob(); });
+</script>
 </body>
 </html>

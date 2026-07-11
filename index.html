@@ -956,9 +956,52 @@
         '<h3 class="mh">'+(IK.door==='capital'?'Tell me about your mandate':'Tell me about your venture')+'</h3>'+
         '<div class="form">'+body+'</div>'+
         '<label class="consent"><input type="checkbox" id="consent"> I agree my details may be stored and reviewed by Terry. Nothing is shared with anyone else without my consent.</label>'+
-        '<button class="mbtn primary" onclick="submitIntake()">Submit</button>'+
+        '<button class="mbtn primary" id="ikSend" onclick="submitIntake()">Submit</button>'+
         backBtn();
     }
+    function _v(id){ var el=document.getElementById(id); return el && el.value ? el.value.trim() : ''; }
+
+    function collectIntake(){
+      var qs = FIT[IK.door] || [];
+      var answers = qs.map(function(q,i){ return { q:q.q, a:(IK.fit[i]||'') }; });
+      return {
+        door: IK.door,
+        submitted: new Date().toISOString(),
+        screening: answers,
+        name: _v('f_name'),
+        email: _v('f_email'),
+        organization: _v('f_org') || _v('f_co'),
+        sector: _v('f_sec'),
+        stage: _v('f_stage'),
+        need: _v('f_need'),
+        geography: _v('f_geo'),
+        timeline: _v('f_time'),
+        exposure: _v('f_exp'),
+        oneLiner: _v('f_one'),
+        note: _v('f_note'),
+        deck: (function(){ var d=document.getElementById('f_deck'); return (d && d.files && d.files[0]) ? d.files[0].name : ''; })()
+      };
+    }
+
+    function readableIntake(d){
+      var L = [];
+      L.push('DOOR: ' + (d.door||'').toUpperCase());
+      L.push('Name: ' + d.name);
+      L.push('Email: ' + d.email);
+      if (d.organization) L.push('Organization: ' + d.organization);
+      L.push('');
+      L.push('— Screening —');
+      d.screening.forEach(function(x){ L.push(x.q + '  ' + x.a); });
+      L.push('');
+      L.push('— Details —');
+      [['Sector',d.sector],['Stage',d.stage],['Need',d.need],['Geography',d.geography],
+       ['Timeline',d.timeline],['Exposure',d.exposure],['One-liner',d.oneLiner],
+       ['Note',d.note],['Deck',d.deck]].forEach(function(p){ if(p[1]) L.push(p[0]+': '+p[1]); });
+      L.push('');
+      L.push('Submitted: ' + d.submitted);
+      return L.join('\n');
+    }
+
     function submitIntake(){
       var c=document.getElementById('consent');
       if (c && !c.checked){
@@ -969,7 +1012,28 @@
         }
         return;
       }
-      renderDone();
+      var btn = document.getElementById('ikSend');
+      if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+
+      var d = collectIntake();
+      var body = new URLSearchParams();
+      body.append('form-name','agntech-intake');
+      body.append('door', d.door || '');
+      body.append('name', d.name || '');
+      body.append('email', d.email || '');
+      body.append('organization', d.organization || '');
+      body.append('summary', readableIntake(d));
+      body.append('payload', JSON.stringify(d));
+      body.append('bot-field','');
+
+      fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() })
+        .then(function(r){ if(!r.ok) throw new Error('status '+r.status); renderDone(); })
+        .catch(function(){
+          // Never lose a serious enquiry: hand it to email as a fallback.
+          var subj = 'AgNtech enquiry — ' + (d.door||'') + ' — ' + (d.name||'');
+          window.location.href = 'mailto:terry@agntechconnect.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(readableIntake(d));
+          renderDone();
+        });
     }
     function renderDone(){
       IK.view='done';
@@ -996,5 +1060,13 @@
   function closeMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.remove('open'); document.body.style.overflow=''; } }
   document.addEventListener('click', function(e){ var a=e.target.closest('#mobmenu a'); if(a) closeMob(); });
 </script>
+  <!-- Netlify form registration for the intake (hidden; JS posts to it) -->
+  <form name="agntech-intake" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="agntech-intake">
+    <input type="text" name="door"><input type="text" name="name"><input type="text" name="email">
+    <input type="text" name="organization"><input type="text" name="summary"><textarea name="payload"></textarea>
+    <input type="text" name="bot-field">
+  </form>
+
 </body>
 </html>

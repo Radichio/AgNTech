@@ -293,7 +293,7 @@
           <input id="askq" type="text" placeholder="Ask a question, or give me your one-liner…" autocomplete="off">
           <button class="asksend" onclick="send()">Send</button>
         </div>
-        <div class="askfoot">A working demo. In production this runs on your AI stack — trained on Terry's material and his screening criteria — and serious pitches flow straight into the intake and onto his dashboard.</div>
+        <div class="askfoot">Built on Terry’s own material and his read of a deal. Ask freely — anything you like.</div>
       </div>
     </div>
   </div>
@@ -650,9 +650,10 @@
     }
 
     var CHIP_SETS = [
-      ["Is my company a fit?","How do you get paid?","I have capital to deploy","Pitch a deal"],
-      ["What makes you different?","Can you help with grants?","Who have you backed?","Tell me about Terry"],
-      ["What sectors do you focus on?","I'm raising — where do I start?","Can you help in a downturn?","How do you decide?"]
+      ["Is my company a fit?","I have capital to deploy","Tell me about Terry","How do you get paid?"],
+      ["What makes you different?","A loan of mine has turned","Can you help with grants?","What sectors do you focus on?"],
+      ["I'm raising \u2014 where do I start?","Who have you backed?","Can you help in a downturn?","What do you look for?"],
+      ["Can foreign capital invest here?","What's succession planning worth?","How long does this take?","Ask me anything"]
     ];
     var chipIdx = 0;
     function renderChips(){

@@ -93,6 +93,28 @@
   .step h4{font-family:var(--df);font-weight:500;font-size:21px;margin-top:8px}
   .step p{font-size:15.5px;color:var(--body);margin-top:10px;line-height:1.6}
 
+  /* insights bulletin */
+  .insights{background:var(--cream)}
+  .insights .lead{max-width:60ch}
+  .bulletin{margin-top:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:760px){.bulletin{grid-template-columns:1fr;gap:16px}}
+  .bcard{padding-top:18px;border-top:2px solid var(--gold-dark)}
+  .bcard .btag{font-family:var(--bf);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);font-weight:700}
+  .bcard .bnote{font-size:15px;color:var(--body);margin-top:9px;line-height:1.62}
+  .bull-headline{grid-column:1/-1;font-family:var(--df);font-weight:500;font-size:22px;color:var(--ink);margin-bottom:2px}
+  .bull-loading{grid-column:1/-1;color:var(--muted);font-size:15px;padding:8px 0}
+  .bull-closing{grid-column:1/-1;font-size:15.5px;color:var(--body);font-style:italic;margin-top:6px;line-height:1.6}
+  .bull-note{margin-top:22px;font-size:12.5px;color:var(--muted)}
+  .bull-note a{color:var(--green);font-weight:500;border-bottom:1px solid var(--gold-dark);cursor:pointer}
+  .bull-stamp{grid-column:1/-1;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:12px;opacity:.7}
+
+  /* booking */
+  .booking{margin-top:32px;max-width:560px;margin-left:auto;margin-right:auto}
+  .book-or{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+  .book-fallback{display:inline-block;background:var(--green);color:var(--on-dark);text-decoration:none;padding:13px 26px;border-radius:10px;font-size:14.5px;font-weight:600;font-family:var(--bf)}
+  .book-fallback:hover{background:var(--green-deep)}
+  .calembed{border-radius:12px;overflow:hidden;border:1px solid var(--line);min-height:660px;background:#fff}
+
   /* close */
   .close{background:var(--cream2);text-align:center}
   .close h2{max-width:20ch;margin:0 auto}
@@ -470,6 +492,19 @@
     </div>
   </section>
 
+  <!-- ===== INSIGHTS BULLETIN (live, guardrailed; cached for the day) ===== -->
+  <section id="insights" class="insights">
+    <div class="wrap">
+      <div class="sec-eyebrow">Insights · the current read</div>
+      <h2>What's shaping Canadian agriculture right now.</h2>
+      <p class="lead">A brief, plain read on the climate — rates, trade, land and the sectors. The public view; the deeper read is for the people Terry works with.</p>
+      <div id="bulletin" class="bulletin">
+        <div class="bull-loading">Reading the market…</div>
+      </div>
+      <div class="bull-note">General market commentary — not advice. For a read on your own operation or deal, <a href="#" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'});return false;">get in touch</a>.</div>
+    </div>
+  </section>
+
   <section id="contact" class="close">
     <div class="wrap">
       <div class="sec-eyebrow" style="text-align:center">Get in touch</div>
@@ -480,6 +515,13 @@
         <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('lender');return false;">A loan that\'s turned</a>
         <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
+
+      <!-- ===== BOOKING (Calendly) — drop the real link into CAL_LINK below to go live ===== -->
+      <div id="booking" class="booking">
+        <div class="book-or">or, if you'd rather put time on the calendar</div>
+        <div id="calWrap"></div>
+      </div>
+
       <p style="font-family:var(--df);font-size:21px;color:var(--ink);margin-top:26px">Terry Cholka <span style="color:var(--gold-2)">· Founding Partner</span></p>
       <div class="contact">Dauphin &amp; Winnipeg, Manitoba &nbsp;·&nbsp; <a href="#">terry@agntechconnect.com</a></div>
     </div>
@@ -844,7 +886,7 @@
              + fg('Sector','f_sec','', IK.fit[0]||'')
              + fg('Stage / traction','f_stage','', IK.fit[1]||'')
              + fg("What you're raising or need",'f_need','', IK.fit[2]||'')
-             + '<div class="fg"><label>Pitch deck (optional)</label><input type="file" id="f_deck"></div>'
+             + '<div class="fg"><label>Pitch deck (optional)</label><input type="text" id="f_deck" placeholder="Link to your deck (Google Drive, Dropbox, DocSend…)"><div style="font-size:12px;color:var(--muted);margin-top:5px">Paste a link, or email your deck to terry@agntechconnect.com after you submit — reference your name and we\'ll match it up.</div></div>'
              + ta('Your one-liner','f_one','What you do, in one sentence');
       }
       _mb.innerHTML =
@@ -875,7 +917,7 @@
         exposure: _v('f_exp'),
         oneLiner: _v('f_one'),
         note: _v('f_note'),
-        deck: (function(){ var d=document.getElementById('f_deck'); return (d && d.files && d.files[0]) ? d.files[0].name : ''; })()
+        deck: _v('f_deck')
       };
     }
 
@@ -950,6 +992,57 @@
       else if (IK.view==='form'){ renderVerdict(); }
     }
   </script>
+
+<script>
+  // ===== INSIGHTS BULLETIN =====
+  // Calls the guardrailed Netlify function. The function itself is edge-cached
+  // for 6h, so repeat visitors don't each trigger a model call — spend stays low.
+  (function(){
+    var box = document.getElementById('bulletin');
+    if (!box) return;
+    function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+    fetch('/.netlify/functions/insights-bulletin')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d || !d.items || !d.items.length){ box.style.display='none'; return; }
+        var h = '';
+        if (d.headline) h += '<div class="bull-headline">'+esc(d.headline)+'</div>';
+        d.items.forEach(function(it){
+          h += '<div class="bcard"><div class="btag">'+esc(it.tag)+'</div><div class="bnote">'+esc(it.note)+'</div></div>';
+        });
+        if (d.closing) h += '<div class="bull-closing">'+esc(d.closing)+'</div>';
+        if (d.generated) h += '<div class="bull-stamp">As at '+esc(d.generated)+'</div>';
+        box.innerHTML = h;
+      })
+      .catch(function(){
+        // If the function is unreachable, hide the section rather than show an error.
+        var sec = document.getElementById('insights'); if (sec) sec.style.display='none';
+      });
+  })();
+
+  // ===== BOOKING (Calendly) =====
+  // TO GO LIVE: paste Terry's Calendly scheduling link into CAL_LINK.
+  // e.g. var CAL_LINK = "https://calendly.com/terry-agntech/discovery-call";
+  // Until then, the section shows nothing (no broken/empty embed).
+  var CAL_LINK = ""; // <-- paste the Calendly link here
+  (function(){
+    var wrap = document.getElementById('calWrap');
+    var booking = document.getElementById('booking');
+    if (!wrap || !booking) return;
+    if (!CAL_LINK){ booking.style.display='none'; return; } // no link yet → hide cleanly
+    // Inline embed via Calendly's widget script.
+    var d = document.createElement('div');
+    d.className = 'calendly-inline-widget calembed';
+    d.setAttribute('data-url', CAL_LINK + '?hide_gdpr_banner=1&background_color=f7f3e9&primary_color=0f2a20');
+    d.style.minWidth = '320px';
+    d.style.height = '660px';
+    wrap.appendChild(d);
+    var s = document.createElement('script');
+    s.src = 'https://assets.calendly.com/assets/external/widget.js';
+    s.async = true;
+    document.body.appendChild(s);
+  })();
+</script>
 
 <script>
   function openMob(){ var m=document.getElementById('mobmenu'); if(m){ m.classList.add('open'); document.body.style.overflow='hidden'; } }

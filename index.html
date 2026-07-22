@@ -174,7 +174,7 @@
   /* intake modal */
   .overlay{position:fixed;inset:0;background:rgba(21,46,24,.55);z-index:100;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:48px 20px}
   .overlay.open{display:flex}
-  .modal{background:var(--cream);border-radius:18px;max-width:560px;width:100%;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.32);position:relative}
+  .modal{background:var(--cream);border-radius:18px;max-width:560px;width:100%;padding:32px;box-shadow:0 30px 80px rgba(0,0,0,.32);position:relative;max-height:90vh;overflow-y:auto}
   .mclose{position:absolute;top:14px;right:16px;width:34px;height:34px;border:none;background:transparent;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;border-radius:8px}
   .mclose:hover{background:var(--cream2);color:var(--ink)}
   .mstep{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
@@ -521,7 +521,7 @@
         <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
 
-      <!-- Booking is gated behind the intake flow (openIntake) — no open self-serve booking by design. -->
+      <!-- Booking is gated behind the intake flow (openIntake -> renderBooking) — no open self-serve booking. -->
 
       <p style="font-family:var(--df);font-size:21px;color:var(--ink);margin-top:26px">Terry Cholka <span style="color:var(--gold-2)">· Founding Partner</span></p>
       <div class="contact">Dauphin &amp; Winnipeg, Manitoba &nbsp;·&nbsp; <a href="#">terry@agntechconnect.com</a></div>
@@ -966,12 +966,12 @@
       body.append('bot-field','');
 
       fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() })
-        .then(function(r){ if(!r.ok) throw new Error('status '+r.status); renderDone(); })
+        .then(function(r){ if(!r.ok) throw new Error('status '+r.status); renderBooking(d); })
         .catch(function(){
           // Never lose a serious enquiry: hand it to email as a fallback.
           var subj = 'AgNtech enquiry — ' + (d.door||'') + ' — ' + (d.name||'');
           window.location.href = 'mailto:terry@agntechconnect.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(readableIntake(d));
-          renderDone();
+          renderBooking(d);
         });
     }
     function renderDone(){
@@ -986,6 +986,29 @@
         '<h3 class="mh" style="text-align:center">Thank you</h3>'+
         '<p class="mp" style="text-align:center">'+msg+'</p>'+
         '<button class="mbtn primary" onclick="closeIntake()">Done</button>';
+    }
+    function renderBooking(d){
+      IK.view='booking';
+      _mb.innerHTML =
+        '<div class="mstep">'+doorLabel()+' \u00b7 book a time</div>'+
+        '<h3 class="mh">Last step \u2014 pick a time.</h3>'+
+        '<p class="mp">Your details are with Terry. Choose a slot below and a confirmation with a video link is sent right away. Prefer he come to you instead? <a href="#" style="color:var(--gold-2)" onclick="renderDone();return false;">have Terry reach out</a>.</p>'+
+        '<div id="cal-embed" style="min-width:300px;height:600px;margin-top:8px"></div>';
+      var url = 'https://calendly.com/terry-agntechconnect?hide_gdpr_banner=1&background_color=f7f3e9&primary_color=0f2a20';
+      var pf = { name:(d&&d.name)||'', email:(d&&d.email)||'' };
+      function boot(){
+        var el=document.getElementById('cal-embed');
+        if (el && window.Calendly && window.Calendly.initInlineWidget){
+          window.Calendly.initInlineWidget({ url:url, parentElement:el, prefill:pf });
+        }
+      }
+      if (window.Calendly && window.Calendly.initInlineWidget){ boot(); return; }
+      if (!document.getElementById('cal-css')){
+        var l=document.createElement('link'); l.id='cal-css'; l.rel='stylesheet';
+        l.href='https://assets.calendly.com/assets/external/widget.css'; document.head.appendChild(l);
+      }
+      var s=document.createElement('script'); s.src='https://assets.calendly.com/assets/external/widget.js';
+      s.async=true; s.onload=boot; document.body.appendChild(s);
     }
     function stepBack(){
       if (IK.view==='fit'){ if (IK.step>0){ IK.step--; renderFit(); } else { renderChooser(); } }

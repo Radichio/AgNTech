@@ -28,6 +28,7 @@
   .mark{width:36px;height:36px;flex:none}
   .navlinks{display:flex;align-items:center;gap:26px;font-size:14.5px;color:var(--body)}
   .navlinks a:hover{color:var(--green)}
+  .nav-live::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-right:7px;vertical-align:middle}
   .navbtn{background:var(--green);color:var(--on-dark);padding:9px 16px;border-radius:8px;font-size:14px;font-weight:500}
   .navbtn:hover{background:var(--green-d)}
   @media(max-width:680px){.navlinks a:not(.navbtn){display:none}}
@@ -106,7 +107,9 @@
   .bull-closing{grid-column:1/-1;font-size:15.5px;color:var(--body);font-style:italic;margin-top:6px;line-height:1.6}
   .bull-note{margin-top:22px;font-size:12.5px;color:var(--muted)}
   .bull-note a{color:var(--green);font-weight:500;border-bottom:1px solid var(--gold-dark);cursor:pointer}
-  .bull-stamp{grid-column:1/-1;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:12px;opacity:.7}
+  .bull-dateline{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;padding-bottom:14px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+  .bull-dateline .bd-kicker{font-family:var(--bf);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);font-weight:700}
+  .bull-dateline .bd-date{font-family:var(--df);font-weight:500;font-size:15.5px;color:var(--ink)}
 
   /* booking */
   .booking{margin-top:32px;max-width:560px;margin-left:auto;margin-right:auto}
@@ -313,7 +316,7 @@
         <a href="#vision">Vision</a>
         <a href="services.html">What I do</a>
         <a href="#why">Why it works</a>
-        <a href="#insights">Insights</a>
+        <a href="#insights" class="nav-live">Insights</a>
         <a href="about.html">About</a>
         <a href="contact.html" class="navbtn">Get in touch</a>
       </div>
@@ -330,7 +333,7 @@
     <a href="index.html#vision">Vision &amp; Mission</a>
     <a href="services.html">What I do</a>
     <a href="index.html#why">Why it works</a>
-    <a href="index.html#insights">Insights</a>
+    <a href="index.html#insights" class="nav-live">Insights</a>
     <a href="about.html">About</a>
     <a href="index.html#ask">Ask Terry</a>
     <div style="margin-top:16px">
@@ -1008,12 +1011,12 @@
       .then(function(d){
         if (!d || !d.items || !d.items.length){ box.style.display='none'; return; }
         var h = '';
+        if (d.generated) h += '<div class="bull-dateline"><span class="bd-kicker">As at</span><span class="bd-date">'+esc(d.generated)+'</span></div>';
         if (d.headline) h += '<div class="bull-headline">'+esc(d.headline)+'</div>';
         d.items.forEach(function(it){
           h += '<div class="bcard"><div class="btag">'+esc(it.tag)+'</div><div class="bnote">'+esc(it.note)+'</div></div>';
         });
         if (d.closing) h += '<div class="bull-closing">'+esc(d.closing)+'</div>';
-        if (d.generated) h += '<div class="bull-stamp">As at '+esc(d.generated)+'</div>';
         box.innerHTML = h;
       })
       .catch(function(){

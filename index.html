@@ -354,7 +354,7 @@
       <p class="sub">Forty years on the land and in the boardroom. I find, vet, and structure the opportunities only a local operator can reach — and I help open the way to the capital needed.</p>
       <div class="cta">
         <a href="#ask" class="btn primary" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
-        <a href="#ask" class="btn ghost" onclick="openIntake('lender');return false;">A loan that\'s turned</a>
+        <a href="#ask" class="btn ghost" onclick="openIntake('lender');return false;">A loan that's turned</a>
         <a href="#ask" class="btn ghost" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
       <div class="tagline">"I speak farmer, tech, and capital — and I connect the three."</div>
@@ -517,15 +517,11 @@
       <p class="lead">Every conversation starts the same way: a few questions, so I understand your situation before we ever get on a call. Discreet, and worth your time.</p>
       <div class="cta">
         <a href="#" class="btn primary" style="background:var(--green);color:var(--on-dark)" onclick="openIntake('capital');return false;">Bring capital to the sector</a>
-        <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('lender');return false;">A loan that\'s turned</a>
+        <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('lender');return false;">A loan that's turned</a>
         <a href="#" class="btn ghost" style="color:var(--green);border-color:#cdbf9f" onclick="openIntake('venture');return false;">Raise or scale a venture</a>
       </div>
 
-      <!-- ===== BOOKING (Calendly) — drop the real link into CAL_LINK below to go live ===== -->
-      <div id="booking" class="booking">
-        <div class="book-or">or, if you'd rather put time on the calendar</div>
-        <div id="calWrap"></div>
-      </div>
+      <!-- Booking is gated behind the intake flow (openIntake) — no open self-serve booking by design. -->
 
       <p style="font-family:var(--df);font-size:21px;color:var(--ink);margin-top:26px">Terry Cholka <span style="color:var(--gold-2)">· Founding Partner</span></p>
       <div class="contact">Dauphin &amp; Winnipeg, Manitoba &nbsp;·&nbsp; <a href="#">terry@agntechconnect.com</a></div>
@@ -1029,7 +1025,7 @@
   // TO GO LIVE: paste Terry's Calendly scheduling link into CAL_LINK.
   // e.g. var CAL_LINK = "https://calendly.com/terry-agntech/discovery-call";
   // Until then, the section shows nothing (no broken/empty embed).
-  var CAL_LINK = "https://calendly.com/terry-agntechconnect"; // Terry's live scheduling link
+  var CAL_LINK = ""; // <-- paste the Calendly link here
   (function(){
     var wrap = document.getElementById('calWrap');
     var booking = document.getElementById('booking');

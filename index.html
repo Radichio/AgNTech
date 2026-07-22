@@ -994,7 +994,8 @@
         '<h3 class="mh">Last step \u2014 pick a time.</h3>'+
         '<p class="mp">Your details are with Terry. Choose a slot below and a confirmation with a video link is sent right away. Prefer he come to you instead? <a href="#" style="color:var(--gold-2)" onclick="renderDone();return false;">have Terry reach out</a>.</p>'+
         '<div id="cal-embed" style="min-width:300px;height:600px;margin-top:8px"></div>';
-      var url = 'https://calendly.com/terry-agntechconnect?hide_gdpr_banner=1&background_color=f7f3e9&primary_color=0f2a20';
+      var SLUG = { capital:'capital-intro', lender:'lender-consult', venture:'venture-intro' };
+      var url = 'https://calendly.com/terry-agntechconnect/' + (SLUG[IK.door] || 'capital-intro') + '?hide_gdpr_banner=1&background_color=f7f3e9&primary_color=0f2a20';
       var pf = { name:(d&&d.name)||'', email:(d&&d.email)||'' };
       function boot(){
         var el=document.getElementById('cal-embed');

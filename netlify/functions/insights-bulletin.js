@@ -18,8 +18,8 @@
 
 const MODEL = 'claude-sonnet-5';
 const MAX_TOKENS = 1200;
-const FEED_BUDGET_MS = 7000;    // all feeds, in parallel
-const MODEL_BUDGET_MS = 16000;  // generation
+const FEED_BUDGET_MS = 4000;    // all feeds, in parallel (observed ~0.7s)
+const MODEL_BUDGET_MS = 25000;  // generation (Netlify's ceiling is 30s; feeds cost <1s)
 const DEBUG_TOKEN = 'agn-diag-2026';
 
 // Anthropic's server-side search tool. Off: it was failing on this account and
@@ -34,7 +34,7 @@ const FEEDS = [
   { tag: 'Livestock',         q: 'Canada cattle beef hog prices when:7d' },
   { tag: 'Credit & land',     q: 'farm credit interest rates farmland Canada when:7d' }
 ];
-const PER_FEED = 5;
+const PER_FEED = 4;
 
 const FALLBACK = {
   headline: "Disciplined capital, steady ground",

@@ -95,7 +95,7 @@ function json(statusCode, obj, cache) {
     statusCode,
     headers: {
       'content-type': 'application/json',
-      'cache-control': cache === false ? 'no-store' : 'public, max-age=21600'
+      'cache-control': cache === false ? 'no-store' : 'public, max-age=1800'
     },
     body: JSON.stringify(obj)
   };

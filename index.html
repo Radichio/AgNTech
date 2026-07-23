@@ -785,7 +785,7 @@
     var IK = { door:null, step:0, fit:{}, view:null };
     var _ov, _mb;
     // Allow other pages to route into the one intake via ?intake=capital|venture|open
-    window.addEventListener('load', function(){ try{ var p=new URLSearchParams(location.search).get('intake'); if(p==='capital'||p==='venture'||p==='lender'){ openIntake(p); } else if(p){ openIntake(); } }catch(e){} });
+    window.addEventListener('load', function(){ try{ var p=new URLSearchParams(location.search).get('intake'); if(p==='capital'||p==='venture'||p==='lender'||p==='talent'){ openIntake(p); } else if(p){ openIntake(); } }catch(e){} });
     function openIntake(door){
       _ov = document.getElementById('overlay'); _mb = document.getElementById('mbody');
       // Every step render replaces #mbody. Watch for that and snap back to the
@@ -819,9 +819,15 @@
         {q:"What kind of operation?", a:["Farm or primary ag","Feedlot or livestock","Processing or food","Agtech or other"]},
         {q:"Where does it stand?", a:["Early signs of trouble","In default","Headed to realization"]},
         {q:"What would help most?", a:["An honest read on the operation","A workout structure","A buyer who understands it"]}
+      ],
+      talent:[
+        {q:"What kind of work draws you?", a:["Field trials & R&D","Hardware & prototyping","Operations & agronomy","Something else"]},
+        {q:"Your background in ag or agtech?", a:["Deep \u2014 years in the sector","Some \u2014 adjacent experience","New to ag, strong in my own field"]},
+        {q:"Where are you?", a:["Dauphin area","Winnipeg area","Elsewhere in Manitoba","Outside Manitoba"]},
+        {q:"Timing?", a:["Ready now","Within six months","Longer horizon \u2014 keep me posted"]}
       ]
     };
-    function doorLabel(){ return IK.door==='capital' ? 'Capital' : (IK.door==='lender' ? 'Lender' : 'Venture'); }
+    function doorLabel(){ return IK.door==='capital' ? 'Capital' : (IK.door==='lender' ? 'Lender' : (IK.door==='talent' ? 'Careers' : 'Venture')); }
     function backBtn(){ return '<button class="mback" onclick="stepBack()">← Back</button>'; }
 
     function renderChooser(){
@@ -849,6 +855,13 @@
     function answer(i){ var qs=FIT[IK.door]; IK.fit[IK.step]=qs[IK.step].a[i]; IK.step++; renderFit(); }
 
     function verdictFor(){
+      if (IK.door==='talent'){
+        if (IK.fit[3]==='Longer horizon \u2014 keep me posted')
+          return {tone:'soft', text:"That suits where things are. The lab is still being built, so there is no queue to wait in \u2014 leave your details and Terry will keep you in mind as the work opens up."};
+        if (IK.fit[1]==='New to ag, strong in my own field')
+          return {tone:'soft', text:"Coming from outside agriculture is not a barrier here \u2014 the lab needs people who can build. Tell him what you are strong at and where you would want to point it."};
+        return {tone:'good', text:"These are not posted openings yet \u2014 the lab is being stood up. But Terry reads every registration himself, and the right people tend to get found early."};
+      }
       if (IK.door==='lender'){
         if (IK.fit[1]==='Headed to realization')
           return {tone:'soft', text:"Late in the day, but not always too late — sometimes there's still more value in an orderly path than a forced sale. Give Terry the details and he'll tell you straight what he sees."};
@@ -892,6 +905,14 @@
              + fg('Geography','f_geo','Where you want to deploy')
              + fg('Timeline','f_time','e.g. over the next 12 months')
              + ta('Your mandate, in a sentence or two','f_note');
+      } else if (IK.door==='talent'){
+        body = fg('Name','f_name')+fg('Email','f_email','you@email.com')
+             + fg('Where you are','f_geo','', IK.fit[2]||'')
+             + fg('What you do now','f_role','Current role or most recent')
+             + fg('LinkedIn or portfolio','f_link','A link Terry can look at')
+             + fg('The work that draws you','f_sec','', IK.fit[0]||'')
+             + fg('Timing','f_time','', IK.fit[3]||'')
+             + ta('What you would bring','f_one','A sentence or two \u2014 what you are good at, and what you would want to build here.');
       } else {
         body = fg('Name','f_name')+fg('Company','f_co')+fg('Email','f_email','you@company.com')
              + fg('Sector','f_sec','', IK.fit[0]||'')
@@ -902,7 +923,7 @@
       }
       _mb.innerHTML =
         '<div class="mstep">'+doorLabel()+' · details</div>'+
-        '<h3 class="mh">'+(IK.door==='capital'?'Tell me about your mandate':'Tell me about your venture')+'</h3>'+
+        '<h3 class="mh">'+(IK.door==='capital'?'Tell me about your mandate':(IK.door==='lender'?'Tell me about the situation':(IK.door==='talent'?'Tell me about you':'Tell me about your venture')))+'</h3>'+
         '<div class="form">'+body+'</div>'+
         '<label class="consent"><input type="checkbox" id="consent"> I agree my details may be stored and reviewed by Terry. Nothing is shared with anyone else without my consent.</label>'+
         '<button class="mbtn primary" id="ikSend" onclick="submitIntake()">Submit</button>'+
@@ -928,7 +949,9 @@
         exposure: _v('f_exp'),
         oneLiner: _v('f_one'),
         note: _v('f_note'),
-        deck: _v('f_deck')
+        deck: _v('f_deck'),
+        role: _v('f_role'),
+        link: _v('f_link')
       };
     }
 
@@ -944,7 +967,8 @@
       L.push('');
       L.push('— Details —');
       [['Sector',d.sector],['Stage',d.stage],['Need',d.need],['Geography',d.geography],
-       ['Timeline',d.timeline],['Exposure',d.exposure],['One-liner',d.oneLiner],
+       ['Timeline',d.timeline],['Exposure',d.exposure],['Current role',d.role],
+       ['LinkedIn / portfolio',d.link],['One-liner',d.oneLiner],
        ['Note',d.note],['Deck',d.deck]].forEach(function(p){ if(p[1]) L.push(p[0]+': '+p[1]); });
       L.push('');
       L.push('Submitted: ' + d.submitted);
@@ -976,17 +1000,22 @@
       body.append('bot-field','');
 
       fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body.toString() })
-        .then(function(r){ if(!r.ok) throw new Error('status '+r.status); renderBooking(d); })
+        .then(function(r){ if(!r.ok) throw new Error('status '+r.status); afterSubmit(d); })
         .catch(function(){
           // Never lose a serious enquiry: hand it to email as a fallback.
           var subj = 'AgNtech enquiry — ' + (d.door||'') + ' — ' + (d.name||'');
           window.location.href = 'mailto:terry@agntechconnect.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(readableIntake(d));
-          renderBooking(d);
+          afterSubmit(d);
         });
     }
+    // Capital, lenders and founders may book a time. Careers registrations do not:
+    // a candidate gets a considered reply, not a slot on the founding partner's calendar.
+    function afterSubmit(d){ if (IK.door==='talent') renderDone(); else renderBooking(d); }
     function renderDone(){
       IK.view='done';
-      var msg = (IK.door==='capital')
+      var msg = (IK.door==='talent')
+        ? "Received, and it goes on Terry's own list \u2014 not into a pile. These are future roles rather than open postings, so there is nothing to chase: he will be in touch as the lab takes shape."
+        : (IK.door==='capital')
         ? "Received. Terry reviews capital mandates personally and will be in touch directly — discreetly. Thank you."
         : (IK.door==='lender')
         ? "Received, and held in confidence. Terry will look at the operation himself and come back with a straight read."

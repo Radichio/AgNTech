@@ -16,7 +16,7 @@
 //
 // DIAGNOSTICS: ?debug=<DEBUG_TOKEN> shows the headlines pulled and what ran.
 
-const MODEL = 'claude-sonnet-5';
+const MODEL = 'claude-haiku-4-5-20251001';  // fast tier: generates in seconds, so the call cannot outrun the function
 const MAX_TOKENS = 1200;
 const FEED_BUDGET_MS = 4000;    // all feeds, in parallel (observed ~0.7s)
 const MODEL_BUDGET_MS = 25000;  // generation (Netlify's ceiling is 30s; feeds cost <1s)

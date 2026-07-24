@@ -107,9 +107,14 @@ exports.handler = async (event) => {
     });
     if (!resp.ok) {
       const t = await resp.text();
-      console.log('[intake] Supabase rejected the insert:', resp.status, t.slice(0, 400));
+      // Full body + which key-shape we're using, so the cause names itself.
+      const keyShape = key.startsWith('sb_secret_') ? 'sb_secret_' :
+                       key.startsWith('sb_publishable_') ? 'sb_publishable_' :
+                       key.startsWith('eyJ') ? 'legacy_jwt' : 'unknown';
+      console.log('[intake] Supabase REJECTED insert. status=' + resp.status +
+                  ' keyShape=' + keyShape + ' body=' + t);
     } else {
-      console.log('[intake] stored:', row.door, row.email || '(no email)');
+      console.log('[intake] STORED ok:', row.door, row.email || '(no email)');
     }
   } catch (e) {
     console.log('[intake] insert failed:', String((e && e.message) || e));

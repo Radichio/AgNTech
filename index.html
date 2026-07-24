@@ -23,7 +23,7 @@
   /* nav */
   nav{position:sticky;top:0;z-index:50;background:rgba(250,245,235,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .navin{max-width:1080px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink)}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink);cursor:pointer}
   .brand .n{color:var(--green)}
   .mark{width:36px;height:36px;flex:none}
   .navlinks{display:flex;align-items:center;gap:26px;font-size:14.5px;color:var(--body)}
@@ -302,7 +302,7 @@
 
   <nav>
     <div class="navin">
-      <span class="brand">
+      <span class="brand" role="button" tabindex="0" aria-label="Back to top" onclick="toTop()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toTop();}">
         <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
           <rect x="9" y="11" width="30" height="4" fill="#0F2A20"/>
           <rect x="11" y="15" width="4" height="22" fill="#0F2A20"/>
@@ -326,7 +326,7 @@
 
   <div class="mobmenu" id="mobmenu">
     <div class="mtop">
-      <span class="mbrand">Ag<span style="color:#C9A45A">N</span>tech Connect</span>
+      <span class="mbrand" role="button" tabindex="0" aria-label="Back to top" style="cursor:pointer" onclick="closeMob&&closeMob();toTop()">Ag<span style="color:#C9A45A">N</span>tech Connect</span>
       <button class="mclose" onclick="closeMob()" aria-label="Close menu">&times;</button>
     </div>
     <a href="index.html">Home</a>
@@ -1121,5 +1121,8 @@
     <input type="text" name="bot-field">
   </form>
 
+  <script>
+    function toTop(){ try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); } }
+  </script>
 </body>
 </html>

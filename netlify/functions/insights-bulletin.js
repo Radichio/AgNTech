@@ -17,7 +17,7 @@
 // DIAGNOSTICS: ?debug=<DEBUG_TOKEN> shows the headlines pulled and what ran.
 
 const MODEL = 'claude-haiku-4-5-20251001';  // fast tier: generates in seconds, so the call cannot outrun the function
-const MAX_TOKENS = 1200;
+const MAX_TOKENS = 1800;
 const FEED_BUDGET_MS = 4000;    // all feeds, in parallel (observed ~0.7s)
 const MODEL_BUDGET_MS = 25000;  // generation (Netlify's ceiling is 30s; feeds cost <1s)
 const DEBUG_TOKEN = 'agn-diag-2026';
@@ -29,10 +29,15 @@ const MAX_SEARCHES = 4;
 
 // The threads we pull live headlines for. `when:7d` keeps it to the last week.
 const FEEDS = [
-  { tag: 'Trade & tariffs',   q: 'Canada agriculture tariffs trade when:7d' },
-  { tag: 'Grains & oilseeds', q: 'canola wheat grain prices Canada when:7d' },
-  { tag: 'Livestock',         q: 'Canada cattle beef hog prices when:7d' },
-  { tag: 'Credit & land',     q: 'farm credit interest rates farmland Canada when:7d' }
+  { tag: 'Trade & tariffs',    q: 'Canada agriculture tariffs trade when:7d' },
+  { tag: 'Grains & oilseeds',  q: 'canola wheat grain prices Canada when:7d' },
+  { tag: 'Cattle & beef',      q: 'Canada cattle beef market prices when:7d' },
+  { tag: 'Hogs & poultry',     q: 'Canada hogs pork poultry chicken market when:7d' },
+  { tag: 'Dairy',              q: 'Canada dairy supply management milk when:7d' },
+  { tag: 'Inputs & costs',     q: 'fertilizer fuel input costs Canadian farmers when:7d' },
+  { tag: 'Crop conditions',    q: 'Prairie crop conditions harvest weather when:7d' },
+  { tag: 'Credit & land',      q: 'farm credit interest rates farmland values Canada when:7d' },
+  { tag: 'Agri-food & agtech', q: 'Canadian agri-food processing agtech investment when:7d' }
 ];
 const PER_FEED = 4;
 
@@ -80,6 +85,8 @@ BE SPECIFIC AND DATE-ANCHORED. Name the actual development. "A 50% tariff announ
 DRAW THE LINE — event, mechanism, consequence. For each thread: what happened, how it actually transmits into the sector, and what it means for a Prairie operation or a deal on the table right now. That chain is what makes this a desk read rather than a news summary. Your reader is sophisticated — investors, operators, lenders. They sit up for a specific, non-obvious read, never for volume.
 
 1. LEAD WITH A THROUGH-LINE. Build the headline around the single dynamic that matters most right now — a thesis, not a label. The items should connect to it. The closing should land it.
+
+1b. COVER THE LANDSCAPE. This is a desk read on Canadian agriculture as a whole, not a report on the loudest story of the week. Give FOUR OR FIVE items spanning genuinely different parts of the sector — across grains and oilseeds, cattle, hogs and poultry, dairy, inputs and costs, crop conditions, credit and farmland, and agri-food and agtech capital. Two items is a failure: a reader should finish with a picture of the whole industry, with the through-line running through it. Where a thread is quiet, say so briefly and move on — quiet is information too. Never omit a major segment simply because the week's headlines were dominated elsewhere.
 2. EVERY ITEM CARRIES A TENSION. Past "here is the condition" to "here is what it means, and the thing pulling against it." A line like "the mood is watchful rather than alarmed" is the texture to aim for.
 3. STAY MEASURED. A seasoned operator giving a straight read over coffee — short sentences, no hype, no emoji, no exclamation marks. Sharp is not loud; confident restraint reads as more credible to this audience.
 4. BE OF THIS MOMENT. Reflect the season and what is actually in front of producers and capital. A reader should be able to tell what week it is.
@@ -101,7 +108,7 @@ FUNNEL. Close by inviting the reader to get in touch for a read on how the clima
 
 OUTPUT FORMAT. Respond with a single raw JSON object and NOTHING else — no preamble, no commentary, no markdown, no code fences:
 {"headline":"<the through-line as a short thesis, under 9 words>","items":[{"tag":"<1-2 word theme>","note":"<2-3 sentences: the specific development, how it transmits, and the tension in it>"},{"tag":"...","note":"..."},{"tag":"...","note":"..."}],"closing":"<one warm sentence inviting contact>"}
-Provide 3 to 4 items. "tag" is a 1-2 word label (e.g. "Rates", "Cattle", "Trade", "Land", "Canola", "Agri-food").`;
+Provide FOUR OR FIVE items, spanning different parts of the sector. "tag" is a 1-2 word label (e.g. "Rates", "Cattle", "Trade", "Land", "Canola", "Agri-food").`;
 
 function json(statusCode, obj, cache) {
   return {
@@ -230,12 +237,20 @@ function extractJson(text) {
   return null;
 }
 
+// Cut at a sentence boundary, never mid-thought.
+function trimToSentence(t, max) {
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const stop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
+  return (stop > max * 0.5 ? cut.slice(0, stop + 1) : cut).trim();
+}
+
 function shape(parsed, today) {
   if (!parsed) return null;
   const items = parsed.items
     .filter(x => x && typeof x.tag === 'string' && typeof x.note === 'string')
-    .map(x => ({ tag: x.tag.trim().slice(0, 24), note: x.note.trim().slice(0, 400) }))
-    .slice(0, 4);
+    .map(x => ({ tag: x.tag.trim().slice(0, 24), note: trimToSentence(x.note.trim(), 700) }))
+    .slice(0, 5);
   if (!items.length) return null;
   return {
     headline: parsed.headline.trim().slice(0, 80),

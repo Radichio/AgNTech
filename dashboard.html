@@ -80,6 +80,17 @@
   .abtn:hover{color:var(--ink);border-color:var(--muted)}
   .abtn.primary{background:#F0E7D2;color:var(--blue);border-color:#D8C38E}
 </style>
+  <style>
+    .demotag{display:inline-block;padding:1px 6px;margin-left:6px;border:1px solid #C9B98A;border-radius:20px;
+      font:700 8px/1.5 'Helvetica Neue',Arial,sans-serif;letter-spacing:.08em;color:#9a8552;
+      background:rgba(176,138,60,.07);vertical-align:middle;text-transform:uppercase}
+  </style>
+  <style>
+    .pcard.intake{border-left:2px solid #B08A3C}
+    .newtag{display:inline-block;padding:1px 6px;margin-left:6px;border-radius:20px;
+      font:700 8px/1.5 'Helvetica Neue',Arial,sans-serif;letter-spacing:.08em;
+      color:#0F2A20;background:#E2C98A;vertical-align:middle;text-transform:uppercase}
+  </style>
 </head>
 <body>
 
@@ -155,17 +166,12 @@
     })();
   </script>
 
-  <style>
-    .demopill{display:inline-block;margin-left:12px;padding:2px 8px;border:1px solid #B08A3C;border-radius:20px;
-      font:700 9.5px/1.4 'Helvetica Neue',Arial,sans-serif;letter-spacing:.09em;color:#8F6F2E;background:rgba(176,138,60,.08);
-      vertical-align:middle;text-transform:uppercase}
-  </style>
   <div class="bar">
     <span class="brand">
       <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech&nbsp;Connect <span class="sub">&nbsp;/ dashboard</span>
     </span>
     <div class="digest">
-      <span><b>2</b> new to vet</span><span><b>6</b> in process</span><span><b>4</b> in library</span><span class="on">live data on</span><span class="demopill" id="demopill">DEMO DATA</span>
+      <span id="digest"></span><span class="on">live data</span>
     </div>
   </div>
 
@@ -175,36 +181,12 @@
 
         <div class="zone">
           <div class="zlabel"><h2>In process</h2><span class="zsub">where each relationship sits — new intake and existing alike</span></div>
-          <div class="kanban">
-            <div class="col">
-              <h4>Vetting fit <span class="ct">2</span></h4>
-              <div class="pcard" data-card="soilsense" onclick="select('soilsense')"><div class="pn">SoilSense</div><span class="chip sector">Bioscience</span><div class="pmeta">New — scoring vs rubric</div></div>
-              <div class="pcard" data-card="harvestpay" onclick="select('harvestpay')"><div class="pn">HarvestPay</div><span class="chip sector">Food</span><div class="pmeta">New — scoring vs rubric</div></div>
-            </div>
-            <div class="col">
-              <h4>Engaged <span class="ct">2</span></h4>
-              <div class="pcard" data-card="greenfield" onclick="select('greenfield')"><div class="pn">Greenfield Seed</div><span class="chip sector">Agtech</span><div class="pmeta">Advising on go-to-market</div></div>
-              <div class="pcard" data-card="pasturage" onclick="select('pasturage')"><div class="pn">Pasturage Co.</div><span class="chip sector">Agriculture</span><div class="pmeta">Structuring capital</div></div>
-            </div>
-            <div class="col">
-              <h4>Gaining traction <span class="ct">1</span></h4>
-              <div class="pcard" data-card="rootstock" onclick="select('rootstock')"><div class="pn">Rootstock Robotics</div><span class="chip sector">Agtech</span><div class="pmeta">Intros underway</div></div>
-            </div>
-            <div class="col">
-              <h4>Ready to introduce <span class="ct">1</span></h4>
-              <div class="pcard active" data-card="tilth" onclick="select('tilth')"><div class="pn">Tilth Labs</div><span class="chip sector">Agtech</span> <span class="chip fit">8.9</span><div class="pmeta">Cleared — in the library</div></div>
-            </div>
-          </div>
+          <div class="kanban" id="kanban"></div>
         </div>
 
         <div class="zone">
           <div class="zlabel"><h2>Referral library</h2><span class="zsub">vetted opportunities, ready to match to the right capital — the outflow</span></div>
-          <div class="libgrid">
-            <div class="lcard" data-card="tilth" onclick="select('tilth')"><div class="lh"><span class="ln">Tilth Labs</span><span class="chip fit">8.9</span></div><div class="lpitch">Variable-rate platform — $640k ARR, +18% MoM.</div><div class="bestfit">Best fit: <b>growth-stage agtech funds</b></div></div>
-            <div class="lcard" data-card="rootstock" onclick="select('rootstock')"><div class="lh"><span class="ln">Rootstock Robotics</span><span class="chip fit">8.4</span></div><div class="lpitch">Autonomous weeding — four paid pilots.</div><div class="bestfit">Best fit: <b>hardware-comfortable seed</b></div></div>
-            <div class="lcard" data-card="verdant" onclick="select('verdant')"><div class="lh"><span class="ln">Verdant Bio</span><span class="chip fit">7.7</span></div><div class="lpitch">Nitrogen-fixing microbial — strong lab data.</div><div class="bestfit">Best fit: <b>patient bioscience capital</b></div></div>
-            <div class="lcard" data-card="prairieprotein" onclick="select('prairieprotein')"><div class="lh"><span class="ln">Prairie Protein</span><span class="chip fit">7.8</span></div><div class="lpitch">Pulse-based protein — first co-packer signed.</div><div class="bestfit">Best fit: <b>food-tech & family offices</b></div></div>
-          </div>
+          <div class="libgrid" id="libgrid"></div>
         </div>
 
       </div>
@@ -216,86 +198,252 @@
   </div>
 
 <script>
-  const DATA = {
-    tilth:{name:"Tilth Labs",sector:"Agtech",stage:"Series A",dtype:"Investment",fit:"8.9",
-      summary:"Variable-rate application platform. $640k ARR growing ~18% month over month, and two of your portfolio peers are already customers.",
-      strengths:["Best traction in the batch","Warm references from peers you trust","Capital-efficient to date"],
-      risks:["Valuation expectations may run ahead of stage"],
-      market:{stat:"VRA software adoption +22% YoY",note:"Category leaders are getting marked up — timing favours a raise now rather than in six months."},
-      comps:"Comparable Series A rounds priced $25–40M post on similar ARR and growth.",
-      net:{fit:"growth-stage agtech funds",conn:"Prairie Ag Growth",ctype:"Series A fund · precision ag"}},
-    rootstock:{name:"Rootstock Robotics",sector:"Agtech",stage:"Seed",dtype:"Investment",fit:"8.4",
-      summary:"Autonomous inter-row weeding for row crops. Four paid pilots on Prairie farms, real cost-per-acre savings, a founder who actually farmed.",
-      strengths:["Paying pilots, not letters of intent","Founder ran a 5,000-acre operation","Clear cost-per-acre savings story"],
-      risks:["Hardware margins unproven at scale","{FLAG} Deck claims $180k ARR but the listed pilots sum to ~$120k"],
-      market:{stat:"Precision-ag funding +14% YoY",note:"Weeding robotics is one of the few ag-hardware niches still drawing seed capital."},
-      comps:"Early comps (FarmWise, Carbon Robotics) priced $8–12M post at seed.",
-      net:{fit:"hardware-comfortable seed capital",conn:"North40 Angels",ctype:"angel group · ag hardware"}},
-    soilsense:{name:"SoilSense",sector:"Bioscience",stage:"Seed",dtype:"Investment",fit:"6.9",
-      summary:"Microbial soil amendment improving nitrogen uptake. Lab results strong; field trials just beginning.",
-      strengths:["Differentiated science","Large addressable market","Technical founding team"],
-      risks:["Pre-revenue, field data still thin","Regulatory path not yet mapped"],
-      market:{stat:"Ag biologicals ~$15B, +10% CAGR",note:"Nitrogen-efficiency plays are in favour while fertilizer costs stay elevated."},
-      comps:"Pivot Bio and Sound Ag set the category; early rounds $5–9M.",
-      net:{fit:"patient bioscience capital",conn:"BioPrairie Fund",ctype:"deep-tech · long horizon"}},
-    harvestpay:{name:"HarvestPay",sector:"Food",stage:"Seed",dtype:"Investment",fit:"5.2",
-      summary:"Payments and working capital for produce buyers. Capable team, but adjacent to your agronomy edge.",
-      strengths:["Experienced fintech founder","Working product"],
-      risks:["Fintech-led, not the core lane","{FLAG} Crowded category with no clear agriculture wedge"],
-      market:{stat:"Agri-fintech: 40+ funded players",note:"Hard to differentiate without a proprietary channel; valuations compressed since 2023."},
-      comps:"Many comps, compressed valuations — buyer's market.",
-      net:{fit:"generalist fintech — likely outside your network",conn:"—",ctype:""}},
-    greenfield:{name:"Greenfield Seed",sector:"Agtech",stage:"Advisory",dtype:"Advisory",fit:"7.1",
-      summary:"Forage-seed startup needing a go-to-market and channel strategy into Western Canada.",
-      strengths:["Strong product, early interest","You know the dealer channel well"],
-      risks:["Limited budget for a full engagement"],
-      market:{stat:"Forage-seed: steady, regional",note:"Channel relationships are the whole game here — squarely your edge."},
-      comps:"—",
-      net:{fit:"an advisory client, not a referral",conn:"—",ctype:""}},
-    pasturage:{name:"Pasturage Co.",sector:"Agriculture",stage:"Advisory",dtype:"Advisory + capital",fit:"7.8",
-      summary:"Established cow-calf and feedlot operation wanting to restructure debt and bring in an outside investor. Squarely your world.",
-      strengths:["Real operating business with cash flow","Your direct cattle and feedlot experience","A clear, answerable question"],
-      risks:["Family-ownership dynamics to navigate"],
-      market:{stat:"Cattle margins improving on tight supply",note:"A good window to bring capital in on better terms."},
-      comps:"—",
-      net:{fit:"you could syndicate the investor side",conn:"Friesen Family Office",ctype:"family office · ag"}},
-    verdant:{name:"Verdant Bio",sector:"Bioscience",stage:"Seed",dtype:"Investment",fit:"7.7",
-      summary:"Nitrogen-fixing microbial amendment — strong lab data, field trials beginning.",
-      strengths:["Strong science","Timely given input costs"],
-      risks:["Field validation still pending","Long regulatory runway"],
-      market:{stat:"Biologicals +10% CAGR",note:"Investor appetite is strong; credible field data is the unlock."},
-      comps:"Early microbial rounds $6–10M post.",
-      net:{fit:"patient bioscience capital",conn:"BioPrairie Fund",ctype:"deep-tech · long horizon"}},
-    prairieprotein:{name:"Prairie Protein",sector:"Food",stage:"Seed",dtype:"Investment",fit:"7.8",
-      summary:"Pulse-based protein ingredient — first co-packer signed, early purchase orders in hand.",
-      strengths:["Real offtake interest","Rides Prairie pulse supply"],
-      risks:["Capital-intensive scale-up","Commodity-priced inputs"],
-      market:{stat:"Plant protein reset; B2B holding up",note:"Ingredient suppliers are faring better than consumer brands in this cycle."},
-      comps:"B2B ingredient rounds $4–8M post.",
-      net:{fit:"food-tech & family offices",conn:"Friesen Family Office",ctype:"family office · food & ag"}}
-  };
+/* ---------------------------------------------------------------------------
+   Dashboard data layer. Everything on this page renders from Supabase:
+   the pipeline columns, the referral library, the header counts, and the
+   detail panel. Nothing is hardcoded.
 
-  function select(id){
-    document.querySelectorAll('[data-card]').forEach(c=>c.classList.toggle('active', c.getAttribute('data-card')===id));
-    const d=DATA[id];
-    const risks=d.risks.map(r=> r.indexOf('{FLAG}')===0 ? '<li class="flag">'+r.replace('{FLAG}','').trim()+'</li>' : '<li>'+r+'</li>').join('');
-    const comps = (d.comps && d.comps!=='—') ? '<div class="dblock"><div class="dbh">Comparables <span class="live">live</span></div><div class="dbt">'+d.comps+'</div></div>' : '';
-    const net = (d.net.conn && d.net.conn!=='—')
-      ? '<div class="dblock"><div class="dbh">In your network</div><div class="dbt">Best fit: <b style="color:var(--green);font-weight:500">'+d.net.fit+'</b></div><div class="conn"><div><div class="cname">'+d.net.conn+'</div><div class="ctype">'+d.net.ctype+'</div></div><button class="sendbtn" onclick="sendIntro(this)">Send intro</button></div></div>'
-      : '<div class="dblock"><div class="dbh">In your network</div><div class="dbt">'+d.net.fit+'</div></div>';
+   Reads run as the signed-in user via window.agnSB (created by the login gate
+   above), so row-level security applies — no session, no data.
+--------------------------------------------------------------------------- */
+
+/* Seeded demo companies. Rows with these slugs get a "demo" tag so real
+   records stand out. Delete the seed rows and the tags disappear on their own. */
+var DEMO_SLUGS = ['tilth','rootstock','verdant','prairieprotein',
+                  'soilsense','harvestpay','greenfield','pasturage'];
+
+var LANES = [
+  { key:'vetting_fit',        label:'Vetting fit' },
+  { key:'engaged',            label:'Engaged' },
+  { key:'gaining_traction',   label:'Gaining traction' },
+  { key:'ready_to_introduce', label:'Ready to introduce' }
+];
+
+var OPPS = [], CONTACTS = {}, INTAKES = [], CURRENT = null;
+
+/* Intake fields come from a public form, so everything is escaped on the way
+   into the DOM. Without this, a crafted submission could run script in Terry's
+   dashboard. */
+function esc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, function(m){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+  });
+}
+
+function asList(v){
+  if (!v) return [];
+  if (typeof v === 'string'){ try { v = JSON.parse(v); } catch(e){ return [v]; } }
+  return Array.isArray(v) ? v : [];
+}
+
+/* ---------- load ---------- */
+async function loadAll(){
+  var sb = window.agnSB;
+  if (!sb){ return; }
+  try {
+    var res = await Promise.all([
+      sb.from('opportunities').select('*'),
+      sb.from('capital_contacts').select('*'),
+      sb.from('intakes').select('*').eq('status','new').order('created_at', { ascending:false })
+    ]);
+    var err = res.find(function(r){ return r.error; });
+    if (err){ throw err.error; }
+
+    OPPS = (res[0].data || []).filter(function(o){ return o.pipeline_status !== 'archived'; });
+    OPPS.sort(function(a,b){ return (b.fit_score || 0) - (a.fit_score || 0); });
+    CONTACTS = {};
+    (res[1].data || []).forEach(function(c){ CONTACTS[c.id] = c; });
+    INTAKES = res[2].data || [];
+
+    renderAll();
+  } catch (e){
+    var msg = (e && (e.message || e.hint || e.details || e.error_description)) ||
+              (function(){ try { return JSON.stringify(e); } catch(_){ return String(e); } })();
+    console.error('[dashboard] load failed:', msg, e);
     document.getElementById('detail').innerHTML =
-      '<div class="dh"><span class="dname">'+d.name+'</span><span class="chip fit">Fit '+d.fit+'</span></div>'+
-      '<div class="tags"><span class="chip sector">'+d.sector+'</span><span class="chip stage">'+d.stage+'</span><span class="chip dtype">'+d.dtype+'</span><span class="aitag"><i>AI-categorized</i> · confirm</span></div>'+
-      '<div class="dsum">'+d.summary+'</div>'+
-      '<div class="dblock"><div class="dbh">Strengths</div><ul class="dl">'+d.strengths.map(s=>'<li>'+s+'</li>').join('')+'</ul></div>'+
-      '<div class="dblock"><div class="dbh">Risks &amp; flags</div><ul class="dl">'+risks+'</ul></div>'+
-      '<div class="live-block"><div class="dbh">Market signal <span class="live">live</span></div><div class="stat">'+d.market.stat+'</div><div class="dbt">'+d.market.note+'</div></div>'+
-      comps+net+
-      '<div class="srcnote">Enriched from market data, comparables, your CRM and news — refreshed live. AI-assisted; you make the call.</div>'+
-      '<div class="dacts"><button class="abtn primary">Open calendar</button><button class="abtn">Decline with note</button></div>';
+      '<div class="empty">Could not load your pipeline.<br><br>' + esc(msg) + '</div>';
   }
-  function sendIntro(el){ el.closest('.conn').innerHTML = '<span class="sent">✓ Introduction sent — tracked</span>'; }
-  select('tilth');
+}
+
+/* ---------- render ---------- */
+function renderAll(){
+  renderDigest();
+  renderKanban();
+  renderLibrary();
+  var first = OPPS.filter(function(o){ return o.in_library; })[0] || OPPS[0];
+  if (first){ select('opp', first.slug); }
+  else if (INTAKES.length){ select('intake', INTAKES[0].id); }
+  else {
+    document.getElementById('detail').innerHTML =
+      '<div class="empty">Nothing in the pipeline yet. New enquiries from the website will appear here as they arrive.</div>';
+  }
+}
+
+function renderDigest(){
+  var toVet = INTAKES.length +
+    OPPS.filter(function(o){ return o.pipeline_status === 'vetting_fit'; }).length;
+  var lib = OPPS.filter(function(o){ return o.in_library; }).length;
+  document.getElementById('digest').innerHTML =
+    '<span><b>' + toVet + '</b> new to vet</span>' +
+    '<span><b>' + OPPS.length + '</b> in process</span>' +
+    '<span><b>' + lib + '</b> in library</span>';
+}
+
+function demoTag(slug){
+  return DEMO_SLUGS.indexOf(slug) > -1 ? '<span class="demotag">demo</span>' : '';
+}
+
+function oppCard(o){
+  var fit = (o.fit_score != null) ? ' <span class="chip fit">' + esc(o.fit_score) + '</span>' : '';
+  return '<div class="pcard" data-kind="opp" data-card="' + esc(o.slug) + '">' +
+    '<div class="pn">' + esc(o.name) + demoTag(o.slug) + '</div>' +
+    (o.sector ? '<span class="chip sector">' + esc(o.sector) + '</span>' : '') + fit +
+    '<div class="pmeta">' + esc(o.pipeline_note || '') + '</div></div>';
+}
+
+/* A raw enquiry, not yet assessed. Deliberately shown without a fit score —
+   nothing has scored it, and a number here would imply otherwise. */
+function intakeCard(i){
+  var who = i.company || i.name || 'New enquiry';
+  return '<div class="pcard intake" data-kind="intake" data-card="' + esc(i.id) + '">' +
+    '<div class="pn">' + esc(who) + '<span class="newtag">new</span></div>' +
+    (i.door ? '<span class="chip sector">' + esc(i.door) + '</span>' : '') +
+    '<div class="pmeta">Enquiry — not yet assessed</div></div>';
+}
+
+function renderKanban(){
+  document.getElementById('kanban').innerHTML = LANES.map(function(lane){
+    var cards = OPPS.filter(function(o){ return o.pipeline_status === lane.key; });
+    var pre = (lane.key === 'vetting_fit') ? INTAKES.map(intakeCard).join('') : '';
+    var n = cards.length + (lane.key === 'vetting_fit' ? INTAKES.length : 0);
+    return '<div class="col"><h4>' + lane.label + ' <span class="ct">' + n + '</span></h4>' +
+           pre + cards.map(oppCard).join('') + '</div>';
+  }).join('');
+}
+
+function renderLibrary(){
+  var libs = OPPS.filter(function(o){ return o.in_library; });
+  document.getElementById('libgrid').innerHTML = libs.length
+    ? libs.map(function(o){
+        var fit = (o.fit_score != null) ? '<span class="chip fit">' + esc(o.fit_score) + '</span>' : '';
+        return '<div class="lcard" data-kind="opp" data-card="' + esc(o.slug) + '">' +
+          '<div class="lh"><span class="ln">' + esc(o.name) + demoTag(o.slug) + '</span>' + fit + '</div>' +
+          '<div class="lpitch">' + esc(o.library_pitch || o.summary || '') + '</div>' +
+          (o.best_fit_description
+            ? '<div class="bestfit">Best fit: <b>' + esc(o.best_fit_description) + '</b></div>' : '') +
+          '</div>';
+      }).join('')
+    : '<div class="empty">Nothing cleared to the library yet.</div>';
+}
+
+/* ---------- detail panel ---------- */
+function select(kind, id){
+  CURRENT = id;
+  document.querySelectorAll('[data-card]').forEach(function(c){
+    c.classList.toggle('active', c.getAttribute('data-card') === String(id));
+  });
+  var el = document.getElementById('detail');
+  if (kind === 'intake'){
+    var i = INTAKES.filter(function(x){ return String(x.id) === String(id); })[0];
+    if (i) el.innerHTML = intakeDetail(i);
+    return;
+  }
+  var o = OPPS.filter(function(x){ return x.slug === id; })[0];
+  if (o) el.innerHTML = oppDetail(o);
+}
+
+function row(label, val){
+  return val ? '<div class="dbt"><b style="color:var(--green);font-weight:600">' + esc(label) +
+               '</b> — ' + esc(val) + '</div>' : '';
+}
+
+function intakeDetail(i){
+  return '<div class="dh"><span class="dname">' + esc(i.company || i.name || 'New enquiry') + '</span></div>' +
+    '<div class="tags">' + (i.door ? '<span class="chip sector">' + esc(i.door) + '</span>' : '') +
+      '<span class="aitag"><i>Not yet assessed</i></span></div>' +
+    (i.one_liner ? '<div class="dsum">' + esc(i.one_liner) + '</div>' : '') +
+    '<div class="dblock"><div class="dbh">The enquiry</div>' +
+      row('Name', i.name) + row('Email', i.email) + row('Company', i.company) +
+      row('Sector', i.sector) + row('Stage', i.stage) + row('Need', i.need) +
+      row('Geography', i.geography) + row('Timeline', i.timeline) + row('Exposure', i.exposure) +
+      row('Role', i.role) + row('Link', i.link) +
+    '</div>' +
+    (i.note ? '<div class="dblock"><div class="dbh">Note</div><div class="dbt">' + esc(i.note) + '</div></div>' : '') +
+    '<div class="srcnote">Straight from the website intake. Nothing has been researched or scored yet.</div>';
+}
+
+function oppDetail(o){
+  var strengths = asList(o.strengths).map(function(x){
+    return '<li>' + esc(typeof x === 'string' ? x : x.text) + '</li>';
+  }).join('');
+
+  var risks = asList(o.risks).map(function(x){
+    var t = (typeof x === 'string') ? x : x.text;
+    var flag = (typeof x === 'object' && x.is_flag) || (typeof x === 'string' && x.indexOf('{FLAG}') === 0);
+    t = String(t).replace('{FLAG}', '').trim();
+    return '<li' + (flag ? ' class="flag"' : '') + '>' + esc(t) + '</li>';
+  }).join('');
+
+  var market = (o.market_stat || o.market_note)
+    ? '<div class="live-block"><div class="dbh">Market signal</div>' +
+      (o.market_stat ? '<div class="stat">' + esc(o.market_stat) + '</div>' : '') +
+      (o.market_note ? '<div class="dbt">' + esc(o.market_note) + '</div>' : '') + '</div>'
+    : '';
+
+  var comps = (o.comparables && o.comparables !== '\u2014')
+    ? '<div class="dblock"><div class="dbh">Comparables</div><div class="dbt">' + esc(o.comparables) + '</div></div>'
+    : '';
+
+  var c = o.best_fit_contact_id ? CONTACTS[o.best_fit_contact_id] : null;
+  var net = '';
+  if (o.best_fit_description || c){
+    net = '<div class="dblock"><div class="dbh">In your network</div>' +
+      (o.best_fit_description
+        ? '<div class="dbt">Best fit: <b style="color:var(--green);font-weight:500">' +
+          esc(o.best_fit_description) + '</b></div>' : '') +
+      (c ? '<div class="conn"><div><div class="cname">' + esc(c.name) + '</div>' +
+           '<div class="ctype">' + esc(c.contact_type || '') + '</div></div>' +
+           '<button class="sendbtn" onclick="sendIntro(this)">Send intro</button></div>' : '') +
+      '</div>';
+  }
+
+  return '<div class="dh"><span class="dname">' + esc(o.name) + '</span>' +
+      (o.fit_score != null ? '<span class="chip fit">Fit ' + esc(o.fit_score) + '</span>' : '') + '</div>' +
+    '<div class="tags">' +
+      (o.sector ? '<span class="chip sector">' + esc(o.sector) + '</span>' : '') +
+      (o.stage ? '<span class="chip stage">' + esc(o.stage) + '</span>' : '') +
+      (o.deal_type ? '<span class="chip dtype">' + esc(o.deal_type) + '</span>' : '') +
+    '</div>' +
+    (o.summary ? '<div class="dsum">' + esc(o.summary) + '</div>' : '') +
+    (strengths ? '<div class="dblock"><div class="dbh">Strengths</div><ul class="dl">' + strengths + '</ul></div>' : '') +
+    (risks ? '<div class="dblock"><div class="dbh">Risks &amp; flags</div><ul class="dl">' + risks + '</ul></div>' : '') +
+    market + comps + net +
+    '<div class="srcnote">Assessment and notes stored with the record. AI-assisted; you make the call.</div>' +
+    '<div class="dacts"><button class="abtn primary">Open calendar</button>' +
+    '<button class="abtn">Decline with note</button></div>';
+}
+
+function sendIntro(el){
+  el.closest('.conn').innerHTML = '<span class="sent">\u2713 Introduction sent \u2014 tracked</span>';
+}
+
+/* One delegated listener beats inline onclick, which would break on any
+   apostrophe in a company name. */
+document.querySelector('.app').addEventListener('click', function(e){
+  var card = e.target.closest('[data-card]');
+  if (card) select(card.getAttribute('data-kind'), card.getAttribute('data-card'));
+});
+
+document.addEventListener('agn-authed', loadAll);
+
+/* The login gate creates window.agnSB immediately, before anyone signs in, so
+   its presence is NOT proof of a session. Only load if a session actually
+   exists — otherwise the query fires unauthenticated and RLS rightly refuses. */
+if (window.agnSB && window.agnSB.auth){
+  window.agnSB.auth.getSession().then(function(r){
+    if (r && r.data && r.data.session) loadAll();
+  }).catch(function(){ /* not signed in yet; the agn-authed event will fire */ });
+}
 </script>
 </body>
 </html>

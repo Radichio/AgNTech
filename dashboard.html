@@ -146,13 +146,19 @@
         if (loginEl) loginEl.style.display = 'flex';
       }
       async function signIn(){
-        var email = document.getElementById('lem').value.trim();
+        var email = document.getElementById('lem').value.trim().toLowerCase();
         var pass  = document.getElementById('lpw').value;
         if (!email || !pass){ errEl.textContent = 'Enter your email and password.'; return; }
         btn.disabled = true; errEl.textContent = '';
         var res = await sb.auth.signInWithPassword({ email: email, password: pass });
         btn.disabled = false;
-        if (res.error){ errEl.textContent = 'Sign-in failed \u2014 check your details.'; return; }
+        if (res.error){
+          /* Show what Supabase actually said. A generic message hides the cause —
+             'Invalid login credentials' and 'Email not confirmed' need different fixes. */
+          console.error('[login] sign-in failed:', res.error);
+          errEl.textContent = res.error.message || 'Sign-in failed \u2014 check your details.';
+          return;
+        }
         unlock();
       }
       btn.addEventListener('click', signIn);
@@ -357,11 +363,53 @@ function row(label, val){
                '</b> — ' + esc(val) + '</div>' : '';
 }
 
+/* How long a file has been sitting. Age matters in a pipeline. */
+function ago(iso){
+  if (!iso) return '';
+  var ms = Date.now() - new Date(iso).getTime();
+  if (isNaN(ms)) return '';
+  var h = Math.floor(ms / 3600000);
+  if (h < 1) return 'just now';
+  if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+  var d = Math.floor(h / 24);
+  return d + (d === 1 ? ' day ago' : ' days ago');
+}
+
+/* The screening answers are Terry's own qualifying questions. They are the first
+   real signal on a file and were being stored but never shown. */
+function screeningBlock(i){
+  var raw = i.raw;
+  if (typeof raw === 'string'){ try { raw = JSON.parse(raw); } catch(e){ raw = null; } }
+  var qs = raw && raw.screening;
+  if (!qs || !qs.length) return '';
+  return '<div class="dblock"><div class="dbh">What they answered</div>' +
+    qs.map(function(x){
+      if (!x || !x.q) return '';
+      return '<div class="dbt" style="margin-bottom:7px">' +
+             '<span style="color:var(--muted)">' + esc(x.q) + '</span><br>' +
+             '<b style="color:var(--green);font-weight:600">' + esc(x.a || '\u2014') + '</b></div>';
+    }).join('') + '</div>';
+}
+
+/* Flags what a file is missing, so triage does not require reading every field. */
+function gapsBlock(i){
+  var want = [['email','an email address'], ['company','a company name'],
+              ['sector','a sector'], ['timeline','a timeline'],
+              ['one_liner','a description of the opportunity']];
+  var missing = want.filter(function(w){ return !i[w[0]]; }).map(function(w){ return w[1]; });
+  if (!missing.length) return '';
+  return '<div class="dblock"><div class="dbh">Still to establish</div><div class="dbt">' +
+         esc(missing.join(' \u00b7 ')) + '</div></div>';
+}
+
 function intakeDetail(i){
+  var age = ago(i.created_at);
   return '<div class="dh"><span class="dname">' + esc(i.company || i.name || 'New enquiry') + '</span></div>' +
     '<div class="tags">' + (i.door ? '<span class="chip sector">' + esc(i.door) + '</span>' : '') +
+      (age ? '<span class="chip stage">' + esc(age) + '</span>' : '') +
       '<span class="aitag"><i>Not yet assessed</i></span></div>' +
     (i.one_liner ? '<div class="dsum">' + esc(i.one_liner) + '</div>' : '') +
+    screeningBlock(i) +
     '<div class="dblock"><div class="dbh">The enquiry</div>' +
       row('Name', i.name) + row('Email', i.email) + row('Company', i.company) +
       row('Sector', i.sector) + row('Stage', i.stage) + row('Need', i.need) +
@@ -369,6 +417,7 @@ function intakeDetail(i){
       row('Role', i.role) + row('Link', i.link) +
     '</div>' +
     (i.note ? '<div class="dblock"><div class="dbh">Note</div><div class="dbt">' + esc(i.note) + '</div></div>' : '') +
+    gapsBlock(i) +
     '<div class="srcnote">Straight from the website intake. Nothing has been researched or scored yet.</div>';
 }
 

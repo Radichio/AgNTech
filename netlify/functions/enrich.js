@@ -20,6 +20,12 @@
 //
 // 4. AUTHENTICATED CALLERS ONLY. This writes to the database, so the caller's
 //    Supabase session is verified before anything happens.
+//
+// 5. ABSENCE IS NOT WEAKNESS. An intake form cannot contain a TAM, unit
+//    economics or a use of proceeds. Scoring those low for silence put 28
+//    points of weight on the floor for every enquiry that will ever arrive and
+//    made the top band arithmetically unreachable. Unevidenced criteria come
+//    back null and leave the average entirely — see the scoring block below.
 
 const MODEL = 'claude-haiku-4-5-20251001';   // fast tier: comfortably inside the function budget
 const MAX_TOKENS = 2000;
@@ -49,6 +55,14 @@ const RUBRIC = [
     asks: 'Do the claims check out? Is the runway sane? Is it over-concentrated?' }
 ];
 
+// An enquiry always says something about these four. They may never come back
+// null — if they do, the enquiry is too thin to score at all.
+const ALWAYS_SCORED = ['lane_fit', 'people', 'whats_real', 'edge'];
+
+// If less than this much weight was actually evidenced, no score is issued.
+// A confident number off half a rubric is worse than no number.
+const MIN_WEIGHT_TO_SCORE = 50;
+
 // End it on their own, whatever the score.
 const KNOCKOUTS = [
   { key: 'off_lane',    label: 'Outside his lanes entirely' },
@@ -62,11 +76,25 @@ const BANDS = [
   { min: 0,   verdict: 'Early / not a fit right now' }
 ];
 
-const SYSTEM = `You assess inbound opportunities for AgNtech Connect, a capital-advisory practice in Canadian agriculture run by Terry Cholka — forty years as a farmer and operator, and earlier a agricultural lender. He brings capital and buyers to Canadian companies and advises founders, lenders and operators.
+const SYSTEM = `You assess inbound opportunities for AgNtech Connect, a capital-advisory practice in Canadian agriculture run by Terry Cholka — forty years as a farmer and operator, and earlier an agricultural lender. He brings capital and buyers to Canadian companies and advises founders, lenders and operators.
 
 Your job is to prepare a file so that a decision can be made on it. You do not make the decision.
 
-SCORE EACH CRITERION 0-10, where 0 is absent or disqualifying, 5 is unremarkable, 8 is strong, 10 is exceptional. Score honestly. Most inbound enquiries are 4-6 on most criteria; reserve 8+ for genuine evidence. If the intake gives you nothing on a criterion, score it 3 and say the evidence is absent — do not assume the best.
+SCORING
+Score each criterion 0-10 on the evidence actually in front of you: 0 disqualifying, 5 unremarkable, 8 strong, 10 exceptional. Reserve 8 and above for genuine evidence. Most inbound enquiries are 4-6 on the criteria they do speak to.
+
+ABSENCE IS NOT WEAKNESS. An inbound enquiry is a short form, not a data room. It will rarely contain a market size, unit economics, a valuation or a use of proceeds — and a company is not worse for the form being short. If a criterion has no evidence either way, return null for it rather than a low number, and record the gap in "risks" so it becomes a question to ask. A low score must rest on evidence you actually have, never on evidence you wish you had.
+
+These four must always carry a number and must never be null: lane_fit, people, whats_real, edge. Every enquiry tells you something about the sector it sits in, the person who wrote it, what exists on the ground, and whether Terry's involvement would move anything. The other four — market, economics, structure, risk — may be null when the enquiry and the research are genuinely silent.
+
+KNOCK-OUTS
+Judge these separately from the scores. Set each on what the enquiry actually says, not on your overall impression of the company. More than one can be true.
+
+- off_lane: the business is not in Canadian agriculture, agri-food, agtech or agricultural lending at all. Being early, small or unproven is NOT off-lane. A pre-revenue agricultural company is in the lane.
+- wont_share: they want money without a partner. Set this true on any clear statement to that effect — "purely a cheque", "not looking for advice or a board seat", "I do not take partners", declining board involvement or governance. This is about their stated appetite for a working partner, not about whether they are pleasant or competent. If the enquiry says it plainly, set it true even when everything else about the company looks strong. This is the single knock-out most often missed.
+- integrity: a claim that cannot be reconciled with the rest of the enquiry or the research, or a misrepresentation.
+
+A knock-out ends the file regardless of the scores. Do not soften one because the company is otherwise attractive.
 
 ON FIGURES — this matters more than anything else you do:
 - Use a number ONLY if it appears in the enquiry itself or in the research provided to you.
@@ -81,7 +109,7 @@ TONE: plain, measured, specific. A colleague briefing a principal. No hype, no f
 
 Respond with a single raw JSON object and nothing else:
 {
- "scores": {"lane_fit":0-10,"people":0-10,"whats_real":0-10,"market":0-10,"economics":0-10,"structure":0-10,"edge":0-10,"risk":0-10},
+ "scores": {"lane_fit":0-10,"people":0-10,"whats_real":0-10,"market":0-10|null,"economics":0-10|null,"structure":0-10|null,"edge":0-10,"risk":0-10|null},
  "knockouts": {"off_lane":true|false,"wont_share":true|false,"integrity":true|false},
  "summary": "<2-3 sentences: what this is, and what stands out>",
  "strengths": ["<short, specific>", "..."],
@@ -245,8 +273,8 @@ exports.handler = async (event) => {
     intake.note ? `Note: ${intake.note}` : '',
     screening ? `\nSCREENING ANSWERS:\n${screening}` : '',
     researchText ? `\nPUBLIC REPORTING (may or may not be about this company \u2014 judge relevance):\n${researchText}`
-                 : `\nNo public reporting was retrievable. Score on the enquiry alone and leave market figures empty.`,
-    `\nScore each criterion on the evidence actually present. Output only the JSON object.`
+                 : `\nNo public reporting was retrievable. Score on the enquiry alone, leave market figures empty, and return null for any criterion the enquiry itself does not speak to.`,
+    `\nScore each criterion on the evidence actually present, and return null rather than a low number where there is no evidence either way. Output only the JSON object.`
   ].filter(Boolean).join('\n');
 
   // --- assess ---------------------------------------------------------------
@@ -278,26 +306,72 @@ exports.handler = async (event) => {
   }
 
   // --- weights applied HERE, never by the model -----------------------------
+  //
+  // A criterion the enquiry is silent on comes back null. It contributes to
+  // neither the numerator nor the denominator — the score becomes the quality
+  // of what was actually evidenced, and the gaps travel as questions instead.
+  // Scoring silence as 3 put market + economics + structure (28 weight) on the
+  // floor for every enquiry and capped the achievable total below 8.0, which
+  // made the top band unreachable no matter how good the company was.
   let total = 0, weightUsed = 0;
   const breakdown = RUBRIC.map((c) => {
-    const raw10 = Math.max(0, Math.min(10, Number(assessed.scores[c.key])));
-    const s = isNaN(raw10) ? 0 : raw10;
-    total += s * c.weight; weightUsed += c.weight;
-    return { label: c.label, score: s };
+    const v = assessed.scores ? assessed.scores[c.key] : undefined;
+    const n = (v === null || v === undefined || v === '') ? NaN : Number(v);
+    if (isNaN(n)) {
+      return { key: c.key, label: c.label, weight: c.weight,
+               score: null, contribution: 0, unevidenced: true };
+    }
+    const s = Math.max(0, Math.min(10, n));
+    total += s * c.weight;
+    weightUsed += c.weight;
+    return { key: c.key, label: c.label, weight: c.weight,
+             score: s, contribution: Math.round(s * c.weight * 10) / 10, unevidenced: false };
   });
+
+  // The four load-bearing criteria must carry a number. If one is missing the
+  // enquiry is too thin to score, and saying so is better than a false total.
+  const missingCore = ALWAYS_SCORED.filter((k) => {
+    const b = breakdown.find((x) => x.key === k);
+    return !b || b.score === null;
+  });
+
   let fit = weightUsed ? Math.round((total / weightUsed) * 10) / 10 : null;
+  let insufficient = false;
+  if (weightUsed < MIN_WEIGHT_TO_SCORE || missingCore.length) {
+    insufficient = true;
+    fit = null;
+  }
 
   // --- knock-outs end it, whatever the score --------------------------------
   const tripped = KNOCKOUTS.filter((k) => assessed.knockouts && assessed.knockouts[k.key] === true);
-  if (tripped.length) fit = 0;
+  if (tripped.length) { fit = 0; insufficient = false; }
 
-  const band = BANDS.find((b) => fit >= b.min) || BANDS[BANDS.length - 1];
+  const band = insufficient
+    ? { min: null, verdict: 'Not scored, too little to go on' }
+    : (BANDS.find((b) => fit >= b.min) || BANDS[BANDS.length - 1]);
+
+  // --- the breakdown, on the record -----------------------------------------
+  // Logged before the write, so a rejected insert still leaves the reasoning
+  // behind. Every criterion, its weight, what it contributed, what came back
+  // unevidenced, and which knock-outs tripped.
+  console.log('[enrich] breakdown ' + (intake.company || intake.name) + ' ' + JSON.stringify({
+    fit: fit,
+    verdict: band.verdict,
+    weight_used: weightUsed,
+    knockouts: tripped.map((k) => k.key),
+    unevidenced: breakdown.filter((b) => b.unevidenced).map((b) => b.key),
+    scores: breakdown.reduce((a, b) => { a[b.key] = b.score; return a; }, {}),
+    contributions: breakdown.reduce((a, b) => { a[b.key] = b.contribution; return a; }, {})
+  }));
 
   // --- shape the record -----------------------------------------------------
   const risks = Array.isArray(assessed.risks) ? assessed.risks.map((r) =>
     (typeof r === 'string') ? { text: r, is_flag: false }
                             : { text: String(r.text || ''), is_flag: !!r.is_flag }) : [];
   tripped.forEach((k) => risks.unshift({ text: 'Knock-out: ' + k.label, is_flag: true }));
+  if (insufficient) {
+    risks.unshift({ text: 'Not scored: the enquiry gave too little to assess against the rubric. Ask before judging.', is_flag: true });
+  }
   if (assessed.ask) risks.push({ text: 'Ask them: ' + assessed.ask, is_flag: false });
 
   const opp = {
@@ -320,9 +394,16 @@ exports.handler = async (event) => {
     intake_id: intake.id
   };
 
-  const contact = matchContact(Array.isArray(contacts) ? contacts : [], {
-    best_fit_description: opp.best_fit_description, sector: opp.sector, summary: opp.summary
-  });
+  // A knocked-out record has no best fit. The matcher works on keywords and
+  // cannot read negation — "not agriculture" matches an agriculture thesis tag
+  // just as well as "agriculture" does — so it must not run here at all. A live
+  // Draft intro button on a rejected file is a button that lies.
+  let contact = null;
+  if (!tripped.length) {
+    contact = matchContact(Array.isArray(contacts) ? contacts : [], {
+      best_fit_description: opp.best_fit_description, sector: opp.sector, summary: opp.summary
+    });
+  }
   if (contact) opp.best_fit_contact_id = contact.id;
 
   // --- write ----------------------------------------------------------------
@@ -342,6 +423,8 @@ exports.handler = async (event) => {
     });
     console.log('[enrich] assessed', opp.name, 'fit', fit, tripped.length ? '(knock-out)' : '');
     return j(200, { ok: true, fit_score: fit, verdict: band.verdict,
+                    insufficient: insufficient,
+                    weight_used: weightUsed,
                     knockouts: tripped.map((k) => k.label), breakdown, slug: opp.slug });
   } catch (e) {
     return j(500, { error: 'Save failed: ' + (e.message || e) });

@@ -9,7 +9,8 @@
 //   'claude-opus-4-8'            → top tier  ($5/$25)
 const MODEL = 'claude-sonnet-5';
 
-const MAX_TOKENS = 220;   // three sentences and a question. A budget that exists gets spent.
+const MAX_TOKENS = 400;   // headroom, so a long answer is never cut mid-word.
+                          // Brevity is the prompt's job, not the ceiling's.
 const MAX_TURNS  = 24;    // cap conversation length sent to the model
 const MAX_CHARS  = 4000;  // cap per-message length
 
@@ -34,6 +35,8 @@ const PROMPT_CORE = `You are the Ask Terry assistant for AgNtech Connect — Ter
 LENGTH. Three sentences, then one question. Every time. Say the one useful thing, then ask the one thing that decides whether this is worth a conversation. If it will not fit in three sentences you have not yet decided what matters.
 
 No opening compliment. No restating their question back. No closing summary. No lists.
+
+NEVER RECITE HIS BACKGROUND. Asked about his experience, his track record or "tell me about Terry", do not walk the list. Give the one or two things that bear on what this person is actually weighing, and ask what they are weighing. A career summary is the wrong answer to every question.
 
 THE FOUR THINGS PEOPLE COME FOR.
 
@@ -172,7 +175,17 @@ exports.handler = async (event) => {
             .slice(0, 3);
         }
       }
-    } catch (e) { /* not JSON — use the raw text as the reply */ }
+    } catch (e) {
+      // Truncated or non-JSON. Recover the reply text if a partial wrapper is
+      // present, then cut back to the last finished sentence — a clean short
+      // answer beats a long one that stops mid-word.
+      const m = raw.match(/"reply"\s*:\s*"([\s\S]*)$/);
+      let t = (m ? m[1] : raw).replace(/\\"/g, '"').replace(/["}\s]+$/, '').trim();
+      const cut = Math.max(t.lastIndexOf('. '), t.lastIndexOf('? '), t.lastIndexOf('! '),
+                           t.length - 1 === t.lastIndexOf('.') ? t.length - 1 : -1);
+      if (cut > 40) t = t.slice(0, cut + 1).trim();
+      reply = t || FALLBACK;
+    }
 
     return json(200, { reply, suggestions });
   } catch (e) {

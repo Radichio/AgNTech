@@ -378,10 +378,10 @@
         </div>
         <div class="aitags" id="aitags"></div>
         <div class="chips" id="chips">
-          <span class="chip2" onclick="chip(this)">Is my company a fit?</span>
-          <span class="chip2" onclick="chip(this)">How do you get paid?</span>
-          <span class="chip2" onclick="chip(this)">I have capital to deploy</span>
-          <span class="chip2" onclick="chip(this)">I want to pitch a deal</span>
+          <span class="chip2" onclick="chip(this)">How does this help Indigenous and Métis people?</span>
+          <span class="chip2" onclick="chip(this)">Can my profession open a door to Canada?</span>
+          <span class="chip2" onclick="chip(this)">If I have capital to deploy…</span>
+          <span class="chip2" onclick="chip(this)">I'm farming and something needs to change</span>
         </div>
         <div class="askinput">
           <input id="askq" type="text" placeholder="Ask a question, or give me your one-liner…" autocomplete="off">
@@ -560,45 +560,6 @@
 
     var FALLBACK = "Good question — and a bit much to settle in a chat box. Give me a little more, or step through the short intake and Terry will get you a real answer fast. The things worth doing properly, he'd rather do properly — with you.";
 
-    var CAPITAL_ANSWER = "Then you're in the right place. Terry finds, vets and structures opportunities for serious capital coming into Canadian agriculture — and he steers it through the ownership and review rules that catch outside money off guard. What you see has already been pressure-tested, not a stack of cold introductions. Tell me roughly what you're after — the sectors, the size, the horizon — or step through the short intake and he'll take it from there.";
-
-    function capitalSideRe(q){ return /(have capital|capital to deploy|to deploy|deploy capital|\bdeploy\b|mandate|family office|to invest|place (capital|money)|allocate|i'?m an investor|capital coming)/i.test(q); }
-    function looksLikeCapital(q){
-      return capitalSideRe(q) && !/(raising|\braise\b|pre-?seed|series\s*[a-d]\b|\bwe (make|build|are building|sell)|our (product|startup|venture))/i.test(q);
-    }
-    function classifyPitch(q){
-      var raiseSignal = /(raising|\braise\b|seed round|series\s*[a-d]\b|pre-?seed|looking for (capital|investment|funding|money)|our round)/i.test(q);
-      var buildSignal = /(we (make|build|are building|sell|developed|created|have built)|our (product|startup|company|technology|platform|venture)|i'?m building|building a (startup|company|product))/i.test(q);
-      if ((!raiseSignal && !buildSignal) || capitalSideRe(q)) return null;
-
-      var sector = null;
-      if (/(sensor|soil|precision|agtech|robot|drone|imaging|software|platform|\bdata\b)/i.test(q)) sector = "Agtech";
-      else if (/(microb|biolog|nitrogen|genetic|bioscience|amendment|trait)/i.test(q)) sector = "Bioscience";
-      else if (/(\bfood\b|protein|ingredient|beverage|snack|consumer|\bcpg\b)/i.test(q)) sector = "Food";
-      else if (/(cattle|grain|forage|seed|\bfarm\b|\bacre|crop|livestock|feedlot)/i.test(q)) sector = "Agriculture";
-
-      var stage = null;
-      if (/(revenue|arr\b|mrr\b|paying|profitable)/i.test(q)) stage = "Revenue";
-      else if (/(pilot|trial|\bloi\b|letter of intent|early customer)/i.test(q)) stage = "Paying pilots";
-      else if (/(\bidea\b|concept|pre-?revenue|pre-?seed|just starting|no revenue)/i.test(q)) stage = "Early";
-
-      var inLane = (sector === "Agtech" || sector === "Bioscience" || sector === "Food" || sector === "Agriculture");
-      var signal = null;
-      if (inLane && (stage === "Revenue" || stage === "Paying pilots")) signal = "Worth a look";
-      else if (stage === "Early") signal = "Early";
-
-      var tags = [];
-      if (sector) tags.push({ label: sector });
-      if (stage) tags.push({ label: stage });
-      if (signal) tags.push({ label: signal, sig:true });
-
-      var open = inLane
-        ? "I'd like to hear more — that's right where Terry lives, so you're on good ground already."
-        : "I'd like to hear more. That sits a touch outside his usual ground, but he'll give you a straight read all the same.";
-      var reply = open + " Two things help him see it clearly — who's finding it valuable enough to pay today, and what this round is really meant to unlock. Tell me that much and you'll get an honest read; if it's a fit, it goes straight to Terry, and you'll hear back either way.";
-
-      return { tags: tags, reply: reply };
-    }
 
     function addUser(text){
       var d = document.createElement('div');
@@ -656,31 +617,15 @@
       });
     }
 
-    var CHIP_SETS = [
-      ["Is my company a fit?","I have capital to deploy","Tell me about Terry","How do you get paid?"],
-      ["What makes you different?","A loan of mine has turned","Can you help with grants?","What sectors do you focus on?"],
-      ["I'm raising \u2014 where do I start?","Who have you backed?","Can you help in a downturn?","What do you look for?"],
-      ["Can foreign capital invest here?","What's succession planning worth?","How long does this take?","Ask me anything"]
-    ];
-    var chipIdx = 0;
-    var liveChips = null;   // adaptive follow-ups from the AI (null = use static sets)
+    var PILLS = ["How does this help Indigenous and M\u00e9tis people?","Can my profession open a door to Canada?","If I have capital to deploy\u2026","I'm farming and something needs to change"];
     function renderChips(){
       if (!chipsEl) return;
       chipsEl.innerHTML = '';
-      if (liveChips && liveChips.length){
-        liveChips.forEach(function(label){
-          var b = document.createElement('button');
-          b.className = 'chip'; b.type = 'button'; b.textContent = label;
-          b.onclick = function(){ ask(label); };
-          chipsEl.appendChild(b);
-        });
-        return;
-      }
-      CHIP_SETS[chipIdx].forEach(function(label){
-        var s = document.createElement('span');
-        s.className = 'chip2'; s.textContent = label;
-        s.onclick = function(){ ask(label); };
-        chipsEl.appendChild(s);
+      PILLS.forEach(function(label){
+        var el = document.createElement('span');
+        el.className = 'chip2'; el.textContent = label;
+        el.onclick = function(){ ask(label); };
+        chipsEl.appendChild(el);
       });
     }
 
@@ -725,9 +670,6 @@
       busy = true;
       if (inputEl) inputEl.value = '';
       popTags(null);
-      liveChips = null;
-      chipIdx = (chipIdx + 1) % CHIP_SETS.length;
-      renderChips();
 
       var typing = showTyping();
       fetch(AGN_ENDPOINT, {
@@ -739,14 +681,9 @@
       .then(function(data){
         if (typing.parentNode) typing.parentNode.removeChild(typing);
         var reply = (data && data.reply) ? String(data.reply).trim() : AGN_FALLBACK;
-        var sugg  = (data && Array.isArray(data.suggestions)) ? data.suggestions.filter(function(x){ return typeof x === 'string' && x.trim(); }).slice(0,3) : [];
         chatHist.push({ role:'assistant', content: reply });
         if (chatHist.length > 24) chatHist = chatHist.slice(-24);
-        typeOut(reply, true, function(){
-          busy = false;
-          liveChips = sugg.length ? sugg : null;   // fall back to the static sets if none
-          renderChips();
-        });
+        typeOut(reply, true, function(){ busy = false; });
       })
       .catch(function(){
         if (typing.parentNode) typing.parentNode.removeChild(typing);

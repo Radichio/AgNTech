@@ -53,6 +53,27 @@
   .lpitch{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:9px}
   .bestfit{font-size:11.5px;color:var(--ink);margin-top:10px} .bestfit b{color:var(--green);font-weight:500}
 
+  /* Passed on. Closed by default so it stays out of the working view, but the
+     count sits in the header — a record Terry stopped is never silent. */
+  .arch{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .arch summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .arch summary::-webkit-details-marker{display:none}
+  .arch summary:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:12px}
+  .arch .at{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .arch .ai{width:0;height:0;border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .15s}
+  .arch[open] .ai{transform:rotate(90deg)}
+  .arch .ac{color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:10.5px}
+  .arch[open] summary{border-bottom:1px solid var(--line)}
+  .archgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;padding:14px 16px 16px}
+  .acard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px;cursor:pointer;transition:.13s}
+  .acard:hover{border-color:var(--muted)}
+  .acard.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .acard .an{font-family:var(--df);font-weight:500;font-size:14px}
+  .acard .ar{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:7px}
+  .chip.ko{color:var(--amber);background:#F3E7D4}
+  .chip.nos{color:var(--muted);background:#EAE4D6}
+  @media(prefers-reduced-motion:reduce){.arch .ai{transition:none}}
+
   .detail{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
   .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:40px 12px;line-height:1.6}
   .dh{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -195,6 +216,16 @@
           <div class="libgrid" id="libgrid"></div>
         </div>
 
+        <div class="zone" id="archzone" hidden>
+          <details class="arch">
+            <summary>
+              <span class="at"><span class="ai"></span>Passed on</span>
+              <span class="ac" id="archcount">0</span>
+            </summary>
+            <div class="archgrid" id="archgrid"></div>
+          </details>
+        </div>
+
       </div>
 
       <div class="detail" id="detail">
@@ -225,7 +256,7 @@ var LANES = [
   { key:'ready_to_introduce', label:'Ready to introduce' }
 ];
 
-var OPPS = [], CONTACTS = {}, INTAKES = [], CURRENT = null;
+var OPPS = [], ARCHIVED = [], CONTACTS = {}, INTAKES = [], CURRENT = null;
 
 /* Intake fields come from a public form, so everything is escaped on the way
    into the DOM. Without this, a crafted submission could run script in Terry's
@@ -255,8 +286,17 @@ async function loadAll(){
     var err = res.find(function(r){ return r.error; });
     if (err){ throw err.error; }
 
-    OPPS = (res[0].data || []).filter(function(o){ return o.pipeline_status !== 'archived'; });
+    /* Archived rows used to be dropped on the floor here. They are kept now —
+       a record Terry passed on is the most useful thing in the table six months
+       later, and it is the only way to see someone who has come back. */
+    var all = res[0].data || [];
+    OPPS     = all.filter(function(o){ return o.pipeline_status !== 'archived'; });
+    ARCHIVED = all.filter(function(o){ return o.pipeline_status === 'archived'; });
     OPPS.sort(function(a,b){ return (b.fit_score || 0) - (a.fit_score || 0); });
+    ARCHIVED.sort(function(a,b){
+      return String(b.updated_at || b.created_at || '')
+        .localeCompare(String(a.updated_at || a.created_at || ''));
+    });
     CONTACTS = {};
     (res[1].data || []).forEach(function(c){ CONTACTS[c.id] = c; });
     INTAKES = res[2].data || [];
@@ -276,6 +316,7 @@ function renderAll(){
   renderDigest();
   renderKanban();
   renderLibrary();
+  renderArchive();
   var first = OPPS.filter(function(o){ return o.in_library; })[0] || OPPS[0];
   if (first){ select('opp', first.slug); }
   else if (INTAKES.length){ select('intake', INTAKES[0].id); }
@@ -299,11 +340,36 @@ function demoTag(slug){
   return DEMO_SLUGS.indexOf(slug) > -1 ? '<span class="demotag">demo</span>' : '';
 }
 
+/* A record can be in either collection. Everything that resolves a slug goes
+   through here, or selecting a passed-on card silently does nothing. */
+function findOpp(slug){
+  return OPPS.filter(function(x){ return x.slug === slug; })[0] ||
+         ARCHIVED.filter(function(x){ return x.slug === slug; })[0] || null;
+}
+
+/* The engine unshifts a "Knock-out: ..." entry to the top of risks whenever one
+   trips, so the risks list is the reliable signal — not the score. A knock-out
+   scores 0, but so could something merely bad. */
+function knockedOut(o){
+  return asList(o.risks).some(function(x){
+    var t = (typeof x === 'string') ? x : (x && x.text) || '';
+    return String(t).indexOf('Knock-out:') === 0;
+  });
+}
+
+/* Three states, not two. A null score means the engine assessed it and refused
+   to produce a number because too little of the rubric was evidenced — that is
+   a different thing from a low score and must not render as a blank. */
+function fitChip(o, prefix){
+  if (knockedOut(o)) return '<span class="chip ko">knocked out</span>';
+  if (o.fit_score == null) return '<span class="chip nos">not scored</span>';
+  return '<span class="chip fit">' + (prefix || '') + esc(o.fit_score) + '</span>';
+}
+
 function oppCard(o){
-  var fit = (o.fit_score != null) ? ' <span class="chip fit">' + esc(o.fit_score) + '</span>' : '';
   return '<div class="pcard" data-kind="opp" data-card="' + esc(o.slug) + '">' +
     '<div class="pn">' + esc(o.name) + demoTag(o.slug) + '</div>' +
-    (o.sector ? '<span class="chip sector">' + esc(o.sector) + '</span>' : '') + fit +
+    (o.sector ? '<span class="chip sector">' + esc(o.sector) + '</span> ' : '') + fitChip(o) +
     '<div class="pmeta">' + esc(o.pipeline_note || '') + '</div></div>';
 }
 
@@ -331,15 +397,33 @@ function renderLibrary(){
   var libs = OPPS.filter(function(o){ return o.in_library; });
   document.getElementById('libgrid').innerHTML = libs.length
     ? libs.map(function(o){
-        var fit = (o.fit_score != null) ? '<span class="chip fit">' + esc(o.fit_score) + '</span>' : '';
         return '<div class="lcard" data-kind="opp" data-card="' + esc(o.slug) + '">' +
-          '<div class="lh"><span class="ln">' + esc(o.name) + demoTag(o.slug) + '</span>' + fit + '</div>' +
+          '<div class="lh"><span class="ln">' + esc(o.name) + demoTag(o.slug) + '</span>' + fitChip(o) + '</div>' +
           '<div class="lpitch">' + esc(o.library_pitch || o.summary || '') + '</div>' +
           (o.best_fit_description
             ? '<div class="bestfit">Best fit: <b>' + esc(o.best_fit_description) + '</b></div>' : '') +
           '</div>';
       }).join('')
     : '<div class="empty">Nothing cleared to the library yet.</div>';
+}
+
+/* Everything Terry stopped: declined with a reason, or knocked out. The whole
+   section hides when it is empty rather than showing an empty-state — there is
+   nothing to invite here, and a heading over nothing is just furniture. */
+function renderArchive(){
+  var zone = document.getElementById('archzone');
+  if (!ARCHIVED.length){ zone.hidden = true; return; }
+  zone.hidden = false;
+  document.getElementById('archcount').textContent = ARCHIVED.length;
+  document.getElementById('archgrid').innerHTML = ARCHIVED.map(function(o){
+    var when = o.updated_at || o.created_at;
+    return '<div class="acard" data-kind="opp" data-card="' + esc(o.slug) + '">' +
+      '<div class="lh"><span class="an">' + esc(o.name) + demoTag(o.slug) + '</span>' +
+      fitChip(o) + '</div>' +
+      '<div class="ar">' + esc(o.pipeline_note || 'No reason recorded') + '</div>' +
+      (when ? '<div class="ar">' + esc(String(when).slice(0, 10)) + '</div>' : '') +
+      '</div>';
+  }).join('');
 }
 
 /* ---------- detail panel ---------- */
@@ -354,7 +438,7 @@ function select(kind, id){
     if (i) el.innerHTML = intakeDetail(i);
     return;
   }
-  var o = OPPS.filter(function(x){ return x.slug === id; })[0];
+  var o = findOpp(id);
   if (o) el.innerHTML = oppDetail(o);
 }
 
@@ -487,7 +571,14 @@ function oppDetail(o){
     ? '<div class="dblock"><div class="dbh">Comparables</div><div class="dbt">' + esc(o.comparables) + '</div></div>'
     : '';
 
-  var c = o.best_fit_contact_id ? CONTACTS[o.best_fit_contact_id] : null;
+  /* No introduction off a knocked-out record. The server-side matcher works on
+     keywords and cannot read negation — "not agriculture" matches an
+     agriculture thesis tag as well as "agriculture" does — so a rejected file
+     could surface a live Draft intro button pointed at a real contact. Fixed in
+     enrich.js too; this is the second lock, and it also covers rows written
+     before that fix landed. */
+  var ko = knockedOut(o);
+  var c = (o.best_fit_contact_id && !ko) ? CONTACTS[o.best_fit_contact_id] : null;
   var net = '';
   if (o.best_fit_description || c){
     net = '<div class="dblock"><div class="dbh">In your network</div>' +
@@ -501,8 +592,19 @@ function oppDetail(o){
       '</div>';
   }
 
+  var archived = (o.pipeline_status === 'archived');
+  var acts = archived
+    ? '<div class="dacts"><button class="abtn primary" onclick="restore(\'' + esc(o.slug) +
+      '\', this)">Bring back to vetting</button></div>'
+    : '<div class="dacts">' +
+        '<button class="abtn' + (ko ? '' : ' primary') + '" onclick="inviteToBook(\'' +
+          esc(o.slug) + '\')">Invite to book</button>' +
+        '<button class="abtn' + (ko ? ' primary' : '') + '" onclick="decline(\'' +
+          esc(o.slug) + '\', this)">Decline with note</button>' +
+      '</div>';
+
   return '<div class="dh"><span class="dname">' + esc(o.name) + '</span>' +
-      (o.fit_score != null ? '<span class="chip fit">Fit ' + esc(o.fit_score) + '</span>' : '') + '</div>' +
+      fitChip(o, 'Fit ') + '</div>' +
     '<div class="tags">' +
       (o.sector ? '<span class="chip sector">' + esc(o.sector) + '</span>' : '') +
       (o.stage ? '<span class="chip stage">' + esc(o.stage) + '</span>' : '') +
@@ -513,10 +615,7 @@ function oppDetail(o){
     (risks ? '<div class="dblock"><div class="dbh">Risks &amp; flags</div><ul class="dl">' + risks + '</ul></div>' : '') +
     market + comps + net +
     '<div class="srcnote">Assessment and notes stored with the record. AI-assisted; you make the call.</div>' +
-    '<div class="dacts">' +
-      '<button class="abtn primary" onclick="inviteToBook(\'' + esc(o.slug) + '\')">Invite to book</button>' +
-      '<button class="abtn" onclick="decline(\'' + esc(o.slug) + '\', this)">Decline with note</button>' +
-    '</div>';
+    acts;
 }
 
 /* Terry's own booking link — the private Calendly event, not one of the three
@@ -525,7 +624,7 @@ var BOOKING_LINK = 'https://calendly.com/terry-agntechconnect/private-conversati
 
 /* Drafts an email inviting them to book a time. Nothing is sent automatically. */
 async function inviteToBook(slug){
-  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  var o = findOpp(slug);
   if (!o) return;
   var email = '', who = '';
   if (o.intake_id){
@@ -558,7 +657,7 @@ async function inviteToBook(slug){
 /* Declines the opportunity: archives it with a reason. This is a real write —
    the record stays, so six months on you can see why you passed. */
 async function decline(slug, btn){
-  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  var o = findOpp(slug);
   if (!o) return;
   var reason = window.prompt('Why are you passing on ' + o.name + '?\n\nThis is kept on the record.');
   if (reason === null) return;
@@ -582,11 +681,37 @@ async function decline(slug, btn){
   }
 }
 
+/* The way back. Passing on something is reversible — a founder answers the
+   question that was missing, or the engine called a knock-out that was not one.
+   The original reason is overwritten deliberately: the note explains where the
+   record sits now, and where it sits now is back in vetting. */
+async function restore(slug, btn){
+  var o = findOpp(slug);
+  if (!o) return;
+  btn.disabled = true;
+  var label = btn.textContent;
+  btn.textContent = 'Bringing back\u2026';
+  try {
+    var r = await window.agnSB.from('opportunities')
+      .update({ pipeline_status: 'vetting_fit',
+                pipeline_note: 'Back in vetting \u2014 reopened' })
+      .eq('slug', slug);
+    if (r.error) throw r.error;
+    await loadAll();
+    select('opp', slug);
+  } catch (e){
+    console.error('[restore]', e);
+    btn.disabled = false;
+    btn.textContent = label;
+    alert('Could not bring it back: ' + (e.message || e));
+  }
+}
+
 /* Opens a drafted introduction in Terry's mail client. Nothing is sent
    automatically — he reads it, edits it, and sends it himself. The button
    used to claim an introduction had been sent and tracked; it did neither. */
 function draftIntro(slug, contactId){
-  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  var o = findOpp(slug);
   var c = CONTACTS[contactId];
   if (!o || !c) return;
   var subject = 'Introduction \u2014 ' + o.name;

@@ -441,8 +441,17 @@ async function assess(id, btn){
     });
     var out = await r.json();
     if (!r.ok) throw new Error(out.detail || out.error || ('status ' + r.status));
+    /* Per-criterion scores, for calibrating the rubric. Weights stay server-side;
+       this shows only what the model scored each criterion out of 10. */
+    if (out.breakdown){
+      console.log('%c[assess] ' + (out.verdict || '') + '  \u2192  fit ' + out.fit_score,
+                  'font-weight:700');
+      console.table(out.breakdown);
+      if (out.knockouts && out.knockouts.length) console.warn('KNOCK-OUT:', out.knockouts.join('; '));
+    }
     btn.textContent = 'Assessed \u2014 fit ' + out.fit_score;
     await loadAll();
+    if (out.slug) select('opp', out.slug);   // land on the file it just produced
   } catch (e) {
     console.error('[assess]', e);
     btn.disabled = false;
@@ -487,7 +496,8 @@ function oppDetail(o){
           esc(o.best_fit_description) + '</b></div>' : '') +
       (c ? '<div class="conn"><div><div class="cname">' + esc(c.name) + '</div>' +
            '<div class="ctype">' + esc(c.contact_type || '') + '</div></div>' +
-           '<button class="sendbtn" onclick="sendIntro(this)">Send intro</button></div>' : '') +
+           '<button class="sendbtn" onclick="draftIntro(\'' + esc(o.slug) + '\',\'' +
+           esc(o.best_fit_contact_id) + '\')">Draft intro</button></div>' : '') +
       '</div>';
   }
 
@@ -507,8 +517,34 @@ function oppDetail(o){
     '<button class="abtn">Decline with note</button></div>';
 }
 
-function sendIntro(el){
-  el.closest('.conn').innerHTML = '<span class="sent">\u2713 Introduction sent \u2014 tracked</span>';
+/* Opens a drafted introduction in Terry's mail client. Nothing is sent
+   automatically — he reads it, edits it, and sends it himself. The button
+   used to claim an introduction had been sent and tracked; it did neither. */
+function draftIntro(slug, contactId){
+  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  var c = CONTACTS[contactId];
+  if (!o || !c) return;
+  var subject = 'Introduction \u2014 ' + o.name;
+  var body = [
+    'Hello,',
+    '',
+    'I have something I think is worth your time: ' + o.name +
+      (o.sector ? ' (' + o.sector + (o.stage ? ', ' + o.stage : '') + ')' : '') + '.',
+    '',
+    (o.summary || ''),
+    '',
+    'Happy to make the introduction if it looks like a fit.',
+    '',
+    'Terry Cholka',
+    'AgNtech Connect'
+  ].join('\n');
+  if (!c.email){
+    alert('No email on file for ' + c.name + '. Add one to the contact before drafting an introduction.');
+    return;
+  }
+  var to = c.email;
+  window.location.href = 'mailto:' + encodeURIComponent(to) +
+    '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
 /* One delegated listener beats inline onclick, which would break on any

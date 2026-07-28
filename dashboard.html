@@ -513,8 +513,73 @@ function oppDetail(o){
     (risks ? '<div class="dblock"><div class="dbh">Risks &amp; flags</div><ul class="dl">' + risks + '</ul></div>' : '') +
     market + comps + net +
     '<div class="srcnote">Assessment and notes stored with the record. AI-assisted; you make the call.</div>' +
-    '<div class="dacts"><button class="abtn primary">Open calendar</button>' +
-    '<button class="abtn">Decline with note</button></div>';
+    '<div class="dacts">' +
+      '<button class="abtn primary" onclick="inviteToBook(\'' + esc(o.slug) + '\')">Invite to book</button>' +
+      '<button class="abtn" onclick="decline(\'' + esc(o.slug) + '\', this)">Decline with note</button>' +
+    '</div>';
+}
+
+/* Terry's own booking link — the private Calendly event, not one of the three
+   public door links. Set this once. */
+var BOOKING_LINK = 'https://calendly.com/terry-agntechconnect';
+
+/* Drafts an email inviting them to book a time. Nothing is sent automatically. */
+async function inviteToBook(slug){
+  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  if (!o) return;
+  var email = '', who = '';
+  if (o.intake_id){
+    try {
+      var r = await window.agnSB.from('intakes').select('name,email')
+                    .eq('id', o.intake_id).maybeSingle();
+      if (r.data){ email = r.data.email || ''; who = (r.data.name || '').split(' ')[0]; }
+    } catch (e){ console.warn('[invite] could not read intake', e); }
+  }
+  if (!email){
+    alert('No email on file for ' + o.name + '. This opportunity was not created from a website enquiry, so there is no contact address to write to.');
+    return;
+  }
+  var body = [
+    (who ? 'Hi ' + who + ',' : 'Hello,'),
+    '',
+    'Thanks for getting in touch about ' + o.name + '. I have read through what you sent.',
+    '',
+    'Easiest next step is a call \u2014 you can pick a time that suits here:',
+    BOOKING_LINK,
+    '',
+    'Terry Cholka',
+    'AgNtech Connect'
+  ].join('\n');
+  window.location.href = 'mailto:' + encodeURIComponent(email) +
+    '?subject=' + encodeURIComponent('AgNtech Connect \u2014 ' + o.name) +
+    '&body=' + encodeURIComponent(body);
+}
+
+/* Declines the opportunity: archives it with a reason. This is a real write —
+   the record stays, so six months on you can see why you passed. */
+async function decline(slug, btn){
+  var o = OPPS.filter(function(x){ return x.slug === slug; })[0];
+  if (!o) return;
+  var reason = window.prompt('Why are you passing on ' + o.name + '?\n\nThis is kept on the record.');
+  if (reason === null) return;
+  reason = String(reason).trim();
+  if (!reason){ alert('A reason is needed \u2014 that is the point of keeping it.'); return; }
+  btn.disabled = true;
+  var label = btn.textContent;
+  btn.textContent = 'Declining\u2026';
+  try {
+    var r = await window.agnSB.from('opportunities')
+      .update({ pipeline_status: 'archived',
+                pipeline_note: 'Declined \u2014 ' + reason })
+      .eq('slug', slug);
+    if (r.error) throw r.error;
+    await loadAll();
+  } catch (e){
+    console.error('[decline]', e);
+    btn.disabled = false;
+    btn.textContent = label;
+    alert('Could not decline: ' + (e.message || e));
+  }
 }
 
 /* Opens a drafted introduction in Terry's mail client. Nothing is sent

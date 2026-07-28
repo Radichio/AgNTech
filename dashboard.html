@@ -418,7 +418,42 @@ function intakeDetail(i){
     '</div>' +
     (i.note ? '<div class="dblock"><div class="dbh">Note</div><div class="dbt">' + esc(i.note) + '</div></div>' : '') +
     gapsBlock(i) +
-    '<div class="srcnote">Straight from the website intake. Nothing has been researched or scored yet.</div>';
+    '<div class="srcnote">Straight from the website intake. Nothing has been researched or scored yet.</div>' +
+    '<div class="dacts"><button class="abtn primary" onclick="assess(\'' + esc(i.id) + '\', this)">Assess this enquiry</button></div>';
+}
+
+/* Runs the enrichment engine: research, score against the rubric, cross-check,
+   match to the network. The result lands as an opportunity for Terry to judge. */
+async function assess(id, btn){
+  var sb = window.agnSB;
+  if (!sb) return;
+  btn.disabled = true;
+  var label = btn.textContent;
+  btn.textContent = 'Assessing\u2026';
+  try {
+    var sess = await sb.auth.getSession();
+    var token = sess && sess.data && sess.data.session && sess.data.session.access_token;
+    if (!token) throw new Error('Session expired \u2014 sign in again');
+    var r = await fetch('/.netlify/functions/enrich', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ intake_id: id })
+    });
+    var out = await r.json();
+    if (!r.ok) throw new Error(out.detail || out.error || ('status ' + r.status));
+    btn.textContent = 'Assessed \u2014 fit ' + out.fit_score;
+    await loadAll();
+  } catch (e) {
+    console.error('[assess]', e);
+    btn.disabled = false;
+    btn.textContent = label;
+    var d = document.getElementById('detail');
+    var msg = document.createElement('div');
+    msg.className = 'srcnote';
+    msg.style.color = '#8F6F2E';
+    msg.textContent = 'Assessment failed: ' + (e.message || e);
+    d.appendChild(msg);
+  }
 }
 
 function oppDetail(o){

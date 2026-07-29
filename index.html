@@ -161,10 +161,21 @@
   .msg.bot{background:var(--cream2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
   .msg.user{background:var(--green);color:var(--on-dark);align-self:flex-end;border-bottom-right-radius:4px}
   .go2{display:block;margin-top:10px;color:var(--green);font-weight:500;border-bottom:1.5px solid var(--gold);font-size:13px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;max-height:110px;overflow:hidden;transition:opacity .2s ease,max-height .26s ease,margin-top .26s ease}
+  /* max-height is only here so the collapse can animate -- it must never be
+     the thing that decides how many pills are visible. Two rows fit on a
+     desktop, four stack on a phone, and a wrapped pill can take two lines,
+     so the open value is set well clear of any of that. */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;max-height:400px;overflow:hidden;transition:opacity .2s ease,max-height .3s ease,margin-top .3s ease}
   .chips.busy{opacity:0;max-height:0;margin-top:0;pointer-events:none}
   @media(prefers-reduced-motion:reduce){.chips{transition:none}}
   .chip2{font-size:12.5px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;color:var(--body);transition:.13s}
+  /* On a phone the pills each take a row anyway, and at mixed widths with some
+     wrapping to two lines they read as broken. One full-width row each reads
+     as a menu instead. 12px padding puts the tap target at ~44px. */
+  @media(max-width:560px){
+    .chips{gap:7px;margin-top:12px;flex-direction:column;align-items:stretch}
+    .chip2{font-size:13px;padding:12px 15px;text-align:left;border-radius:12px}
+  }
   .chip2:hover{border-color:var(--green);color:var(--green)}
   .askinput{display:flex;gap:9px;margin-top:14px}
   .askinput input{flex:1;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;font-family:var(--bf);color:var(--ink);outline:none}
@@ -720,6 +731,10 @@
       if (e.key === 'Escape'){ var c = document.querySelector('.askcard'); if (c && c.classList.contains('fs')) toggleFs(false); }
     });
     renderChips();
+    // full placeholder is clipped mid-word on a narrow input
+    if (inputEl && window.matchMedia('(max-width:560px)').matches) {
+      inputEl.placeholder = 'Ask, or give me your one-liner\u2026';
+    }
   </script>
 
   <script>

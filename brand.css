@@ -1,0 +1,145 @@
+/* ============================================================
+   AgNtech Connect — brand tokens
+   Tetra Farms Ltd., trading as AgNtech Connect
+
+   NOT YET WIRED IN. Every page still carries its own copy of the
+   :root block below, and all nine now agree. This file exists so
+   that when they are consolidated, there is one place to change.
+
+   To adopt it, in each page: delete the :root{...} block and add
+   <link rel="stylesheet" href="brand.css"> above the <style> tag.
+   Do it on one page, deploy, confirm, then do the rest — a wrong
+   path fails silently and every colour falls back to nothing.
+
+   dashboard.html and network.html are deliberately excluded. They
+   run a separate light-admin palette and are not public brand.
+   ============================================================ */
+
+:root{
+
+  /* ── Grounds ───────────────────────────────────────────────
+     Parchment is the background colour. The brand sheet is explicit:
+     Deep Forest is for "type and key elements", Parchment for
+     "backgrounds and space".                                       */
+  --cream:#F4F1E9;      /* Parchment — page ground                  */
+  --cream2:#EFEADD;     /* a half-step down, for banded sections    */
+  --paper:#F7F3E9;      /* card ground, a half-step up from the page*/
+
+  /* ── Type ─────────────────────────────────────────────────── */
+  --ink:#0F2A20;        /* Deep Forest — headings and primary text  */
+  --body:#41473E;       /* body copy: 8.47:1 on Parchment           */
+  --muted:#7A8076;      /* captions only. 3.28:1 on --cream2, so it
+                           must not carry anything a reader needs.  */
+
+  /* ── Greens ────────────────────────────────────────────────
+     THREE greens, and the difference matters. Deep Forest is a
+     type colour. Used across a whole viewport it stops reading as
+     a hue and reads as ink — which is exactly what happened to the
+     hero. --green-deep is the same family lifted for large fills;
+     it is also the lightest green that keeps brass accents at AA,
+     so it is a ceiling, not a preference.                          */
+  --green:#0F2A20;      /* type, buttons and fills on light ground  */
+  --green-d:#0A1F17;    /* hover state, one step darker             */
+  --green-deep:#1B4332; /* large surfaces: hero, bands, footer, menu*/
+
+  /* ── Brass ────────────────────────────────────────────────
+     The brand sheet's accessibility table claims Brass on Parchment
+     is 5.19:1 and AA. It is 2.84:1 and fails. --gold-2 fails too, at
+     4.15:1. So brass splits by JOB, not by shade:
+       --gold        rules, borders, fills, and text on dark ground
+       --gold-text   brass used as text on a light ground (5.39:1)
+       --gold-dark   brass lightened for dark ground (4.72:1 on
+                     --green-deep). Never on a light ground: 2.08:1.
+     Using --gold or --gold-2 as text on Parchment is the single most
+     repeated accessibility fault in this codebase.                 */
+  --gold:#B08A3C;       /* Brass — the brand accent                 */
+  --gold-2:#8F6F2E;     /* retained for existing non-text uses only */
+  --gold-text:#7A5E22;  /* brass as text on Parchment or --paper    */
+  --gold-dark:#C9A45A;  /* brass as text on --green-deep            */
+
+  /* ── Lines and reversed type ──────────────────────────────── */
+  --line:#DED7C6;       /* hairlines and card borders               */
+  --on-dark:#F4F1E9;    /* Parchment as type: 9.82:1 on --green-deep*/
+  --sage-dark:#9DB39A;  /* secondary type on dark: 4.93:1. Do not
+                           reduce its opacity — at .82 it drops to
+                           3.89:1 and fails.                        */
+
+  /* ── Type faces ───────────────────────────────────────────
+     Libre Baskerville stands in for Baskerville No. 2 from the
+     brand sheet. Helvetica Neue for Neue Haas Grotesk.             */
+  --df:'Libre Baskerville',Georgia,serif;
+  --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
+}
+
+/* ── Contrast reference, measured not assumed (WCAG 2.1) ──────
+   AAA needs 7:1, AA needs 4.5:1 for text under 18.66px bold / 24px.
+
+     --ink        on --cream         13.56:1   AAA
+     --body       on --cream          8.47:1   AAA
+     --gold-text  on --cream          5.39:1   AA
+     --gold-text  on --paper          5.49:1   AA
+     --on-dark    on --green-deep     9.82:1   AAA
+     --sage-dark  on --green-deep     4.93:1   AA
+     --gold-dark  on --green-deep     4.72:1   AA
+     --green      on --gold           4.77:1   AA
+     --gold       on --cream          2.84:1   FAIL  <- never as text
+     --gold-2     on --cream          4.15:1   FAIL  <- never as text
+     --gold-dark  on --cream          2.08:1   FAIL  <- never as text
+     --green-deep on --gold           3.45:1   FAIL  <- use --green
+   ──────────────────────────────────────────────────────────── */
+
+
+/* ============================================================
+   THE GATEWAY MARK — two versions, and which one goes where
+
+   The brand sheet's mark is a refined portico: moulded lintel, columns
+   with capitals and flared bases, a tapered brass column with a cupped
+   top and splayed foot. Measured off the artwork it is 624x825, which is
+   the specified 3:4 to within a rounding error.
+
+   Below roughly 48px none of that detail survives, so a REDUCTION is
+   correct and normal -- the brand sheet anticipates it in item 4, showing
+   the mark simplifying at 64, 32 and 16px.
+
+   What was wrong was not that a reduction existed. It was that the
+   reduction ran at 1:0.950 -- squat, 40% too wide for its height -- and
+   was being used at 290px and 600px, where you were simply looking at the
+   small-size mark blown up. That is why the banner and the app icon read
+   as two different companies.
+
+   THE RULE
+     Inline in a page        -> reduced SVG below. No HTTP request, scales
+                                cleanly, and at nav or watermark size the
+                                mouldings would not read anyway.
+     Baked into an asset     -> the refined artwork. PDFs, the LinkedIn
+                                banner, business cards, the app icon,
+                                anything printed.
+
+   Both sit in a 3:4 box, so they are interchangeable with no layout shift.
+
+   THE REDUCED MARK — viewBox IS the 3:4 bounding box, so any width and
+   height in 3:4 renders it true. Geometry taken from the refined artwork:
+   the posts are inset 1.5 units from the lintel edge because the capitals
+   flare wider than the shafts, the brass column is 4.1 wide, the base 14,
+   both centred on 15.
+
+     <svg viewBox="0 0 30 40" aria-hidden="true">
+       <rect x="0"    y="0"  width="30"  height="4"  fill="#0F2A20"/>
+       <rect x="1.5"  y="4"  width="3.7" height="33" fill="#0F2A20"/>
+       <rect x="24.8" y="4"  width="3.7" height="33" fill="#0F2A20"/>
+       <rect x="13"   y="9"  width="4.1" height="28" fill="#B08A3C"/>
+       <rect x="8"    y="37" width="14"  height="3"  fill="#B08A3C"/>
+     </svg>
+
+   On a dark ground swap #0F2A20 for --on-dark and #B08A3C for --gold-dark.
+
+   NOTE the foot. The centre column's base is BRASS, not forest -- verified
+   against the artwork. Every earlier coded version had it in Deep Forest,
+   which reads as the brass column borrowing the structure's threshold. In
+   the artwork it stands on its own footing.
+
+   STILL OUTSTANDING: the refined mark exists only as raster. Ask whoever
+   built the brand sheet for the vector. Once it lands, the large inline
+   uses -- the hero watermark above all -- should switch to it, and this
+   rule collapses to a single mark at every size.
+   ============================================================ */

@@ -27,7 +27,7 @@
   .navin{max-width:1080px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
   .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink);cursor:pointer}
   .brand .n{color:var(--green)}
-  .mark{width:36px;height:36px;flex:none}
+  .mark{width:27px;height:36px;flex:none}
   .navlinks{display:flex;align-items:center;gap:26px;font-size:14.5px;color:var(--body)}
   .navlinks a:hover{color:var(--green)}
   .nav-live::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-right:7px;vertical-align:middle}
@@ -49,7 +49,7 @@
   .btn.ghost:hover{border-color:var(--on-dark)}
   .tagline{margin-top:42px;font-family:var(--df);font-style:italic;font-size:20px;color:var(--sage-dark)}
   .hero-rule{width:54px;height:3px;background:var(--gold-dark);margin-top:44px;opacity:.8}
-  .hero-wheat{position:absolute;right:7%;top:50%;transform:translateY(-50%);width:290px;opacity:.13;z-index:1}
+  .hero-wheat{position:absolute;right:7%;top:50%;transform:translateY(-50%);width:240px;opacity:.13;z-index:1}
   /* below this the mark would sit behind the headline */
   @media(max-width:1000px){.hero-wheat{display:none}}
   @media(max-width:680px){.hero h1{font-size:38px}.hero .sub{font-size:17px}}
@@ -296,7 +296,7 @@
   <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block (div#gate + the following <script>) to make a page public ===== -->
   <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
     <div style="text-align:center;width:320px;max-width:86vw">
-      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <svg viewBox="0 0 30 40" width="35" height="46" style="margin-bottom:16px" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#F4F1E9"/><rect x="1.5" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="24.8" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="13" y="9" width="4.1" height="28" fill="#C9A45A"/><rect x="8" y="37" width="14" height="3" fill="#C9A45A"/></svg>
       <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
       <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
       <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
@@ -322,13 +322,7 @@
   <nav>
     <div class="navin">
       <span class="brand" role="button" tabindex="0" aria-label="Back to top" onclick="toTop()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toTop();}">
-        <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
-          <rect x="9" y="11" width="30" height="4" fill="#0F2A20"/>
-          <rect x="11" y="15" width="4" height="22" fill="#0F2A20"/>
-          <rect x="33" y="15" width="4" height="22" fill="#0F2A20"/>
-          <rect x="22" y="18" width="4" height="16" fill="#B08A3C"/>
-          <rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/>
-        </svg>
+        <svg class="mark" viewBox="0 0 30 40" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#0F2A20"/><rect x="1.5" y="4" width="3.7" height="33" fill="#0F2A20"/><rect x="24.8" y="4" width="3.7" height="33" fill="#0F2A20"/><rect x="13" y="9" width="4.1" height="28" fill="#B08A3C"/><rect x="8" y="37" width="14" height="3" fill="#B08A3C"/></svg>
         AgNtech Connect
       </span>
       <div class="navlinks">
@@ -365,7 +359,7 @@
 
 
   <header class="hero">
-    <svg class="hero-wheat" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/></svg>
+    <svg class="hero-wheat" viewBox="0 0 30 40" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#F4F1E9"/><rect x="1.5" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="24.8" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="13" y="9" width="4.1" height="28" fill="#B08A3C"/><rect x="8" y="37" width="14" height="3" fill="#C9A45A"/></svg>
     <div class="wrap">
       <div class="eyebrow">Canadian Agriculture · Technology · Capital</div>
       <h1>A trusted navigator for serious capital entering Canadian agriculture.</h1>

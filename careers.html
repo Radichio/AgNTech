@@ -9,8 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9; --ink:#0F2A20; --green:#0F2A20; --green-deep:#0A1F17;
-    --body:#41473E; --muted:#7A8076; --gold:#B08A3C; --gold-2:#8F6F2E; --gold-dark:#C9A45A; --line:#DED7C6; --sage-dark:#9DB3A4;
+    --cream:#F4F1E9; --cream2:#EFEADD; --paper:#F7F3E9;
+    --ink:#0F2A20; --body:#41473E; --muted:#7A8076;
+    --green:#0F2A20; --green-d:#0A1F17; --green-deep:#1B4332;
+    --gold:#B08A3C; --gold-2:#8F6F2E; --gold-text:#7A5E22; --gold-dark:#C9A45A;
+    --line:#DED7C6; --on-dark:#F4F1E9; --sage-dark:#9DB39A;
     --df:'Libre Baskerville',Georgia,serif; --bf:'Helvetica Neue',Arial,system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -22,14 +25,14 @@
   nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:18px}
   .brand{display:flex;align-items:center;gap:9px;font-family:var(--df);font-weight:600;font-size:20px;letter-spacing:-.01em;text-decoration:none;color:var(--ink)}
   .brand .n{color:var(--green)}
-  .mark{width:36px;height:36px;flex:none}
+  .mark{width:27px;height:36px;flex:none}
   .navlinks{display:flex;gap:24px;align-items:center}
   .navlinks a{font-size:14px;color:var(--body);text-decoration:none;transition:.12s}
   .navlinks a:hover{color:var(--ink)}
   @media(max-width:720px){.navlinks{display:none}}
 
   .hero{padding:62px 0 20px}
-  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text);font-weight:600}
   .hero h1{font-family:var(--df);font-weight:500;font-size:43px;line-height:1.12;margin-top:14px;max-width:20ch}
   @media(max-width:640px){.hero h1{font-size:32px}}
   .hero .lead{font-size:18px;color:var(--body);line-height:1.65;margin-top:20px;max-width:64ch}
@@ -38,7 +41,7 @@
   .notecard b{color:var(--ink)}
 
   section.block{padding:34px 0}
-  .sec-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:600;margin-bottom:8px}
+  .sec-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text);font-weight:600;margin-bottom:8px}
   h2.sh{font-family:var(--df);font-weight:500;font-size:27px;line-height:1.18;color:var(--ink)}
   .prose{font-size:16px;color:var(--body);line-height:1.72;margin-top:14px;max-width:66ch}
   .prose b{color:var(--ink);font-weight:600}
@@ -51,11 +54,11 @@
 
   .roles{display:grid;gap:14px;margin-top:22px}
   .role{border:1px solid var(--line);border-radius:12px;padding:20px 22px;background:var(--cream)}
-  .roletag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);font-weight:700}
+  .roletag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text);font-weight:700}
   .role h3{font-family:var(--df);font-weight:500;font-size:20px;color:var(--ink);margin:6px 0 8px}
   .role p{font-size:14px;color:var(--body);line-height:1.58;max-width:72ch}
   .role .meta{font-size:12.5px;color:var(--muted);margin-top:10px}
-  .role a.reg{display:inline-block;margin-top:12px;font-size:13.5px;color:var(--gold-2);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
+  .role a.reg{display:inline-block;margin-top:12px;font-size:13.5px;color:var(--gold-text);text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
 
   .close{background:var(--cream2);border-top:1px solid var(--line);text-align:center;padding:52px 0;margin-top:20px}
   .close h2{font-family:var(--df);font-weight:500;font-size:27px;line-height:1.2;max-width:26ch;margin:0 auto}
@@ -65,7 +68,7 @@
   footer{background:var(--green-deep);color:var(--sage-dark);font-size:13.5px;padding:30px 0}
   footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
   footer .n{color:var(--gold-dark)}
-  footer .fnav a{color:var(--sage-dark);text-decoration:none;opacity:.82}
+  footer .fnav a{color:var(--sage-dark);text-decoration:none}
   footer .fnav a:hover{color:var(--cream)}
   footer .treaty{justify-content:center;margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
   footer .treaty span{text-align:center;max-width:72ch;line-height:1.5}
@@ -80,13 +83,13 @@
   .mobmenu .mclose{background:none;border:none;color:var(--cream);font-size:30px;line-height:1;cursor:pointer;padding:0 4px}
   .mobmenu a{color:var(--cream);text-decoration:none;font-family:var(--df);font-size:23px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.10)}
   .mobmenu a.sm{font-family:var(--bf);font-size:15px;color:var(--sage-dark);border-bottom:none;padding:9px 0}
-  .mobmenu .mcta{margin-top:22px;background:var(--gold);color:var(--green-deep);text-align:center;border-radius:10px;padding:14px;font-weight:700;font-family:var(--bf);font-size:15px;border-bottom:none}
+  .mobmenu .mcta{margin-top:22px;background:var(--gold);color:var(--green);text-align:center;border-radius:10px;padding:14px;font-weight:700;font-family:var(--bf);font-size:15px;border-bottom:none}
   @media(max-width:720px){ .burger{display:block} }
   /* ── sticky mobile CTA ───────────────────────────────── */
   .stickycta{display:none}
   @media(max-width:720px){
-    .stickycta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(10,31,23,.96);backdrop-filter:blur(6px);padding:10px 14px;border-top:1px solid rgba(255,255,255,.10)}
-    .stickycta a{display:block;background:var(--gold);color:var(--green-deep);text-align:center;text-decoration:none;font-weight:700;font-size:15px;padding:13px;border-radius:10px;font-family:var(--bf)}
+    .stickycta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(27,67,50,.96);backdrop-filter:blur(6px);padding:10px 14px;border-top:1px solid rgba(255,255,255,.10)}
+    .stickycta a{display:block;background:var(--gold);color:var(--green);text-align:center;text-decoration:none;font-weight:700;font-size:15px;padding:13px;border-radius:10px;font-family:var(--bf)}
     body{padding-bottom:74px}
   }
   /* ── mobile scroll/priority pass ─────────────────────── */
@@ -105,7 +108,7 @@
   <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
   <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
     <div style="text-align:center;width:320px;max-width:86vw">
-      <svg viewBox="0 0 48 48" width="46" height="46" style="margin-bottom:16px"><rect x="9" y="11" width="30" height="4" fill="#F4F1E9"/><rect x="11" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="33" y="15" width="4" height="22" fill="#F4F1E9"/><rect x="22" y="18" width="4" height="16" fill="#C9A45A"/><rect x="17" y="36" width="14" height="3.5" fill="#F4F1E9"/></svg>
+      <svg viewBox="0 0 30 40" width="35" height="46" style="margin-bottom:16px" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#F4F1E9"/><rect x="1.5" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="24.8" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="13" y="9" width="4.1" height="28" fill="#C9A45A"/><rect x="8" y="37" width="14" height="3" fill="#C9A45A"/></svg>
       <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
       <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
       <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
@@ -124,7 +127,7 @@
 
   <nav class="top">
     <div class="wrap">
-      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="11" width="30" height="4" fill="#0F2A20"/><rect x="11" y="15" width="4" height="22" fill="#0F2A20"/><rect x="33" y="15" width="4" height="22" fill="#0F2A20"/><rect x="22" y="18" width="4" height="16" fill="#B08A3C"/><rect x="17" y="36" width="14" height="3.5" fill="#0F2A20"/></svg>AgNtech Connect</a>
+      <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 30 40" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#0F2A20"/><rect x="1.5" y="4" width="3.7" height="33" fill="#0F2A20"/><rect x="24.8" y="4" width="3.7" height="33" fill="#0F2A20"/><rect x="13" y="9" width="4.1" height="28" fill="#B08A3C"/><rect x="8" y="37" width="14" height="3" fill="#B08A3C"/></svg>AgNtech Connect</a>
       <div class="navlinks">
         <a href="index.html#vision">Vision</a>
         <a href="services.html">What I do</a>

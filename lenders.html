@@ -122,25 +122,6 @@
 </head>
 <body>
 
-  <!-- ===== PRIVATE-PREVIEW PASSWORD GATE — delete this whole block to make public ===== -->
-  <div id="gate" style="position:fixed;inset:0;z-index:99999;background:#0F2A20;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue',Arial,sans-serif">
-    <div style="text-align:center;width:320px;max-width:86vw">
-      <svg viewBox="0 0 30 40" width="35" height="46" style="margin-bottom:16px" aria-hidden="true"><rect x="0" y="0" width="30" height="4" fill="#F4F1E9"/><rect x="1.5" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="24.8" y="4" width="3.7" height="33" fill="#F4F1E9"/><rect x="13" y="9" width="4.1" height="28" fill="#C9A45A"/><rect x="8" y="37" width="14" height="3" fill="#C9A45A"/></svg>
-      <div style="font-family:Georgia,'Times New Roman',serif;color:#F4F1E9;font-size:21px;margin-bottom:8px">AgNtech Connect</div>
-      <div style="color:#9DB3A4;font-size:13px;margin-bottom:18px;line-height:1.5">Private preview — please enter the password.</div>
-      <input id="gpw" type="password" placeholder="Password" style="width:100%;padding:12px 13px;border-radius:9px;border:1px solid #2C4A3B;background:#15352A;color:#F4F1E9;font-size:14px;outline:none;font-family:inherit">
-      <div id="gerr" style="color:#E2B66A;font-size:12.5px;height:15px;margin-top:7px"></div>
-      <button id="gbtn" style="width:100%;margin-top:6px;padding:12px;border:none;border-radius:9px;background:#B08A3C;color:#0F2A20;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Enter</button>
-    </div>
-  </div>
-  <script>
-    var GATE_PASSWORD = "terry-preview-26";
-    (function(){ try{ if(sessionStorage.getItem('agn_gate')==='ok'){ var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } }catch(e){} })();
-    function gateOpen(){ if(document.getElementById('gpw').value === GATE_PASSWORD){ try{ sessionStorage.setItem('agn_gate','ok'); }catch(e){} var g=document.getElementById('gate'); if(g) g.parentNode.removeChild(g); } else { document.getElementById('gerr').textContent='Incorrect — try again.'; } }
-    document.getElementById('gbtn').addEventListener('click', gateOpen);
-    document.getElementById('gpw').addEventListener('keydown', function(e){ if(e.key==='Enter') gateOpen(); });
-    document.getElementById('gpw').focus();
-  </script>
 
   <nav class="top">
     <div class="wrap">

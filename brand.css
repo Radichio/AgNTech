@@ -97,6 +97,49 @@
    top and splayed foot. Measured off the artwork it is 624x825, which is
    the specified 3:4 to within a rounding error.
 
+   WHAT IT MEANS. The brand sheet reads it as a gateway -- access,
+   partnership, stewardship -- and that is true but it is only the first
+   lane. The pitch deck carries the rest, and the mark already draws it.
+
+   The deck's shape is "not a Y, an S": a funnel sorts and discards, a
+   trellis is shared structure that many things grow on. In S x y z =
+   x z (y z), the deck assigns the terms explicitly -- z is the substrate
+   AgNtech owns and lends out, y is a venture that uses it, x is the
+   regional economy that receives both, and S is AgNtech, the rule that
+   wires them together.
+
+   Onto the mark:
+     the SPAN is S. The horizontal that wires two verticals into one
+       structure is the company itself -- not a decorative crossbar.
+     the BRASS COLUMN is z. Between both verticals, available to each,
+       whole and undivided, because non-rival things are not diminished
+       by being shared. Brass because it is the scarce asset: programming
+       is importable, substrate is not.
+     its FOOT is brass and rests on nothing else. The substrate is rooted
+       in its own right, which is why the foot must never be forest.
+     the GAP at the top is the argument, not restraint. Take a vertical
+       away and the span loses its bearing, but the brass column is
+       untouched -- when a venture on a trellis fails, the substrate is
+       still standing.
+
+   WHERE IT STRAINS, and the deck says so first: x and y are not peers,
+   and a real portfolio needs the rule applied repeatedly. The formula
+   illustrates the principle; it is not a schematic. The mark draws two
+   verticals because two is the minimum that makes "shared" mean
+   anything -- the deck's trellis names four. Nobody should count posts
+   and conclude there are two pillars.
+
+   CONSEQUENCES FOR COLOUR. The verticals are living things growing on a
+   shared structure, so the surface green has to read as alive rather than
+   as ink -- which is why --green-deep is #1B4332 and not #0F2A20. And if
+   brass is the non-importable scarce thing, spending it freely
+   contradicts the claim: "sparingly, for accents" is an assertion about
+   what is actually rare, not a matter of taste.
+
+   NO GROUND LINE. A ground line would tie the substrate to the frame.
+   Its independence from the frame is the whole argument. The mark is
+   correct as drawn.
+
    Below roughly 48px none of that detail survives, so a REDUCTION is
    correct and normal -- the brand sheet anticipates it in item 4, showing
    the mark simplifying at 64, 32 and 16px.
@@ -108,12 +151,34 @@
    as two different companies.
 
    THE RULE
-     Inline in a page        -> reduced SVG below. No HTTP request, scales
-                                cleanly, and at nav or watermark size the
-                                mouldings would not read anyway.
-     Baked into an asset     -> the refined artwork. PDFs, the LinkedIn
-                                banner, business cards, the app icon,
-                                anything printed.
+     Everywhere              -> the REFINED artwork. It is the mark.
+     nav lockup, every page  -> AgNtech_Mark.png at 110x144, embedded as a
+                                base64 data URI. 8 KB per page, covers 4x
+                                DPR, and cannot 404 -- a missing file would
+                                break the logo on nine pages, which is a
+                                worse failure than a blunter shape.
+     hero watermark, index   -> AgNtech_Mark-Light.png by src. It is a
+                                13%-opacity decoration on one page, so a
+                                file reference is fine there.
+     PDFs and the banner     -> AgNtech_Mark.png / -Light.png full res.
+     dark grounds            -> AgNtech_Mark-Light.png, which is the same
+                                artwork with forest swapped for parchment.
+                                Brass is untouched. Do not attempt this with
+                                a CSS filter; filters cannot recolour a
+                                raster's ink selectively.
+
+   TWO EXTRACTION FAULTS worth never repeating. The first pass classified
+   pixels with a threshold, which produced BINARY alpha -- 2 values, zero
+   soft pixels -- so every curve became a staircase, and it also shaved the
+   anti-aliased outer edge and blunted the mouldings. The fix is to
+   un-composite instead: each edge pixel is p = a*ink + (1-a)*parchment, so
+   coverage is the projection of (p - parchment) onto (ink - parchment).
+   That recovers 252 alpha levels and the true silhouette. If the mark ever
+   looks crude again, check the alpha histogram first.
+
+     The rectangle SVG below is retained as a fallback only -- for a 16px
+     favicon, or anywhere a data URI is not possible. It is no longer used
+     in the pages.
 
    Both sit in a 3:4 box, so they are interchangeable with no layout shift.
 

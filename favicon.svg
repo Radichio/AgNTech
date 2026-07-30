@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- At 16-32px the refined mark's mouldings cannot resolve, so the favicon
+       uses the rectangle reduction -- which is exactly what brand.css retains
+       it for. Parchment ground so it reads on a dark browser theme too. -->
+  <rect width="48" height="48" rx="9" fill="#F4F1E9"/>
+  <g transform="translate(9 4)">
+    <rect x="0"    y="0"  width="30"  height="4"  fill="#0F2A20"/>
+    <rect x="1.5"  y="4"  width="3.7" height="33" fill="#0F2A20"/>
+    <rect x="24.8" y="4"  width="3.7" height="33" fill="#0F2A20"/>
+    <rect x="13"   y="9"  width="4.1" height="28" fill="#B08A3C"/>
+    <rect x="8"    y="37" width="14"  height="3"  fill="#B08A3C"/>
+  </g>
+</svg>

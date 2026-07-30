@@ -208,3 +208,40 @@
    uses -- the hero watermark above all -- should switch to it, and this
    rule collapses to a single mark at every size.
    ============================================================ */
+
+
+/* ============================================================
+   THE COLONNADE — the footer treatment
+
+   One bay of the mark is a gateway. Many bays is the trellis the deck
+   describes, and a footer is the only wide horizontal band on the site,
+   so it is the one place the mark can be drawn without straining.
+
+   The deck's own footnote admits the single-bay figure strains: x and y
+   are not peers, and a real portfolio needs the rule applied repeatedly.
+   Nine bays do not strain. And there is exactly ONE brass column,
+   centred in the middle bay, because z is non-rival — one substrate,
+   shared by many. Two brass columns would say two substrates and
+   contradict the claim.
+
+   Geometry, viewBox 0 0 1400 96, scaled from the mark's 40-unit height:
+     lintel        0 -> 9.6      continuous, full width
+     posts         9.6 -> 96     ten of them, pitch 155.6
+     brass column  21.6 -> 88.8  x 695-705, clear of the lintel by 12px
+     brass foot    88.8 -> 96    x 683-717, 33.6 wide
+
+   Parchment at .10, brass at .17 — texture, not an object. The hero
+   taught this twice: a visible mark behind text is always wrong, so the
+   colonnade gets its own band and never sits under a line of type.
+
+   Three details that are deliberate, not accidents:
+     - the posts run to the footer's BOTTOM EDGE, which lets the edge
+       read as the ground without the mark carrying a ground line. The
+       negative bottom margin cancels the footer's padding so they
+       actually reach it.
+     - the outermost posts sit half off the frame at x=-4 and x=1396. A
+       trellis continues past what you can see.
+     - the SVG scales with viewport width, so the band is 96px at 1400px
+       and shallower on smaller screens. Below 720px it is hidden rather
+       than thinned to nothing.
+   ============================================================ */

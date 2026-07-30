@@ -49,9 +49,17 @@
   .btn.ghost:hover{border-color:var(--on-dark)}
   .tagline{margin-top:42px;font-family:var(--df);font-style:italic;font-size:20px;color:var(--sage-dark)}
   .hero-rule{width:54px;height:3px;background:var(--gold-dark);margin-top:44px;opacity:.8}
-  .hero-wheat{position:absolute;right:7%;top:50%;transform:translateY(-50%);width:240px;opacity:.13;z-index:1}
-  /* below this the mark would sit behind the headline */
-  @media(max-width:1000px){.hero-wheat{display:none}}
+  /* Anchored bottom-right, NOT vertically centred. Centred put it straight
+     into the headline's band, and the headline cannot give way without
+     losing its two-line break. The empty region in this hero is the lower
+     right: the sub, the buttons and the tagline all stop around 60% of the
+     width, and the mark sits at 74-77%. Anchored to the bottom, its top
+     lands roughly 78px below the headline whether that runs two lines or
+     three, so the clearance holds as the hero grows. */
+  .hero-wheat{position:absolute;right:6%;bottom:30px;width:190px;opacity:.12;z-index:1}
+  /* narrower than this and the headline reaches across -- hide it rather
+     than shrink it to nothing */
+  @media(max-width:1100px){.hero-wheat{display:none}}
   @media(max-width:680px){.hero h1{font-size:38px}.hero .sub{font-size:17px}}
 
   /* sections */

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="agn-locked">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -140,6 +140,8 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    /* set in the <html> tag so the page starts LOCKED and script failure
+       cannot leave it open; this line is now belt-and-braces only */
     document.documentElement.classList.add('agn-locked');
     (function(){
       var SUPABASE_URL = "https://yqivawgiuuzwuxbvfrjo.supabase.co";

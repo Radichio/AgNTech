@@ -104,6 +104,14 @@ Judge these separately from the scores. Set each on what the enquiry actually sa
 
 A knock-out ends the file regardless of the scores. Do not soften one because the company is otherwise attractive.
 
+A KNOCK-OUT STILL GETS A FULL WORKUP. It is a decision, and a decision has to be explainable to the person it lands on. Never write a thin one. Every knocked-out file must say:
+ - what the company actually IS, in concrete terms, using whatever the research turned up as well as the enquiry. If the research found the company, use it: what it does, how long it has existed, who runs it, what stage it is at. Terry may know these people.
+ - WHY it falls outside, naming the specific test it fails rather than restating the label. "Pharmaceutical development for human health, not agricultural production, inputs, equipment or food" is a reason. "This is off-lane" is not.
+ - what would have to be TRUE for it to be in the lane. If an agricultural or food-science connection exists that the enquiry did not mention, that is the thing to ask about, and it is often the difference between a wrong rejection and a right one.
+ - where it belongs INSTEAD. Terry's practice is built on making the right introduction rather than sending someone away with nothing, so name the kind of investor or advisor this needs. Never leave the ask empty and never write "not applicable" -- there is always a useful question, and on a knocked-out file the useful question is usually whether the knock-out is correct.
+
+If the enquiry is thin but the research is rich, the write-up should lean on the research and say so.
+
 A SEARCH MISS IS NOT A FINDING. You will be told which spellings of the company name were searched. If none of them returned anything, that means the search did not match — it does NOT mean the company is unknown, unverifiable or does not exist. Never write that public reporting "returns no evidence of" the company, or that there is "no trace" of it. Write that it could not be verified from the searches run, name the spellings tried, and make it a question to ask rather than a flag against them. If the results that come back are obviously about a different organisation in a different field, say that the search matched something unrelated — do not treat those results as being about this applicant.
 
 ON FIGURES — this matters more than anything else you do:
@@ -187,9 +195,19 @@ function nameVariants(company, email) {
 }
 
 
-/** One Google News query. Returns the headlines it found, or an empty list. */
-async function newsSearch(q, signal) {
-  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(q + ' when:2y') +
+/**
+ * One Google News query. Returns the headlines it found, or an empty list.
+ *
+ * `window` is optional and MUST be omitted for company-existence searches. A
+ * recency filter is right for market context and actively wrong for "does this
+ * company exist and what does it do" -- a firm founded in 2009 whose coverage
+ * peaked in 2021 vanishes entirely behind a two-year window, and the engine
+ * then reports a company it could not see as a company it could not verify.
+ * That is exactly how Sci-mar came back as marine fisheries research.
+ */
+async function newsSearch(q, signal, window) {
+  const url = 'https://news.google.com/rss/search?q=' +
+              encodeURIComponent(q + (window ? ' when:' + window : '')) +
               '&hl=en-CA&gl=CA&ceid=CA:en';
   try {
     const r = await fetch(url, { signal,
@@ -222,11 +240,26 @@ async function research(intake) {
     const variants = nameVariants(intake.company, intake.email);
     const sector = intake.sector || 'Canadian agriculture';
 
-    const queries = variants.map((v) => ({ q: '"' + v + '"', kind: 'company' }));
-    queries.push({ q: sector + ' Canada agriculture', kind: 'sector' });
+    // Company searches run with NO time window -- see newsSearch above.
+    const queries = variants.map((v) => ({ q: '"' + v + '"', kind: 'company', win: null }));
+
+    // A bare name collides with unrelated organisations: "Sci-mar" matches
+    // marine science, "Claystone" matches quarrying. The intake already carries
+    // a geography and a sector; pairing them with the name is a free
+    // disambiguation and neither is invented.
+    const place = String(intake.geography || '').split(',')[0].trim();
+    if (variants.length && (place || intake.sector)) {
+      queries.push({
+        q: '"' + variants[0] + '" ' + [place, intake.sector].filter(Boolean).join(' '),
+        kind: 'company', win: null
+      });
+    }
+
+    // Only the sector query wants recency: this one IS market context.
+    queries.push({ q: sector + ' Canada agriculture', kind: 'sector', win: '1y' });
 
     const out = await Promise.all(queries.map(async (spec) => {
-      const items = await newsSearch(spec.q, ctrl.signal);
+      const items = await newsSearch(spec.q, ctrl.signal, spec.win);
       return { q: spec.q, kind: spec.kind, items: items };
     }));
 

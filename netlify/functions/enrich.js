@@ -28,6 +28,14 @@
 //    back null and leave the average entirely — see the scoring block below.
 
 const MODEL = 'claude-haiku-4-5-20251001';   // fast tier: comfortably inside the function budget
+
+// TEMPERATURE 0. Left at the default of 1.0, the same enquiry scored 7.2 and
+// then 8.2 on consecutive runs -- and every one of the six scored criteria
+// moved by exactly +1, so this was the model's overall generosity shifting as a
+// block rather than noise on any one line. A full point is a whole band: the
+// same company reads "Promising, with questions" on one click and "Worth a
+// look" on the next. A rubric that returns a different answer to the same
+// question is not a rubric. Creativity is not wanted here; consistency is.
 const MAX_TOKENS = 2000;
 const RESEARCH_BUDGET_MS = 5000;
 const MODEL_BUDGET_MS = 22000;
@@ -286,6 +294,7 @@ exports.handler = async (event) => {
       method: 'POST', signal: ctrl.signal,
       headers: { 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({ model: MODEL, max_tokens: MAX_TOKENS, system: SYSTEM,
+                             temperature: 0,
                              messages: [{ role: 'user', content: userMsg }] })
     });
     const text = await resp.text();

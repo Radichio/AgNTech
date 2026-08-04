@@ -104,6 +104,8 @@ Judge these separately from the scores. Set each on what the enquiry actually sa
 
 A knock-out ends the file regardless of the scores. Do not soften one because the company is otherwise attractive.
 
+A SEARCH MISS IS NOT A FINDING. You will be told which spellings of the company name were searched. If none of them returned anything, that means the search did not match — it does NOT mean the company is unknown, unverifiable or does not exist. Never write that public reporting "returns no evidence of" the company, or that there is "no trace" of it. Write that it could not be verified from the searches run, name the spellings tried, and make it a question to ask rather than a flag against them. If the results that come back are obviously about a different organisation in a different field, say that the search matched something unrelated — do not treat those results as being about this applicant.
+
 ON FIGURES — this matters more than anything else you do:
 - Use a number ONLY if it appears in the enquiry itself or in the research provided to you.
 - NEVER invent or estimate a market size, growth rate, valuation, or comparable. If you do not have a real one, write that it is not established.
@@ -142,39 +144,102 @@ function decode(s) {
     .replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/<[^>]+>/g, '').trim();
 }
 
-/** Public reporting on the company and its category. Same approach as the bulletin. */
-async function research(intake) {
-  const terms = [];
-  if (intake.company) terms.push(`"${intake.company}"`);
-  const sector = intake.sector || 'Canadian agriculture';
-  terms.push(`${sector} Canada agriculture`);
+/**
+ * Mechanical name variants. DETERMINISTIC ONLY -- never ask the model to guess
+ * alternative spellings, because a plausible guess that matches a DIFFERENT real
+ * company gets written up as the applicant's business, and Terry may repeat it.
+ * Every variant here is a transform of the string the applicant typed.
+ *
+ * "Sci-mar" searched as one exact string returns marine biology papers. The same
+ * company as "Scimar" is a Manitoba biotech with clinical trials and a head
+ * office in Dauphin. One hyphen was the whole difference.
+ */
+function nameVariants(company, email) {
+  const out = [];
+  const seen = Object.create(null);
+  const push = (v) => {
+    const t = String(v || '').trim();
+    const k = t.toLowerCase();
+    if (t.length > 2 && !seen[k]) { seen[k] = 1; out.push(t); }
+  };
 
+  const raw = String(company || '').trim();
+  if (raw) {
+    // drop legal suffixes: "Northrow Ag Systems Ltd." searches better without
+    const base = raw.replace(
+      /[,.]?\s+(ltd|limited|inc|incorporated|corp|corporation|llc|llp|co|company|group|holdings)\.?$/i, ''
+    ).trim() || raw;
+    push(base);
+    push(base.replace(/[-\u2010-\u2015]/g, ''));    // Sci-mar  -> Scimar
+    push(base.replace(/[-\u2010-\u2015]/g, ' '));   // Sci-mar  -> Sci mar
+    push(base.replace(/\s+/g, ''));                 // Sci mar  -> Scimar
+  }
+
+  // The email domain is the strongest signal available and it is already in the
+  // intake, unused until now: it carries the company's OWN spelling of itself.
+  const m = /@([A-Za-z0-9.-]+)\s*$/.exec(String(email || ''));
+  if (m) {
+    const dom = m[1].toLowerCase();
+    const free = /(gmail|yahoo|hotmail|outlook|icloud|proton|aol|live|msn|me|mail)\./.test(dom);
+    if (!free && !/\.example$/.test(dom)) push(dom.split('.')[0]);
+  }
+  return out.slice(0, 4);
+}
+
+
+/** One Google News query. Returns the headlines it found, or an empty list. */
+async function newsSearch(q, signal) {
+  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(q + ' when:2y') +
+              '&hl=en-CA&gl=CA&ceid=CA:en';
+  try {
+    const r = await fetch(url, { signal,
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; AgNtechConnect/1.0)' } });
+    if (!r.ok) return [];
+    const xml = await r.text();
+    const items = [];
+    const re = /<item>([\s\S]*?)<\/item>/g;
+    let m;
+    while ((m = re.exec(xml)) !== null && items.length < 6) {
+      const t = /<title>([\s\S]*?)<\/title>/.exec(m[1]);
+      if (t) items.push(decode(t[1]));
+    }
+    return items;
+  } catch (e) { return []; }
+}
+
+
+/**
+ * Public reporting on the company and its category.
+ *
+ * Searches every mechanical variant of the name, not just the string as typed,
+ * and reports HOW it searched so the model can tell a genuine absence from a
+ * spelling miss. Returns { tried, found, anyHit } rather than a bare list.
+ */
+async function research(intake) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), RESEARCH_BUDGET_MS);
   try {
-    const out = await Promise.all(terms.map(async (q) => {
-      const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(q + ' when:1y') +
-                  '&hl=en-CA&gl=CA&ceid=CA:en';
-      try {
-        const r = await fetch(url, { signal: ctrl.signal,
-          headers: { 'user-agent': 'Mozilla/5.0 (compatible; AgNtechConnect/1.0)' } });
-        if (!r.ok) return { q, items: [] };
-        const xml = await r.text();
-        const items = [];
-        const re = /<item>([\s\S]*?)<\/item>/g;
-        let m;
-        while ((m = re.exec(xml)) !== null && items.length < 6) {
-          const t = /<title>([\s\S]*?)<\/title>/.exec(m[1]);
-          if (t) items.push(decode(t[1]));
-        }
-        return { q, items };
-      } catch (e) { return { q, items: [] }; }
+    const variants = nameVariants(intake.company, intake.email);
+    const sector = intake.sector || 'Canadian agriculture';
+
+    const queries = variants.map((v) => ({ q: '"' + v + '"', kind: 'company' }));
+    queries.push({ q: sector + ' Canada agriculture', kind: 'sector' });
+
+    const out = await Promise.all(queries.map(async (spec) => {
+      const items = await newsSearch(spec.q, ctrl.signal);
+      return { q: spec.q, kind: spec.kind, items: items };
     }));
-    return out;
+
+    return {
+      tried: variants,
+      found: out,
+      anyHit: out.some((r) => r.kind === 'company' && r.items.length > 0)
+    };
   } catch (e) {
-    return [];
+    return { tried: [], found: [], anyHit: false };
   } finally { clearTimeout(timer); }
 }
+
 
 function extractJson(text) {
   let depth = 0, start = -1, inStr = false, esc = false;
@@ -259,7 +324,7 @@ exports.handler = async (event) => {
   }
 
   // --- research + network in parallel ---------------------------------------
-  const [found, contacts] = await Promise.all([
+  const [research_, contacts] = await Promise.all([
     research(intake),
     fetch(base + '/rest/v1/capital_contacts?select=*', { headers: sbHeaders })
       .then((r) => r.json()).catch(() => [])
@@ -267,8 +332,18 @@ exports.handler = async (event) => {
 
   const raw = (typeof intake.raw === 'string') ? (() => { try { return JSON.parse(intake.raw); } catch (e) { return {}; } })() : (intake.raw || {});
   const screening = (raw.screening || []).map((s) => `  ${s.q} \u2014 ${s.a}`).join('\n');
-  const researchText = found.filter((f) => f.items.length)
+  const researchText = (research_.found || []).filter((f) => f.items.length)
     .map((f) => `[${f.q}]\n` + f.items.map((i) => '  - ' + i).join('\n')).join('\n\n');
+
+  // Tell the model HOW the company was searched. Without this it cannot tell a
+  // company that does not exist from one whose name it failed to match, and it
+  // writes the second up as the first.
+  const searchNote = (research_.tried || []).length
+    ? `\nHOW THE COMPANY WAS SEARCHED: ${research_.tried.map((t) => '"' + t + '"').join(', ')}`
+      + (research_.anyHit
+          ? ''
+          : ' \u2014 none of these returned anything about this company. That is a SEARCH RESULT, NOT A FINDING about the company.')
+    : '';
 
   const userMsg = [
     `Assess this inbound enquiry.`,
@@ -280,8 +355,9 @@ exports.handler = async (event) => {
     intake.one_liner ? `In their words: ${intake.one_liner}` : '',
     intake.note ? `Note: ${intake.note}` : '',
     screening ? `\nSCREENING ANSWERS:\n${screening}` : '',
-    researchText ? `\nPUBLIC REPORTING (may or may not be about this company \u2014 judge relevance):\n${researchText}`
-                 : `\nNo public reporting was retrievable. Score on the enquiry alone, leave market figures empty, and return null for any criterion the enquiry itself does not speak to.`,
+    searchNote,
+    researchText ? `\nPUBLIC REPORTING (may or may not be about this company \u2014 judge relevance, and say so if a result is clearly about a different organisation):\n${researchText}`
+                 : `\nNothing was retrievable for any spelling tried. Score on the enquiry alone, leave market figures empty, and return null for any criterion the enquiry itself does not speak to.`,
     `\nScore each criterion on the evidence actually present, and return null rather than a low number where there is no evidence either way. Output only the JSON object.`
   ].filter(Boolean).join('\n');
 
